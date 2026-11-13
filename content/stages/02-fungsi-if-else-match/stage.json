@@ -1,0 +1,117 @@
+{
+  "id": "stage-2",
+  "order": 2,
+  "slug": "fungsi-if-else-match",
+  "title": "Fungsi, if-else, match",
+  "week": 9,
+  "course": "KOM120C",
+  "sources": ["KOM120C - K09 - FUNCTIONAL.pdf"],
+  "estimatedMinutes": 20,
+  "summary": "Menulis fungsi dengan def, if-else sebagai ekspresi, dan match.",
+  "concepts": ["fungsi", "if-else", "match"],
+  "prerequisites": ["stage-1"],
+  "objectives": [
+    "Menulis fungsi dengan `def` dan menebak tipe kembalian.",
+    "Memakai if-else sebagai ekspresi yang mengembalikan nilai.",
+    "Memakai `match` untuk memilah nilai."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "**Fungsi** itu resep: dia menerima input (parameter), melakukan sesuatu, lalu mengembalikan hasil. Di Scala ditulis dengan `def`:\n\n```scala\ndef nama(parameter: Tipe): TipeHasil = isiFungsi\n```\n\nNilai kembalian itu **ekspresi terakhir** di dalam fungsi. Scala tidak butuh kata kunci `return` — menuliskannya malah dianggap tidak idiomatik."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    def kuadrat(x: Int): Int = x * x\n    println(kuadrat(5))\n    println(kuadrat(7))\n  }\n}",
+      "runnable": true,
+      "output": "25\n49"
+    },
+    {
+      "type": "text",
+      "body": "Fungsi bisa punya lebih dari satu pernyataan. Pakai blok `{ ... }`, dan letakkan hasil akhir sebagai baris terakhir:"
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    def sumAbs(a: Int, b: Int): Int = {\n      val absA = if (a > 0) a else -a\n      val absB = if (b > 0) b else -b\n      absA + absB\n    }\n    println(sumAbs(5, -3))\n  }\n}",
+      "runnable": true,
+      "output": "8"
+    },
+    {
+      "type": "text",
+      "body": "Di Scala, `if` bukan pernyataan tapi **ekspresi** — dia menghasilkan nilai. Jadi `if` bisa langsung dijalankan dan hasilnya disimpan di variabel:"
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val x = 7\n    val label = if (x > 5) \"besar\" else \"kecil\"\n    println(label)\n  }\n}",
+      "runnable": true,
+      "output": "besar"
+    },
+    {
+      "type": "text",
+      "body": "Kalau banyak cabang, `match` lebih rapi daripada rangkaian `if-else`. Polanya: nilai yang diperiksa, diikuti `case` untuk tiap kemungkinan. `case _` itu jaring pengaman (default)."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val kode = 2\n    val nama = kode match {\n      case 1 => \"Satu\"\n      case 2 => \"Dua\"\n      case 3 => \"Tiga\"\n      case _ => \"Lainnya\"\n    }\n    println(nama)\n  }\n}",
+      "runnable": true,
+      "output": "Dua"
+    },
+    {
+      "type": "pitfall",
+      "body": "Kesalahan umum: menaruh `return` di akhir fungsi. Tidak salah, tapi membuat kode Python-like dan bukan gaya Scala — biarkan ekspresi terakhir yang jadi hasil.\n\nKesalahan kedua: menebak tipe kembalian tapi blok fungsi menghasilkan tipe lain. Misal `def f(x: Int): Int = { println(x); x }` — `println` bertipe `Unit`, jadi `f` mengembalikan `Unit` dan deklarasi `Int` gagal dikompilasi."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "`def nama(p: T): Hasil = ekspresi` — nilai kembalian adalah ekspresi terakhir.",
+        "`if` adalah ekspresi: hasilnya bisa langsung disimpan di variabel.",
+        "`match` memilah nilai; `case _` menangkap semua sisanya."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "stage-2-sumabs",
+      "title": "Jumlah Nilai Mutlak",
+      "statement": "Buat fungsi `sumAbs(a, b)` yang mengembalikan jumlah nilai mutlak (absolut) dari dua bilangan bulat.\n\n**Input:** satu baris berisi dua bilangan bulat `a` dan `b` dipisah spasi.\n\n**Output:** satu baris berisi `|a| + |b|`.\n\nContoh: `a = -5`, `b = 3` menghasilkan `5 + 3 = 8`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val parts = line.split(\" \")\n    val a = parts(0).toInt\n    val b = parts(1).toInt\n    // TODO: hitung |a| + |b| lalu cetak\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val parts = line.split(\" \")\n    val a = parts(0).toInt\n    val b = parts(1).toInt\n    def sumAbs(x: Int, y: Int): Int = {\n      val absX = if (x > 0) x else -x\n      val absY = if (y > 0) y else -y\n      absX + absY\n    }\n    println(sumAbs(a, b))\n  }\n}",
+      "explanation": "Fungsi `sumAbs` mengubah tiap argumen menjadi nilai mutlak memakai `if (x > 0) x else -x`, lalu menjumlahkannya. Perhatikan `if` dipakai sebagai ekspresi sehingga hasilnya bisa langsung disimpan di `val`. Nilai kembalian fungsi adalah ekspresi terakhir, yaitu `absX + absY`.",
+      "hints": [
+        "Nilai mutlak: kalau bilangan negatif, kalikan `-1`; kalau positif, biarkan.",
+        "Pakai `if (x > 0) x else -x` untuk tiap bilangan, simpan di `val`, lalu jumlahkan.",
+        "Kerangka: `def sumAbs(x: Int, y: Int): Int = { val a = ...; val b = ...; a + b }`."
+      ],
+      "tests": [
+        { "input": "5 3\n", "expected": "8", "hidden": false },
+        { "input": "-5 3\n", "expected": "8", "hidden": false },
+        { "input": "-5 -3\n", "expected": "8", "hidden": true },
+        { "input": "0 -7\n", "expected": "7", "hidden": false }
+      ]
+    },
+    {
+      "id": "stage-2-kategori-nilai",
+      "title": "Kategori Nilai",
+      "statement": "Buat program yang membaca nilai akhir (0-100) lalu mencetak kategorinya:\n\n- 80-100 -> `A`\n- 70-79 -> `B`\n- 60-69 -> `C`\n- 50-59 -> `D`\n- di bawah 50 -> `E`\n\n**Input:** satu bilangan bulat.\n\n**Output:** satu huruf kategori.",
+      "difficulty": 2,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    // TODO: pakai match untuk mencetak kategori\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    val kategori = n match {\n      case x if x >= 80 => \"A\"\n      case x if x >= 70 => \"B\"\n      case x if x >= 60 => \"C\"\n      case x if x >= 50 => \"D\"\n      case _            => \"E\"\n    }\n    println(kategori)\n  }\n}",
+      "explanation": "`match` memeriksa `n` dari atas ke bawah, jadi cukup tulis batas bawah tiap rentang. `case x if x >= 80` menangkap semua nilai 80 ke atas; kalau tidak, lanjut ke case berikutnya. `case _` menangkap sisanya (di bawah 50).",
+      "hints": [
+        "`match` cocok untuk memilah banyak rentang nilai.",
+        "Tulis batas bawah tiap rentang: `>= 80`, `>= 70`, `>= 60`, `>= 50`, sisanya `E`.",
+        "Kerangka: `n match { case x if x >= 80 => \"A\"; case x if x >= 70 => \"B\"; ...; case _ => \"E\" }`."
+      ],
+      "tests": [
+        { "input": "90\n", "expected": "A", "hidden": false },
+        { "input": "75\n", "expected": "B", "hidden": false },
+        { "input": "55\n", "expected": "D", "hidden": false },
+        { "input": "30\n", "expected": "E", "hidden": false },
+        { "input": "80\n", "expected": "A", "hidden": true },
+        { "input": "70\n", "expected": "B", "hidden": true }
+      ]
+    }
+  ],
+  "status": "published"
+}

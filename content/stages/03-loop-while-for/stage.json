@@ -1,0 +1,105 @@
+{
+  "id": "stage-3",
+  "order": 3,
+  "slug": "loop-while-for",
+  "title": "Loop while / for",
+  "week": 9,
+  "course": "KOM120C",
+  "sources": ["KOM120C - K09 - FUNCTIONAL.pdf"],
+  "estimatedMinutes": 20,
+  "summary": "Perulangan while dan for, serta beda to dan until.",
+  "concepts": ["while", "for", "generator"],
+  "prerequisites": ["stage-2"],
+  "objectives": [
+    "Mengulang perintah dengan `while`.",
+    "Mengulang koleksi deret dengan `for`.",
+    "Membedakan `to` (inklusif) dan `until` (eksklusif)."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "Perulangan dipakai saat kita mau menjalankan blok yang sama berkali-kali. Scala punya dua gaya: `while` untuk pengulangan berbasis kondisi, dan `for` untuk menelusuri sebuah rentang atau koleksi."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    var i = 1\n    while (i <= 5) {\n      println(i * i)\n      i += 1\n    }\n  }\n}",
+      "runnable": true,
+      "output": "1\n4\n9\n16\n25"
+    },
+    {
+      "type": "text",
+      "body": "`while` mengulang blok selama kondisinya `true`. Di contoh di atas `i += 1` wajib ada — kalau lupa, `i` tidak pernah bertambah dan program berputar selamanya.\n\n`for` lebih ringkas untuk menelusuri rentang. Sintaksnya `for (a <- rentang) { ... }`, dibaca: \"untuk tiap `a` di rentang\"."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    for (a <- 1 to 4) {\n      println(\"Hello\")\n    }\n  }\n}",
+      "runnable": true,
+      "output": "Hello\nHello\nHello\nHello"
+    },
+    {
+      "type": "text",
+      "body": "`for` di Scala adalah **generator** yang bisa dipakai di sisi kiri (`i <-`) maupun kanan (`->` di Map). Yang penting sekarang: `to` dan `until` menentukan batas rentang."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    println(\"1 to 4:\")\n    for (i <- 1 to 4) println(i)\n    println(\"1 until 4:\")\n    for (i <- 1 until 4) println(i)\n  }\n}",
+      "runnable": true,
+      "output": "1 to 4:\n1\n2\n3\n4\n1 until 4:\n1\n2\n3"
+    },
+    {
+      "type": "pitfall",
+      "body": "`1 to 4` **termasuk** 4, sedangkan `1 until 4` **tidak** termasuk 4. Jadi `until` itu seperti `<`, dan `to` seperti `<=`.\n\nKesalahan kedua: bingung `i += 1` dengan `i++`. Scala **tidak** punya operator `++`; yang benar `i += 1` (dan `i -= 1`). Kalau ditulis `i++`, kompilasi gagal."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "`while (kondisi) { ... }` mengulang selama kondisi `true`; jangan lupa mengubah variabel kontrol.",
+        "`for (i <- 1 to n)` menelusuri rentang dan mengeksekusi blok untuk tiap nilai.",
+        "`to` inklusif (termasuk batas), `until` eksklusif (tidak termasuk batas)."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "stage-3-kuadrat",
+      "title": "Kuadrat 1 sampai n",
+      "statement": "Buat program yang mencetak kuadrat dari 1 sampai `n`.\n\n**Input:** satu bilangan bulat `n`.\n\n**Output:** `n` baris, baris ke-i berisi `i * i`.\n\nContoh: `n = 3` menghasilkan `1`, `4`, `9`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    // TODO: ulangi i dari 1 sampai n, cetak i * i\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    var i = 1\n    while (i <= n) {\n      println(i * i)\n      i += 1\n    }\n  }\n}",
+      "explanation": "Variabel `i` mulai dari 1 dan diincrement dengan `i += 1` setiap putaran. Selama `i <= n`, kuadrat `i` dicetak. Kalau `n = 0`, kondisi langsung salah sehingga tidak ada baris yang tercetak.",
+      "hints": [
+        "`while` butuh variabel kontrol yang diubah tiap putaran.",
+        "Mulai `i = 1`, cetak `i * i`, lalu `i += 1`.",
+        "Kerangka: `var i = 1; while (i <= n) { println(i * i); i += 1 }`."
+      ],
+      "tests": [
+        { "input": "5\n", "expected": "1\n4\n9\n16\n25", "hidden": false },
+        { "input": "1\n", "expected": "1", "hidden": false },
+        { "input": "0\n", "expected": "", "hidden": true },
+        { "input": "3\n", "expected": "1\n4\n9", "hidden": false }
+      ]
+    },
+    {
+      "id": "stage-3-fizzbuzz",
+      "title": "FizzBuzz",
+      "statement": "Cetak bilangan 1 sampai `n`, tapi:\n\n- kalau kelipatan 15 -> `FizzBuzz`\n- kalau kelipatan 3 -> `Fizz`\n- kalau kelipatan 5 -> `Buzz`\n- selain itu -> bilangannya sendiri\n\n**Input:** satu bilangan bulat `n`.\n\n**Output:** `n` baris sesuai aturan di atas.",
+      "difficulty": 2,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    // TODO: for 1..n, lalu if/else untuk FizzBuzz\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    for (i <- 1 to n) {\n      if (i % 15 == 0) println(\"FizzBuzz\")\n      else if (i % 3 == 0) println(\"Fizz\")\n      else if (i % 5 == 0) println(\"Buzz\")\n      else println(i)\n    }\n  }\n}",
+      "explanation": "`for (i <- 1 to n)` menelusuri 1 sampai n. Urutan `if` penting: kelipatan 15 harus diperiksa **duluan**, karena 15 juga kelipatan 3 dan 5. Kalau pakai `i % 3 == 0` lebih dulu, 15 akan salah tercetak `Fizz`.",
+      "hints": [
+        "Pakai `for (i <- 1 to n)` untuk menelusuri bilangannya.",
+        "Operator `%` (modulo) dipakai untuk mencari kelipatan.",
+        "Urutan `if` menentukan hasil: periksa kelipatan 15 lebih dulu, baru 3 dan 5."
+      ],
+      "tests": [
+        { "input": "5\n", "expected": "1\n2\nFizz\n4\nBuzz", "hidden": false },
+        { "input": "15\n", "expected": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz", "hidden": false },
+        { "input": "3\n", "expected": "1\n2\nFizz", "hidden": true },
+        { "input": "1\n", "expected": "1", "hidden": false }
+      ]
+    }
+  ],
+  "status": "published"
+}

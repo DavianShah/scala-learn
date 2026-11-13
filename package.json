@@ -1,0 +1,12 @@
+{
+  "name": "scala-learn",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "test": "npm --prefix web run test && node scripts/validate-content.mjs",
+    "verify": "node scripts/verify-lesson-code.mjs && node scripts/verify-problems.mjs"
+  }
+}

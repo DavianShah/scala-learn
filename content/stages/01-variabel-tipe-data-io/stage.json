@@ -1,0 +1,109 @@
+{
+  "id": "stage-1",
+  "order": 1,
+  "slug": "variabel-tipe-data-io",
+  "title": "Variabel, tipe data, I/O",
+  "week": 9,
+  "course": "KOM120C",
+  "sources": ["KOM120C - K09 - FUNCTIONAL.pdf"],
+  "estimatedMinutes": 20,
+  "summary": "Variabel, tipe data, dan cara membaca input / mencetak output di Scala.",
+  "concepts": ["variabel", "tipe data", "I/O"],
+  "prerequisites": [],
+  "objectives": [
+    "Membedakan `val` dan `var` serta kapan memakai `val`.",
+    "Memilih tipe data dasar yang tepat.",
+    "Membaca input dan mencetak output dengan `StdIn` dan `println`."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "Stage ini pondasi semuanya. Kita belajar cara menyimpan nilai di **variabel**, mengenal **tipe data**, dan cara **membaca input / mencetak output**. Kalau tiga hal ini udah lancar, materi berikutnya jauh lebih gampang.\n\nScala punya dua jenis variabel: `val` (nilainya terkunci) dan `var` (bisa diubah). Aturannya sederhana: **pakai `val` dulu, baru ganti `var` kalau memang harus berubah**."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nama = \"Budi\"\n    var umur = 20\n    umur = 21\n    println(nama)\n    println(umur)\n  }\n}",
+      "runnable": true,
+      "output": "Budi\n21"
+    },
+    {
+      "type": "text",
+      "body": "Perhatikan `nama` dideklarasikan dengan `val`, jadi kalau ditulis `nama = \"Ani\"` kompiler akan protes. `umur` memakai `var`, jadi `umur = 21` sah. Kompiler Scala juga menebak tipe otomatis (ini namanya *type inference*): `\"Budi\"` otomatis `String`, `20` otomatis `Int`."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val a: Int = 10\n    val b: Double = 2.5\n    val c: Boolean = true\n    val d: String = \"Scala\"\n    println(a)\n    println(b)\n    println(c)\n    println(d)\n  }\n}",
+      "runnable": true,
+      "output": "10\n2.5\ntrue\nScala"
+    },
+    {
+      "type": "text",
+      "body": "Tipe data dasar yang paling sering dipakai: `Int` (bulat), `Double` (desimal), `Boolean` (`true`/`false`), `String` (teks), dan `Char` (satu huruf). Kalau butuh presisi lebih, ada `Long`, `Float`, `Short`, `Byte`."
+    },
+    {
+      "type": "text",
+      "body": "Membaca input pakai `scala.io.StdIn`, mencetak pakai `println`. `readLine()` mengembalikan **String**, sedangkan `readInt()` dan `readDouble()` langsung mengembalikan angka."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    print(\"Nama: \")\n    val nama = scala.io.StdIn.readLine()\n    print(\"Umur: \")\n    val umur = scala.io.StdIn.readInt()\n    println(\"Halo \" + nama + \", umur \" + umur)\n  }\n}",
+      "runnable": false,
+      "output": "Nama: Budi\nUmur: 20\nHalo Budi, umur 20"
+    },
+    {
+      "type": "pitfall",
+      "body": "`readLine()` selalu menghasilkan `String`. Kalau langsung dioperasikan sebagai angka, kompilasi gagal. Harus diubah dulu: `baris.toInt`, `baris.toDouble`, atau langsung pakai `readInt()` / `readDouble()`.\n\nKesalahan kedua: `println(\"Hasil: \" + 5 + 3)` mencetak `Hasil: 53`, bukan `8`, karena `+` pada String melakukan penggabungan teks. Kalau mau menjumlahkan angka, hitung dulu sebelum digabung ke String."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "`val` untuk nilai tetap, `var` untuk nilai yang bisa berubah — utamakan `val`.",
+        "Tipe data dasar: `Int`, `Double`, `Boolean`, `String`, `Char`.",
+        "Baca input dengan `scala.io.StdIn` (`readLine`, `readInt`, `readDouble`), cetak dengan `println`."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "stage-1-kalkulator",
+      "title": "Kalkulator Empat Operasi",
+      "statement": "Buat program yang membaca dua bilangan desimal lalu mencetak keempat operasi aritmetika.\n\n**Input:** satu baris berisi dua bilangan desimal `a` dan `b` dipisah spasi.\n\n**Output:** empat baris berurutan:\n1. `a + b`\n2. `a - b`\n3. `a * b`\n4. `a / b`\n\nSemua hasil dicetak sebagai desimal, contoh `9.0`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    // TODO: pecah line menjadi dua bilangan\n    // TODO: cetak keempat hasil operasi, satu per baris\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val parts = line.split(\" \")\n    val a = parts(0).toDouble\n    val b = parts(1).toDouble\n    println(a + b)\n    println(a - b)\n    println(a * b)\n    println(a / b)\n  }\n}",
+      "explanation": "Program membaca satu baris lalu memecahnya dengan `split(\" \")` menjadi array String. Tiap bagian diubah ke `Double` memakai `.toDouble`, lalu keempat operasi dicetak berurutan dengan `println`. Perhatikan `println` pada `Double` selalu menampilkan desimal, misal `9.0`.",
+      "hints": [
+        "Pecah baris input pakai `split(\" \")`, lalu ubah tiap bagian ke `Double` dengan `.toDouble`.",
+        "Cetak keempat hasil dengan `println`, urutkan: tambah, kurang, kali, bagi.",
+        "Kerangka: baca baris -> `split(\" \")` -> dua `Double` -> `println(a + b)`, `println(a - b)`, `println(a * b)`, `println(a / b)`."
+      ],
+      "tests": [
+        { "input": "6.0 3.0\n", "expected": "9.0\n3.0\n18.0\n2.0", "hidden": false },
+        { "input": "5.0 2.0\n", "expected": "7.0\n3.0\n10.0\n2.5", "hidden": false },
+        { "input": "10.0 4.0\n", "expected": "14.0\n6.0\n40.0\n2.5", "hidden": true },
+        { "input": "0.0 5.0\n", "expected": "5.0\n-5.0\n0.0\n0.0", "hidden": false }
+      ]
+    },
+    {
+      "id": "stage-1-luas-lingkaran",
+      "title": "Luas Lingkaran",
+      "statement": "Buat program yang membaca radius lingkaran lalu mencetak luasnya.\n\n**Input:** satu bilangan desimal `r`.\n\n**Output:** satu baris berisi luas lingkaran. Gunakan `PI = 3.14`.\n\nContoh: radius `5.0` menghasilkan `3.14 * 5.0 * 5.0 = 78.5`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    // TODO: baca radius\n    // TODO: hitung luas = 3.14 * r * r lalu cetak\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val r = scala.io.StdIn.readDouble()\n    val luas = 3.14 * r * r\n    println(luas)\n  }\n}",
+      "explanation": "Radius dibaca langsung sebagai `Double` memakai `readDouble()`. Luas dihitung dengan `3.14 * r * r` dan disimpan di `val` supaya jelas. Terakhir dicetak dengan `println`. Hati-hati: pakai `3.14`, bukan `math.Pi`, supaya output cocok dengan soal.",
+      "hints": [
+        "Baca radius sebagai `Double` memakai `scala.io.StdIn.readDouble()`.",
+        "Luas = `3.14 * r * r`; simpan di `val` lalu cetak.",
+        "Kerangka: baca `r` -> `val luas = 3.14 * r * r` -> `println(luas)`."
+      ],
+      "tests": [
+        { "input": "5.0\n", "expected": "78.5", "hidden": false },
+        { "input": "1.0\n", "expected": "3.14", "hidden": false },
+        { "input": "0.0\n", "expected": "0.0", "hidden": true },
+        { "input": "2.5\n", "expected": "19.625", "hidden": false }
+      ]
+    }
+  ],
+  "status": "published"
+}

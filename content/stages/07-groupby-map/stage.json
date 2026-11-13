@@ -1,0 +1,126 @@
+{
+  "id": "stage-7",
+  "order": 7,
+  "slug": "groupby-map",
+  "title": "groupBy & Map",
+  "week": 11,
+  "course": "KOM2205",
+  "sources": ["KOM2205 - K11 - HOF2.pdf"],
+  "estimatedMinutes": 20,
+  "summary": "Mengelompokkan data dengan groupBy dan mengolah hasil Map.",
+  "concepts": ["groupBy", "Map", "HashMap"],
+  "prerequisites": ["stage-6"],
+  "objectives": [
+    "Mengelompokkan elemen dengan `groupBy`.",
+    "Membaca dan mengolah hasil `Map`.",
+    "Mengurutkan `Map` berdasarkan kunci."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "`groupBy` mengelompokkan elemen koleksi berdasarkan kriteria, dan mengembalikan sebuah **Map**: kunci = hasil kriteria, nilai = list elemen yang cocok. Ini alat yang sangat sederhana untuk hitung frekuensi, kelompok umur, dsb."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val dt = List(1, 3, 2, 5, 2, 3, 4, 1, 6)\n    val hasil = dt.groupBy(_ % 2)\n    hasil.toSeq.sortBy(_._1).foreach { case (k, v) => println(s\"$k -> $v\") }\n  }\n}",
+      "runnable": true,
+      "output": "0 -> List(2, 2, 4, 6)\n1 -> List(1, 3, 5, 3, 1)"
+    },
+    {
+      "type": "text",
+      "body": "Kriteria `groupBy` boleh fungsi apa saja, misalnya panjang kata:"
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val buah = List(\"pisang\", \"nangka\", \"jambu\", \"apel\", \"nanas\")\n    val hasil = buah.groupBy(_.length)\n    hasil.toSeq.sortBy(_._1).foreach { case (k, v) => println(s\"$k -> $v\") }\n  }\n}",
+      "runnable": true,
+      "output": "4 -> List(apel)\n5 -> List(jambu, nanas)\n6 -> List(pisang, nangka)"
+    },
+    {
+      "type": "text",
+      "body": "`groupBy` menghasilkan **HashMap**, yang urutannya tidak dijamin. Jadi kalau outputnya harus rapi, **urutkan dulu** pakai `toSeq.sortBy(_._1)` (berdasarkan kunci) atau `sortWith(_._1 < _._1)`.\n\nNilai di dalam Map bisa diolah dengan `map`, dan dua List bisa digabung jadi Map dengan `zip`."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nilaiMutu = Map(\"A\" -> 4, \"B\" -> 3, \"C\" -> 2, \"D\" -> 1, \"E\" -> 0)\n    val res = nilaiMutu.map { case (k, v) => k -> (v + 1) }\n    res.toSeq.sortWith(_._1 < _._1).foreach { case (k, v) => println(s\"$k -> $v\") }\n  }\n}",
+      "runnable": true,
+      "output": "A -> 5\nB -> 4\nC -> 3\nD -> 2\nE -> 1"
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val L1 = List(\"Bogor\", \"Jakarta\", \"Surabaya\", \"Bandung\")\n    val L2 = List(1, 4, 2, 3)\n    val map = (L1 zip L2).toMap\n    map.toSeq.sortBy(_._1).foreach { case (k, v) => println(s\"$k -> $v\") }\n  }\n}",
+      "runnable": true,
+      "output": "Bandung -> 3\nBogor -> 1\nJakarta -> 4\nSurabaya -> 2"
+    },
+    {
+      "type": "text",
+      "body": "Contoh paling berguna: menghitung frekuensi kemunculan. `groupBy` membuat kelompok per nilai, lalu `.length` menghitung anggotanya."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val dt = List(9, 1, 5, 8, 2, 5, 5, 1, 2, 3)\n    val frekuensi = dt.groupBy(x => x).map { case (k, v) => k -> v.length }\n    frekuensi.toSeq.sortBy(_._1).foreach { case (k, v) => println(s\"$k -> $v\") }\n  }\n}",
+      "runnable": true,
+      "output": "1 -> 2\n2 -> 2\n3 -> 1\n5 -> 3\n8 -> 1\n9 -> 1"
+    },
+    {
+      "type": "pitfall",
+      "body": "HashMap **tidak menjamin urutan**. Kalau lu mencetak Map langsung, urutannya bisa beda antar jalan. Untuk output yang stabil, selalu `toSeq.sortBy(_._1)` atau `sortWith(_._1 < _._1)` sebelum dicetak.\n\nKesalahan kedua: `groupBy` pada list kosong menghasilkan Map kosong, bukan error — jadi aman, tapi pastikan kode lu menangani Map kosong dengan benar."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "`groupBy(f)` menghasilkan Map: kunci = hasil `f`, nilai = list elemen yang cocok.",
+        "Urutan HashMap tidak dijamin — urutkan dengan `toSeq.sortBy(_._1)` sebelum mencetak.",
+        "Frekuensi: `list.groupBy(x => x).map { case (k, v) => k -> v.length }`."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "stage-7-frekuensi",
+      "title": "Frekuensi Bilangan",
+      "statement": "Hitung frekuensi kemunculan setiap bilangan.\n\n**Input:** satu baris berisi deretan bilangan bulat dipisah spasi.\n\n**Output:** untuk tiap bilangan (diurutkan naik), satu baris berformat `nilai -> frekuensi`.\n\nContoh: `9 1 5 8 2 5 5 1 2 3` -> `1 -> 2`, `2 -> 2`, `3 -> 1`, `5 -> 3`, `8 -> 1`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val angka = line.trim.split(\"\\\\s+\").filter(_.nonEmpty).map(_.toInt).toList\n    // TODO: groupBy lalu hitung panjang tiap kelompok, urutkan\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val angka = line.trim.split(\"\\\\s+\").filter(_.nonEmpty).map(_.toInt).toList\n    val frekuensi = angka.groupBy(x => x).map { case (k, v) => k -> v.length }\n    frekuensi.toSeq.sortBy(_._1).foreach { case (k, v) => println(s\"$k -> $v\") }\n  }\n}",
+      "explanation": "`groupBy(x => x)` menjadikan tiap nilai sebagai kunci, dan semua kemunculannya jadi list nilai. `.map { case (k, v) => k -> v.length }` mengganti list itu dengan panjangnya. Terakhir diurutkan berdasarkan kunci supaya output stabil.",
+      "hints": [
+        "`groupBy(x => x)` mengelompokkan bilangan yang sama.",
+        "Untuk frekuensi, ganti list tiap kelompok dengan `.length`.",
+        "Kerangka: `angka.groupBy(x => x).map { case (k, v) => k -> v.length }.toSeq.sortBy(_._1)` lalu cetak."
+      ],
+      "tests": [
+        { "input": "9 1 5 8 2 5 5 1 2 3\n", "expected": "1 -> 2\n2 -> 2\n3 -> 1\n5 -> 3\n8 -> 1\n9 -> 1", "hidden": false },
+        { "input": "4 4 4\n", "expected": "4 -> 3", "hidden": false },
+        { "input": "7\n", "expected": "7 -> 1", "hidden": true },
+        { "input": "0 0 -1 -1 -1\n", "expected": "-1 -> 3\n0 -> 2", "hidden": false }
+      ]
+    },
+    {
+      "id": "stage-7-anagram",
+      "title": "Kelompok Anagram",
+      "statement": "Kelompokkan kata yang merupakan anagram satu sama lain.\n\n**Input:** satu baris berisi daftar kata dipisah spasi.\n\n**Output:** setiap kelompok yang berisi **2 kata atau lebih** dicetak satu baris. Kata dalam kelompok diurutkan alfabetis dan dipisah koma+spasi. Kelompok diurutkan berdasarkan kata pertama. Kalau tidak ada kelompok, tidak mencetak apa-apa.\n\nContoh: `listen silent hello` -> `listen, silent`.",
+      "difficulty": 2,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val kata = line.trim.split(\"\\\\s+\").filter(_.nonEmpty).toList\n    // TODO: groupBy huruf terurut, saring kelompok >1, urutkan, cetak\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val kata = line.trim.split(\"\\\\s+\").filter(_.nonEmpty).toList\n    val kelompok = kata\n      .groupBy(_.toLowerCase.sorted)\n      .values\n      .filter(_.length > 1)\n      .map(_.sorted)\n      .toList\n      .sortBy(_.head)\n    kelompok.foreach(k => println(k.mkString(\", \")))\n  }\n}",
+      "explanation": "Dua kata anagram punya huruf yang sama, jadi `_.sorted` menghasilkan kunci yang identik. `groupBy` mengumpulkan kata-kata itu. Kelompok berisi satu kata disaring, lalu tiap kelompok dan urutan kelompok disortir supaya output deterministik.",
+      "hints": [
+        "Anagram = huruf sama, urutan beda. Urutkan hurufnya untuk dapatkan kunci.",
+        "`groupBy(_.sorted)` lalu `values.filter(_.length > 1)`.",
+        "Kerangka: `kata.groupBy(_.sorted).values.filter(_.length > 1).map(_.sorted).toList.sortBy(_.head)` lalu cetak `mkString(\", \")`."
+      ],
+      "tests": [
+        {
+          "input": "listen silent hello dear world study taste read dusty dare\n",
+          "expected": "dare, dear, read\ndusty, study\nlisten, silent",
+          "hidden": false
+        },
+        { "input": "abc cba bac xyz\n", "expected": "abc, bac, cba", "hidden": false },
+        { "input": "halo dunia\n", "expected": "", "hidden": true },
+        { "input": "a ab ba b\n", "expected": "ab, ba", "hidden": false },
+        { "input": "abc cba\n", "expected": "abc, cba", "hidden": false }
+      ]
+    }
+  ],
+  "status": "published"
+}

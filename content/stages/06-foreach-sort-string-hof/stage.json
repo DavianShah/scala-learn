@@ -1,0 +1,117 @@
+{
+  "id": "stage-6",
+  "order": 6,
+  "slug": "foreach-sort-string-hof",
+  "title": "foreach, sort, String HOF",
+  "week": 11,
+  "course": "KOM2205",
+  "sources": ["KOM2205 - K11 - HOF2.pdf"],
+  "estimatedMinutes": 20,
+  "summary": "foreach untuk efek samping, mengurutkan koleksi, dan HOF pada String.",
+  "concepts": ["foreach", "sorted", "sortBy", "sortWith", "String HOF"],
+  "prerequisites": ["stage-5"],
+  "objectives": [
+    "Membedakan `foreach` (efek samping) dan `map` (koleksi baru).",
+    "Mengurutkan koleksi dengan `sorted`, `sortBy`, dan `sortWith`.",
+    "Memakai metode String: `length`, `split`, `reverse`, `contains`, `toUpperCase`."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "`foreach` mirip `map`, tapi bedanya fundamental: `map` menghasilkan **koleksi baru**, sedangkan `foreach` menghasilkan **`Unit`** — dia dipakai untuk efek samping, biasanya mencetak ke console."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val dt = List(2, 5, 3, 8, 2)\n    dt.foreach(x => print(s\"$x \"))\n    println()\n    dt.map(x => x * x).foreach(x => print(s\"$x \"))\n    println()\n  }\n}",
+      "runnable": true,
+      "output": "2 5 3 8 2 \n4 25 9 64 4 "
+    },
+    {
+      "type": "text",
+      "body": "Untuk mengurutkan, Scala punya tiga HOF: `sorted` (urutan bawaan), `sortBy(f)` (berdasarkan nilai yang dihasilkan `f`), dan `sortWith((a, b) => ...)` (kriteria perbandingan dua elemen)."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val dt = List(5, 3, 1, 4, 2)\n    println(dt.sorted)\n    println(dt.sortWith(_ > _))\n    val buah = List(\"pisang\", \"mengkudu\", \"jambu\", \"apel\")\n    println(buah.sortBy(_.length))\n  }\n}",
+      "runnable": true,
+      "output": "List(1, 2, 3, 4, 5)\nList(5, 4, 3, 2, 1)\nList(apel, jambu, pisang, mengkudu)"
+    },
+    {
+      "type": "text",
+      "body": "String di Scala punya banyak metode yang menerima fungsi: `length`, `split`, `reverse`, `contains`, `startsWith`, `endsWith`, `toLowerCase`, `toUpperCase`, `indexOf`."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val s = \"Pemrograman\"\n    println(s.length)\n    println(s.reverse)\n    println(s.contains(\"gram\"))\n    println(s.toUpperCase)\n    val kata = \"satu dua tiga\"\n    println(kata.split(\" \").toList)\n  }\n}",
+      "runnable": true,
+      "output": "11\nnamargormeP\ntrue\nPEMROGRAMAN\nList(satu, dua, tiga)"
+    },
+    {
+      "type": "text",
+      "body": "Sekarang gabungkan semuanya jadi satu pipeline — filter, urutkan, balik, lalu kapital. Ini pola yang akan sering lu pakai."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val buah = List(\"pisang\", \"nangka\", \"jambu\", \"apel\", \"nanas\")\n    val hasil = buah\n      .filter(!_.contains(\"an\"))\n      .sortWith(_.length > _.length)\n      .map(_.reverse)\n      .map(_.toUpperCase)\n    println(hasil)\n  }\n}",
+      "runnable": true,
+      "output": "List(UBMAJ, LEPA)"
+    },
+    {
+      "type": "pitfall",
+      "body": "`foreach` mengembalikan `Unit`, jadi `val x = dt.foreach(...)` itu `x` bernilai `()` — bukan list. Kalau lu mau menyimpan hasil transformasi, pakai `map`.\n\nKesalahan kedua: `sortWith(_ > _)` mengurutkan **turun** (dari besar ke kecil), bukan naik. `sortBy(_.length)` mengurutkan naik berdasarkan panjang; kalau mau turun, pakai `.sortBy(_.length).reverse` atau `sortWith(_.length > _.length)`.\n\nKetiga: `s.reverse` membalik **seluruh karakter** String, bukan kata-kata. Untuk membalik urutan kata, `s.split(\" \").reverse`."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "`foreach` untuk efek samping (output), `map` untuk membuat koleksi baru.",
+        "`sorted` urutan bawaan, `sortBy(f)` berdasarkan nilai f, `sortWith((a,b) => ...)` kriteria bebas.",
+        "String HOF: `length`, `split`, `reverse`, `contains`, `toUpperCase`."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "stage-6-pipeline-string",
+      "title": "Saring, Urutkan, Balik",
+      "statement": "Diberikan sekumpulan kata. Keluarkan kata yang **tidak mengandung** substring tertentu, lalu balik hurufnya dan ubah ke huruf besar, urutkan dari yang terpanjang ke terpendek.\n\n**Input:**\n- Baris 1: daftar kata dipisah spasi.\n- Baris 2: substring yang dicegah.\n\n**Output:** satu baris berisi kata-kata hasil, dipisah spasi. Kalau tidak ada kata yang lolos, cetak baris kosong.\n\nContoh: `pisang nangka jambu apel nanas` dengan substring `an` -> `UBMAJ LEPA`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val kata = line.trim.split(\"\\\\s+\").filter(_.nonEmpty).toList\n    val str = scala.io.StdIn.readLine()\n    // TODO: filter, sortWith, map reverse, map uppercase, lalu cetak\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val kata = line.trim.split(\"\\\\s+\").filter(_.nonEmpty).toList\n    val str = scala.io.StdIn.readLine()\n    val hasil = kata\n      .filter(!_.contains(str))\n      .sortWith(_.length > _.length)\n      .map(_.reverse)\n      .map(_.toUpperCase)\n    println(hasil.mkString(\" \"))\n  }\n}",
+      "explanation": "`filter(!_.contains(str))` menyisakan kata yang tidak mengandung substring. `sortWith(_.length > _.length)` mengurutkan menurun berdasarkan panjang. `map(_.reverse)` membalik huruf tiap kata, lalu `map(_.toUpperCase)` mengkapitalisasi. Hasilnya digabung dengan spasi.",
+      "hints": [
+        "Rangkaiannya: saring -> urutkan -> ubah -> gabung.",
+        "`filter(!_.contains(str))` untuk saring, `sortWith(_.length > _.length)` untuk urutan menurun.",
+        "Kerangka: `kata.filter(...).sortWith(...).map(_.reverse).map(_.toUpperCase).mkString(\" \")`."
+      ],
+      "tests": [
+        { "input": "pisang nangka jambu apel nanas\nan\n", "expected": "UBMAJ LEPA", "hidden": false },
+        { "input": "abcd x ef\nx\n", "expected": "DCBA FE", "hidden": false },
+        { "input": "a bb ccc\nz\n", "expected": "CCC BB A", "hidden": false },
+        { "input": "one two three\nwo\n", "expected": "EERHT ENO", "hidden": true },
+        { "input": "halo\nhalo\n", "expected": "", "hidden": false }
+      ]
+    },
+    {
+      "id": "stage-6-hitung-nama",
+      "title": "Nama dengan Huruf Tertentu",
+      "statement": "Hitung berapa nama yang mengandung huruf tertentu.\n\n**Input:**\n- Baris 1: daftar nama dipisah spasi.\n- Baris 2: satu huruf.\n\n**Output:** satu angka, jumlah nama yang mengandung huruf tersebut.\n\nContoh: `andi budi citra` dengan huruf `a` -> `2` (andi dan citra).",
+      "difficulty": 2,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val nama = line.trim.split(\"\\\\s+\").filter(_.nonEmpty).toList\n    val huruf = scala.io.StdIn.readLine()\n    // TODO: hitung nama yang mengandung huruf\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val nama = line.trim.split(\"\\\\s+\").filter(_.nonEmpty).toList\n    val huruf = scala.io.StdIn.readLine()\n    val jumlah = nama.filter(_.contains(huruf)).length\n    println(jumlah)\n  }\n}",
+      "explanation": "`filter(_.contains(huruf))` menyisakan nama yang mengandung huruf yang dicari. `.length` menghitung ukuran list hasil. Kalau tidak ada yang cocok, hasilnya 0.",
+      "hints": [
+        "`String.contains` memeriksa apakah sebuah substring ada di dalam string.",
+        "`filter(_.contains(huruf))` lalu hitung `.length`.",
+        "Kerangka: `nama.filter(_.contains(huruf)).length`."
+      ],
+      "tests": [
+        { "input": "andi budi citra\na\n", "expected": "2", "hidden": false },
+        { "input": "john jane joe\nj\n", "expected": "3", "hidden": false },
+        { "input": "alpha beta gamma\nz\n", "expected": "0", "hidden": true },
+        { "input": "budi\nb\n", "expected": "1", "hidden": false },
+        { "input": "aa ab ba\na\n", "expected": "3", "hidden": false }
+      ]
+    }
+  ],
+  "status": "published"
+}

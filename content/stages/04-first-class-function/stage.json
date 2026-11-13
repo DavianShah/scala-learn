@@ -1,0 +1,125 @@
+{
+  "id": "stage-4",
+  "order": 4,
+  "slug": "first-class-function",
+  "title": "First-Class Function & Fungsi Murni",
+  "week": 9,
+  "course": "KOM120C",
+  "sources": ["KOM120C - K09 - FUNCTIONAL.pdf"],
+  "estimatedMinutes": 20,
+  "summary": "Fungsi sebagai nilai: disimpan di variabel, dikirim sebagai argumen, dikembalikan.",
+  "concepts": ["first-class function", "fungsi murni", "lambda"],
+  "prerequisites": ["stage-2"],
+  "objectives": [
+    "Menyimpan fungsi di variabel dan mengirimnya sebagai argumen.",
+    "Menulis fungsi yang mengembalikan fungsi.",
+    "Membedakan fungsi murni dan fungsi dengan efek samping."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "Di Scala, fungsi adalah **first-class object**: dia bisa disimpan di variabel, dikirim sebagai argumen, dan dikembalikan oleh fungsi lain — sama seperti nilai lain. Penulisannya pakai panah `=>`."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val add = (x: Int, y: Int) => x + y\n    val kali = (x: Int, y: Int) => x * y\n    println(add(3, 4))\n    println(kali(3, 4))\n  }\n}",
+      "runnable": true,
+      "output": "7\n12"
+    },
+    {
+      "type": "text",
+      "body": "Karena fungsi adalah nilai, dia bisa jadi **parameter**. Perhatikan tipe `(Int, Int) => Int`: itu artinya \"sebuah fungsi yang menerima dua `Int` dan mengembalikan `Int`\"."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    def hitung(x: Int, y: Int, operation: (Int, Int) => Int): Int = operation(x, y)\n    println(hitung(5, 3, (a, b) => a + b))\n    println(hitung(5, 3, (a, b) => a * b))\n  }\n}",
+      "runnable": true,
+      "output": "8\n15"
+    },
+    {
+      "type": "text",
+      "body": "Fungsi juga bisa **mengembalikan fungsi**. Ini teknik andalan di Scala: buat \"pabrik\" fungsi yang dipakai berkali-kali."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    def createMultiplier(factor: Int): Int => Int = (x: Int) => x * factor\n    val kaliDua = createMultiplier(2)\n    val kaliLima = createMultiplier(5)\n    println(kaliDua(4))\n    println(kaliLima(4))\n  }\n}",
+      "runnable": true,
+      "output": "8\n20"
+    },
+    {
+      "type": "text",
+      "body": "Fungsi yang menerima fungsi lalu menerapkannya dua kali: `applyTwice`. Ini inti dari gaya fungsional — perilaku dibentuk dengan menggabung-gabungkan fungsi."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    def applyTwice(f: Int => Int, x: Int): Int = f(f(x))\n    println(applyTwice(y => y + 1, 4))\n    println(applyTwice(y => y * 2, 4))\n  }\n}",
+      "runnable": true,
+      "output": "6\n16"
+    },
+    {
+      "type": "text",
+      "body": "**Fungsi murni** (pure function) itu aturannya: input yang sama selalu menghasilkan output yang sama, dan tidak ada efek samping (tidak membaca/mengubah state luar, tidak mencetak). Fungsi murni aman dipakai berulang dan mudah diprediksi."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    var faktor = 2\n    def kaliTidakMurni(x: Int): Int = x * faktor\n    def kaliMurni(x: Int): Int = x * 2\n    faktor = 10\n    println(kaliTidakMurni(5))\n    println(kaliMurni(5))\n  }\n}",
+      "runnable": true,
+      "output": "50\n10"
+    },
+    {
+      "type": "pitfall",
+      "body": "Di contoh terakhir, `kaliTidakMurni(5)` menghasilkan `50` karena `faktor` sudah diubah jadi 10. Fungsi seperti ini bikin program susah ditebak. Biasakan tulis fungsi murni: semua data yang dibutuhkan masuk lewat **parameter**, bukan lewat variabel luar.\n\nCatatan: `println` di dalam fungsi juga membuatnya tidak murni (efek samping), jadi fungsi yang mencetak sebaiknya dipisah dari perhitungan."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "Fungsi adalah nilai: simpan di `val`, kirim sebagai argumen, kembalikan dari fungsi lain.",
+        "`(A, B) => C` adalah tipe fungsi; `def createMultiplier(f: Int): Int => Int` mengembalikan fungsi.",
+        "Fungsi murni: input sama -> output sama, tanpa efek samping."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "stage-4-multiplier",
+      "title": "Pabrik Pengali",
+      "statement": "Buat fungsi `createMultiplier(factor)` yang mengembalikan sebuah fungsi pengali.\n\n**Input:** satu bilangan bulat `n`.\n\n**Output:** satu baris berisi tiga angka dipisah spasi: `createMultiplier(2)(n)`, `createMultiplier(3)(n)`, dan `createMultiplier(5)(n)`.\n\nContoh: `n = 4` menghasilkan `8 12 20`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    // TODO: buat createMultiplier lalu cetak hasilnya\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    def createMultiplier(factor: Int): Int => Int = (x: Int) => x * factor\n    val kaliDua = createMultiplier(2)\n    val kaliTiga = createMultiplier(3)\n    val kaliLima = createMultiplier(5)\n    println(kaliDua(n) + \" \" + kaliTiga(n) + \" \" + kaliLima(n))\n  }\n}",
+      "explanation": "`createMultiplier` mengembalikan lambda `(x: Int) => x * factor`. Setiap panggilan membuat fungsi baru yang \"mengingat\" faktor tertentu. Memanggil `kaliDua(4)` sama dengan `4 * 2`. Ketiga hasil dicetak dalam satu baris.",
+      "hints": [
+        "`createMultiplier` harus mengembalikan fungsi, bukan angka.",
+        "Tipe kembaliannya `Int => Int`; isinya `(x: Int) => x * factor`.",
+        "Kerangka: `val kaliDua = createMultiplier(2)` lalu `println(kaliDua(n) + \" \" + ...)`."
+      ],
+      "tests": [
+        { "input": "4\n", "expected": "8 12 20", "hidden": false },
+        { "input": "1\n", "expected": "2 3 5", "hidden": false },
+        { "input": "0\n", "expected": "0 0 0", "hidden": true },
+        { "input": "10\n", "expected": "20 30 50", "hidden": false }
+      ]
+    },
+    {
+      "id": "stage-4-applytwice",
+      "title": "Terapkan Dua Kali",
+      "statement": "Buat fungsi `applyTwice(f, x)` yang menerapkan fungsi `f` sebanyak dua kali terhadap `x`.\n\n**Input:** satu bilangan bulat `n`.\n\n**Output:** satu baris berisi dua angka dipisah spasi: `applyTwice(x => x + 1, n)` dan `applyTwice(x => x * 2, n)`.\n\nContoh: `n = 4` menghasilkan `6 16`.",
+      "difficulty": 2,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    // TODO: buat applyTwice, lalu terapkan dua fungsi berbeda\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    def applyTwice(f: Int => Int, x: Int): Int = f(f(x))\n    val tambahSatu = applyTwice(x => x + 1, n)\n    val kaliDua = applyTwice(x => x * 2, n)\n    println(tambahSatu + \" \" + kaliDua)\n  }\n}",
+      "explanation": "`applyTwice` memanggil `f` dua kali: `f(f(x))`. Untuk `x + 1` dengan `n = 4`, hasilnya `(4 + 1) + 1 = 6`. Untuk `x * 2`, hasilnya `(4 * 2) * 2 = 16`. Perhatikan urutan: yang dalam dijalankan lebih dulu.",
+      "hints": [
+        "`applyTwice` menerima sebuah fungsi dan sebuah nilai.",
+        "Terapkan `f` dua kali: `f(f(x))`.",
+        "Kerangka: `def applyTwice(f: Int => Int, x: Int): Int = f(f(x))`, lalu panggil dengan `x => x + 1` dan `x => x * 2`."
+      ],
+      "tests": [
+        { "input": "4\n", "expected": "6 16", "hidden": false },
+        { "input": "0\n", "expected": "2 0", "hidden": false },
+        { "input": "10\n", "expected": "12 40", "hidden": false },
+        { "input": "-3\n", "expected": "-1 -12", "hidden": true }
+      ]
+    }
+  ],
+  "status": "published"
+}

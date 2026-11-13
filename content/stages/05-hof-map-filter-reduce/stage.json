@@ -1,0 +1,128 @@
+{
+  "id": "stage-5",
+  "order": 5,
+  "slug": "hof-map-filter-reduce",
+  "title": "HOF: map, filter, reduce",
+  "week": 10,
+  "course": "KOM2205",
+  "sources": ["KOM2205 - K10 - HOF-STUDENT.pdf"],
+  "estimatedMinutes": 20,
+  "summary": "Higher order function: map, filter, dan reduce untuk mengolah koleksi.",
+  "concepts": ["HOF", "map", "filter", "reduce"],
+  "prerequisites": ["stage-4"],
+  "objectives": [
+    "Memakai `map` untuk mengubah tiap elemen koleksi.",
+    "Memakai `filter` untuk menyaring koleksi.",
+    "Memakai `reduce` untuk merangkum koleksi.",
+    "Mengkomposisikan `filter().map().reduce()`."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "**Higher Order Function (HOF)** itu fungsi yang menerima fungsi lain sebagai parameter, atau mengembalikan fungsi sebagai hasil. Di stage sebelumnya kita bikin fungsi sebagai nilai; sekarang kita pakai untuk mengolah **koleksi** (List, Seq).\n\nTiga HOF yang paling sering dipakai: `map`, `filter`, `reduce`."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val data = List(2, 3, 4, 5)\n    println(data.map(x => x * 2))\n    println(data.map(_ * 2))\n  }\n}",
+      "runnable": true,
+      "output": "List(4, 6, 8, 10)\nList(4, 6, 8, 10)"
+    },
+    {
+      "type": "text",
+      "body": "`map` mengganti **tiap elemen** dengan hasil fungsi. Dia tidak mengubah panjang list, hanya isinya. Perhatikan dua gaya: fungsi eksplisit `x => x * 2` dan *wildcard* `_ * 2` yang artinya \"elemen itu\". Keduanya sama."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val data = List(2, 3, 4, 5)\n    println(data.filter(_ % 2 == 0))\n    val names = List(\"John O'Shea\", \"Aiden McGeady\", \"John Hartson\")\n    println(names.filter(x => x.startsWith(\"John\")))\n  }\n}",
+      "runnable": true,
+      "output": "List(2, 4)\nList(John O'Shea, John Hartson)"
+    },
+    {
+      "type": "text",
+      "body": "`filter` menyaring: elemen yang **fungsinya mengembalikan `true`** dipertahankan. Lamda-nya disebut *predicate* — selalu bertipe `Boolean`."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val data = List(2, 3, 4, 5)\n    println(data.reduce(_ + _))\n    println(data.reduce((x, y) => x max y))\n  }\n}",
+      "runnable": true,
+      "output": "14\n5"
+    },
+    {
+      "type": "text",
+      "body": "`reduce` merangkum seluruh elemen jadi **satu nilai**. Lambda-nya menerima dua argumen: akumulator dan elemen berikutnya. `_ + _` menjumlahkan; `(x, y) => x max y` mencari nilai maksimum."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val data = List(2, 3, 4, 5, 6)\n    val hasil = data.filter(_ % 2 == 0).map(x => x * x).reduce(_ + _)\n    println(hasil)\n  }\n}",
+      "runnable": true,
+      "output": "56"
+    },
+    {
+      "type": "text",
+      "body": "Ini keunggulan HOF: ketiganya bisa **dirangkai** jadi satu baris. Baca dari kiri:aring dulu yang genap, kuadratkan, lalu jumlahkan. Output dari satu fungsi jadi input fungsi berikutnya.\n\nUntuk membaca deretan angka dari input, polanya:"
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val list = line.trim.split(\"\\\\s+\").map(_.toInt).toList\n    println(list)\n  }\n}",
+      "runnable": false,
+      "output": "Input: 10 20 30\nOutput: List(10, 20, 30)"
+    },
+    {
+      "type": "pitfall",
+      "body": "`List.range(1, 100)` menghasilkan 1 sampai **99**, bukan 100 — batas kanan tidak termasuk. Kalau soalnya minta \"1 sampai 100\", tulis `List.range(1, 101)` atau `1 to 100`.\n\nKesalahan kedua: `reduce` pada list **kosong** melempar exception. Kalau list bisa kosong, pakai `foldLeft(0)(_ + _)` atau `.sum` yang punya nilai awal.\n\nKetiga: `line.trim.split(\"\\\\s+\")` — kalau `line` kosong, hasilnya array berisi satu string kosong dan `.toInt` gagal. Tambahkan `.filter(_.nonEmpty)` untuk aman."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "`map(f)` mengubah tiap elemen; `filter(p)` menyaring; `reduce(f)` merangkum jadi satu nilai.",
+        "Rangkaikan: `data.filter(...).map(...).reduce(...)`.",
+        "Baca deretan angka: `readLine().trim.split(\"\\\\s+\").map(_.toInt).toList`."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "stage-5-jumlah-kuadrat-genap",
+      "title": "Jumlah Kuadrat Bilangan Genap",
+      "statement": "Hitung jumlah kuadrat dari setiap elemen bilangan yang **genap**.\n\n**Input:** satu baris berisi deretan bilangan bulat dipisah spasi. Dijamin ada minimal satu bilangan genap.\n\n**Output:** satu baris berisi jumlah kuadrat bilangan genap.\n\nContoh: `2 3 4 5` -> bilangan genap 2 dan 4 -> `4 + 16 = 20`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val angka = line.trim.split(\"\\\\s+\").map(_.toInt).toList\n    // TODO: filter genap, map kuadrat, reduce jumlah\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val angka = line.trim.split(\"\\\\s+\").map(_.toInt).toList\n    val hasil = angka.filter(_ % 2 == 0).map(x => x * x).reduce(_ + _)\n    println(hasil)\n  }\n}",
+      "explanation": "Pertama `filter(_ % 2 == 0)` menyisakan bilangan genap. Lalu `map(x => x * x)` mengkuadratkan tiap elemen. Terakhir `reduce(_ + _)` menjumlahkan semuanya jadi satu nilai. Rangkaian HOF ini ringkas dan tidak butuh variabel perantara.",
+      "hints": [
+        "Urutannya: saring dulu, ubah, lalu rangkum.",
+        "`filter(_ % 2 == 0)` untuk bilangan genap, `map(x => x * x)` untuk kuadrat, `reduce(_ + _)` untuk jumlah.",
+        "Kerangka: `angka.filter(...).map(...).reduce(...)`."
+      ],
+      "tests": [
+        { "input": "2 3 4 5\n", "expected": "20", "hidden": false },
+        { "input": "6\n", "expected": "36", "hidden": false },
+        { "input": "2 4 6\n", "expected": "56", "hidden": false },
+        { "input": "-4 3\n", "expected": "16", "hidden": true },
+        { "input": "0 1\n", "expected": "0", "hidden": false }
+      ]
+    },
+    {
+      "id": "stage-5-cari-nilai",
+      "title": "Cari Nilai",
+      "statement": "Cari sebuah nilai di dalam deretan bilangan bulat.\n\n**Input:**\n- Baris 1: deretan bilangan bulat dipisah spasi.\n- Baris 2: bilangan bulat yang dicari.\n\n**Output:** `1` jika nilai ditemukan, `0` jika tidak.\n\nContoh: deretan `10 20 30`, cari `20` -> `1`.",
+      "difficulty": 2,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val angka = line.trim.split(\"\\\\s+\").map(_.toInt).toList\n    val cari = scala.io.StdIn.readInt()\n    // TODO: cetak 1 kalau ada, 0 kalau tidak\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val line = scala.io.StdIn.readLine()\n    val angka = line.trim.split(\"\\\\s+\").map(_.toInt).toList\n    val cari = scala.io.StdIn.readInt()\n    if (angka.contains(cari)) println(1) else println(0)\n  }\n}",
+      "explanation": "`List` punya metode `contains` yang mengembalikan `true` kalau nilai ada di dalamnya. `if` sebagai ekspresi bisa langsung dicetak, tapi di sini dua cabang sama-sama `println`, jadi `if/else` sebagai pernyataan sudah cukup.",
+      "hints": [
+        "Cek keanggotaan pakai `contains`.",
+        "`angka.contains(cari)` menghasilkan `Boolean`.",
+        "Kerangka: `if (angka.contains(cari)) println(1) else println(0)`."
+      ],
+      "tests": [
+        { "input": "10 20 30\n20\n", "expected": "1", "hidden": false },
+        { "input": "10 20 30\n25\n", "expected": "0", "hidden": false },
+        { "input": "5\n5\n", "expected": "1", "hidden": true },
+        { "input": "1 2 3\n4\n", "expected": "0", "hidden": false },
+        { "input": "7 7 7\n7\n", "expected": "1", "hidden": false }
+      ]
+    }
+  ],
+  "status": "published"
+}
