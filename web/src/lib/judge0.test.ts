@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { LIMITS, normalizeOutput, truncate } from "./judge0"
+import { LIMITS, filterJvmWarning, normalizeOutput, truncate } from "./judge0"
 
 describe("normalizeOutput", () => {
   it("membuang CRLF dan spasi/enter di pinggir", () => {
@@ -27,6 +27,31 @@ describe("truncate", () => {
 
   it("tidak mengubah output yang pendek", () => {
     expect(truncate("pendek", 100)).toBe("pendek")
+  })
+})
+
+describe("filterJvmWarning", () => {
+  const warning = [
+    "WARNING: A terminally deprecated method in sun.misc.Unsafe has been called",
+    "WARNING: sun.misc.Unsafe::objectFieldOffset has been called by scala.runtime.LazyVals$ (file:/usr/local/miniconda3/envs/scala3.4.2/libexec/scala3/lib/scala3-library_3-3.4.2-bin-SNAPSHOT.jar)",
+    "WARNING: Please consider reporting this to the maintainers of class scala.runtime.LazyVals$",
+    "WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release",
+  ].join("\n")
+
+  it("membuang peringatan JVM sun.misc.Unsafe", () => {
+    expect(filterJvmWarning(warning)).toBe("")
+  })
+
+  it("mempertahankan error asli", () => {
+    expect(filterJvmWarning("Exception in thread main")).toBe("Exception in thread main")
+  })
+
+  it("campuran: warning dibuang, error tetap", () => {
+    expect(filterJvmWarning(warning + "\njava.lang.Exception: x")).toBe("java.lang.Exception: x")
+  })
+
+  it("string kosong tetap kosong", () => {
+    expect(filterJvmWarning("")).toBe("")
   })
 })
 

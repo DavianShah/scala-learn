@@ -18,6 +18,11 @@ export default defineConfig({
     outDir: "dist",
     sourcemap: false,
   },
+  preview: {
+    host: "127.0.0.1",
+    // preview lokal bisa dibuka lewat tunnel (ngrok/cloudflared) saat development
+    allowedHosts: true,
+  },
   test: {
     environment: "node",
     include: ["src/**/*.test.ts"],

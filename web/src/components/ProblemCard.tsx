@@ -1,6 +1,6 @@
 import { useState } from "react"
 import type { Problem, TestCase } from "../lib/types"
-import { LIMITS, normalizeOutput, runCode, truncate } from "../lib/judge0"
+import { LIMITS, filterJvmWarning, normalizeOutput, runCode, truncate } from "../lib/judge0"
 import type { RunResult, RunStatus } from "../lib/judge0"
 import { Markdown } from "./Markdown"
 
@@ -228,16 +228,18 @@ function firstVisibleInput(problem: Problem): string {
 
 function OutputPanel({ result }: { result: RunResult }) {
   const ui = STATUS_UI[result.status]
+  const compileOut = filterJvmWarning(result.compileOutput)
+  const errOut = filterJvmWarning(result.stderr)
   return (
     <div className="output">
       <div className="output-head">
         <span className={`badge ${ui.cls}`}>{ui.label}</span>
         <span className="muted">{result.timeMs} ms</span>
       </div>
-      {result.compileOutput && (
+      {compileOut && (
         <>
           <div className="field-label">Compile output</div>
-          <pre className="err-text">{truncate(result.compileOutput, LIMITS.max_output_bytes)}</pre>
+          <pre className="err-text">{truncate(compileOut, LIMITS.max_output_bytes)}</pre>
         </>
       )}
       {result.stdout && (
@@ -246,10 +248,10 @@ function OutputPanel({ result }: { result: RunResult }) {
           <pre>{truncate(result.stdout, LIMITS.max_output_bytes)}</pre>
         </>
       )}
-      {result.stderr && (
+      {errOut && (
         <>
           <div className="field-label">stderr</div>
-          <pre className="err-text">{truncate(result.stderr, LIMITS.max_output_bytes)}</pre>
+          <pre className="err-text">{truncate(errOut, LIMITS.max_output_bytes)}</pre>
         </>
       )}
     </div>

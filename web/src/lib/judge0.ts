@@ -81,3 +81,19 @@ export function normalizeOutput(s: string): string {
 export function truncate(s: string, max: number): string {
   return s.length > max ? s.slice(0, max) + "\n… (dipotong)" : s
 }
+
+// JVM modern (JDK 23+) menaruh peringatan ini di stderr + compile_output saat
+// Scala 3 memakai `lazy val` (scala.runtime.LazyVals$ -> sun.misc.Unsafe).
+// Bukan error, dan TIDAK masuk stdout — perbandingan jawaban tetap akurat.
+// Disaring hanya supaya panel output tidak menakut-nakuti pemula.
+const JVM_UNSAFE_WARNING =
+  /^WARNING: (A terminally deprecated method in sun\.misc\.Unsafe has been called|sun\.misc\.Unsafe::\w+ has been called by .+|Please consider reporting this to the maintainers of class .+|sun\.misc\.Unsafe::\w+ will be removed in a future release)\s*$/
+
+export function filterJvmWarning(text: string): string {
+  if (!text) return ""
+  return text
+    .split("\n")
+    .filter((line) => !JVM_UNSAFE_WARNING.test(line.trim()))
+    .join("\n")
+    .trim()
+}

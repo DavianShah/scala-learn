@@ -1,6 +1,6 @@
 import { useState } from "react"
 import type { LessonBlock, Stage } from "../lib/types"
-import { LIMITS, runCode, truncate } from "../lib/judge0"
+import { LIMITS, filterJvmWarning, runCode, truncate } from "../lib/judge0"
 import type { RunResult } from "../lib/judge0"
 import type { Progress } from "../lib/progress"
 import { Markdown } from "./Markdown"
@@ -122,11 +122,15 @@ function CodeBlock({
       )}
       {output !== undefined && <pre className="expected">Output: {output}</pre>}
       {result && result.stdout && <pre>{truncate(result.stdout, LIMITS.max_output_bytes)}</pre>}
-      {result && result.compileOutput && (
-        <pre className="err-text">{truncate(result.compileOutput, LIMITS.max_output_bytes)}</pre>
+      {result && filterJvmWarning(result.compileOutput) && (
+        <pre className="err-text">
+          {truncate(filterJvmWarning(result.compileOutput), LIMITS.max_output_bytes)}
+        </pre>
       )}
-      {result && result.stderr && (
-        <pre className="err-text">{truncate(result.stderr, LIMITS.max_output_bytes)}</pre>
+      {result && filterJvmWarning(result.stderr) && (
+        <pre className="err-text">
+          {truncate(filterJvmWarning(result.stderr), LIMITS.max_output_bytes)}
+        </pre>
       )}
     </div>
   )

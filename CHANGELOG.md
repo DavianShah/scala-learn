@@ -16,3 +16,8 @@
 ### Catatan
 - Entry point Scala wajib `object Main { def main(args: Array[String]): Unit = ... }` (batas Judge0).
 - Contoh kode materi yang butuh stdin ditandai `runnable: false`.
+
+## 2026-11-13 — fix: warning JVM di panel output
+
+### Diubah
+- Panel output menyaring warning `sun.misc.Unsafe` dari JDK modern. Warning itu muncul di `stderr`/`compile_output` saat Scala 3 memakai `lazy val`; **stdout tetap bersih**, jadi penilaian soal tidak terpengaruh. Disaring hanya supaya panel tidak menakut-nakuti pemula.
