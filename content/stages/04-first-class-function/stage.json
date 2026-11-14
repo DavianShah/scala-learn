@@ -18,7 +18,7 @@
   "lesson": [
     {
       "type": "text",
-      "body": "Di Scala, fungsi adalah **first-class object**: dia bisa disimpan di variabel, dikirim sebagai argumen, dan dikembalikan oleh fungsi lain — sama seperti nilai lain. Penulisannya pakai panah `=>`."
+      "body": "Di Scala, fungsi adalah **first-class object**: dia bisa disimpan di variabel, dikirim sebagai argumen, dan dikembalikan oleh fungsi lain, sama seperti nilai lain. Penulisannya pakai panah `=>`."
     },
     {
       "type": "code",
@@ -48,7 +48,7 @@
     },
     {
       "type": "text",
-      "body": "Fungsi yang menerima fungsi lalu menerapkannya dua kali: `applyTwice`. Ini inti dari gaya fungsional — perilaku dibentuk dengan menggabung-gabungkan fungsi."
+      "body": "Fungsi yang menerima fungsi lalu menerapkannya dua kali: `applyTwice`. Ini inti dari gaya fungsional: perilaku dibentuk dengan menggabung-gabungkan fungsi."
     },
     {
       "type": "code",

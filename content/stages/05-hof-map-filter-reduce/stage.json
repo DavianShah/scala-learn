@@ -39,7 +39,7 @@
     },
     {
       "type": "text",
-      "body": "`filter` menyaring: elemen yang **fungsinya mengembalikan `true`** dipertahankan. Lamda-nya disebut *predicate* — selalu bertipe `Boolean`."
+      "body": "`filter` menyaring: elemen yang **fungsinya mengembalikan `true`** dipertahankan. Lamda-nya disebut *predicate*, selalu bertipe `Boolean`."
     },
     {
       "type": "code",
@@ -69,7 +69,7 @@
     },
     {
       "type": "pitfall",
-      "body": "`List.range(1, 100)` menghasilkan 1 sampai **99**, bukan 100 — batas kanan tidak termasuk. Kalau soalnya minta \"1 sampai 100\", tulis `List.range(1, 101)` atau `1 to 100`.\n\nKesalahan kedua: `reduce` pada list **kosong** melempar exception. Kalau list bisa kosong, pakai `foldLeft(0)(_ + _)` atau `.sum` yang punya nilai awal.\n\nKetiga: `line.trim.split(\"\\\\s+\")` — kalau `line` kosong, hasilnya array berisi satu string kosong dan `.toInt` gagal. Tambahkan `.filter(_.nonEmpty)` untuk aman."
+      "body": "`List.range(1, 100)` menghasilkan 1 sampai **99**, bukan 100. Batas kanan tidak termasuk. Kalau soalnya minta \"1 sampai 100\", tulis `List.range(1, 101)` atau `1 to 100`.\n\nKesalahan kedua: `reduce` pada list **kosong** melempar exception. Kalau list bisa kosong, pakai `foldLeft(0)(_ + _)` atau `.sum` yang punya nilai awal.\n\nKetiga: `line.trim.split(\"\\\\s+\")`. Kalau `line` kosong, hasilnya array berisi satu string kosong dan `.toInt` gagal. Tambahkan `.filter(_.nonEmpty)` untuk aman."
     },
     {
       "type": "recap",

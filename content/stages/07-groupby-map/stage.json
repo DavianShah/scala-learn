@@ -64,13 +64,13 @@
     },
     {
       "type": "pitfall",
-      "body": "HashMap **tidak menjamin urutan**. Kalau lu mencetak Map langsung, urutannya bisa beda antar jalan. Untuk output yang stabil, selalu `toSeq.sortBy(_._1)` atau `sortWith(_._1 < _._1)` sebelum dicetak.\n\nKesalahan kedua: `groupBy` pada list kosong menghasilkan Map kosong, bukan error — jadi aman, tapi pastikan kode lu menangani Map kosong dengan benar."
+      "body": "HashMap **tidak menjamin urutan**. Kalau lu mencetak Map langsung, urutannya bisa beda antar jalan. Untuk output yang stabil, selalu `toSeq.sortBy(_._1)` atau `sortWith(_._1 < _._1)` sebelum dicetak.\n\nKesalahan kedua: `groupBy` pada list kosong menghasilkan Map kosong, bukan error. Jadi aman, tapi pastikan kode lu menangani Map kosong dengan benar."
     },
     {
       "type": "recap",
       "items": [
         "`groupBy(f)` menghasilkan Map: kunci = hasil `f`, nilai = list elemen yang cocok.",
-        "Urutan HashMap tidak dijamin — urutkan dengan `toSeq.sortBy(_._1)` sebelum mencetak.",
+        "Urutan HashMap tidak dijamin. Urutkan dengan `toSeq.sortBy(_._1)` sebelum mencetak.",
         "Frekuensi: `list.groupBy(x => x).map { case (k, v) => k -> v.length }`."
       ]
     }

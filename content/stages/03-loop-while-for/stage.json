@@ -28,7 +28,7 @@
     },
     {
       "type": "text",
-      "body": "`while` mengulang blok selama kondisinya `true`. Di contoh di atas `i += 1` wajib ada — kalau lupa, `i` tidak pernah bertambah dan program berputar selamanya.\n\n`for` lebih ringkas untuk menelusuri rentang. Sintaksnya `for (a <- rentang) { ... }`, dibaca: \"untuk tiap `a` di rentang\"."
+      "body": "`while` mengulang blok selama kondisinya `true`. Di contoh di atas `i += 1` wajib ada. Kalau lupa, `i` tidak pernah bertambah dan program berputar selamanya.\n\n`for` lebih ringkas untuk menelusuri rentang. Sintaksnya `for (a <- rentang) { ... }`, dibaca: \"untuk tiap `a` di rentang\"."
     },
     {
       "type": "code",

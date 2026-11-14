@@ -18,7 +18,7 @@
   "lesson": [
     {
       "type": "text",
-      "body": "`foreach` mirip `map`, tapi bedanya fundamental: `map` menghasilkan **koleksi baru**, sedangkan `foreach` menghasilkan **`Unit`** — dia dipakai untuk efek samping, biasanya mencetak ke console."
+      "body": "`foreach` mirip `map`, tapi bedanya fundamental: `map` menghasilkan **koleksi baru**, sedangkan `foreach` menghasilkan **`Unit`**. Dia dipakai untuk efek samping, biasanya mencetak ke console."
     },
     {
       "type": "code",
@@ -48,7 +48,7 @@
     },
     {
       "type": "text",
-      "body": "Sekarang gabungkan semuanya jadi satu pipeline — filter, urutkan, balik, lalu kapital. Ini pola yang akan sering lu pakai."
+      "body": "Sekarang gabungkan semuanya jadi satu pipeline: filter, urutkan, balik, lalu kapital. Ini pola yang akan sering lu pakai."
     },
     {
       "type": "code",
@@ -58,7 +58,7 @@
     },
     {
       "type": "pitfall",
-      "body": "`foreach` mengembalikan `Unit`, jadi `val x = dt.foreach(...)` itu `x` bernilai `()` — bukan list. Kalau lu mau menyimpan hasil transformasi, pakai `map`.\n\nKesalahan kedua: `sortWith(_ > _)` mengurutkan **turun** (dari besar ke kecil), bukan naik. `sortBy(_.length)` mengurutkan naik berdasarkan panjang; kalau mau turun, pakai `.sortBy(_.length).reverse` atau `sortWith(_.length > _.length)`.\n\nKetiga: `s.reverse` membalik **seluruh karakter** String, bukan kata-kata. Untuk membalik urutan kata, `s.split(\" \").reverse`."
+      "body": "`foreach` mengembalikan `Unit`, jadi `val x = dt.foreach(...)` itu `x` bernilai `()`, bukan list. Kalau lu mau menyimpan hasil transformasi, pakai `map`.\n\nKesalahan kedua: `sortWith(_ > _)` mengurutkan **turun** (dari besar ke kecil), bukan naik. `sortBy(_.length)` mengurutkan naik berdasarkan panjang; kalau mau turun, pakai `.sortBy(_.length).reverse` atau `sortWith(_.length > _.length)`.\n\nKetiga: `s.reverse` membalik **seluruh karakter** String, bukan kata-kata. Untuk membalik urutan kata, `s.split(\" \").reverse`."
     },
     {
       "type": "recap",

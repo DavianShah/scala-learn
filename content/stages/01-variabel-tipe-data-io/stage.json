@@ -57,7 +57,7 @@
     {
       "type": "recap",
       "items": [
-        "`val` untuk nilai tetap, `var` untuk nilai yang bisa berubah — utamakan `val`.",
+        "`val` untuk nilai tetap, `var` untuk nilai yang bisa berubah. Utamakan `val`.",
         "Tipe data dasar: `Int`, `Double`, `Boolean`, `String`, `Char`.",
         "Baca input dengan `scala.io.StdIn` (`readLine`, `readInt`, `readDouble`), cetak dengan `println`."
       ]

@@ -1,259 +1,341 @@
-import { useState } from "react"
-import type { Problem, TestCase } from "../lib/types"
-import { LIMITS, filterJvmWarning, normalizeOutput, runCode, truncate } from "../lib/judge0"
-import type { RunResult, RunStatus } from "../lib/judge0"
+import { useEffect, useRef, useState } from "react"
+import type { Problem } from "../lib/types"
+import {
+  filterJvmWarning,
+  normalizeOutput,
+  runCode,
+  truncate,
+  type RunResult,
+} from "../lib/judge0"
+import { Icon } from "./Icon"
+import { Confetti } from "./Confetti"
 import { Markdown } from "./Markdown"
 
-interface TestOutcome {
-  test: TestCase
-  ok: boolean
-  actual: string
-  status: RunStatus
-  timeMs: number
+const MAX_OUT = 4000
+
+const STATUS_UI: Record<RunResult["status"], string> = {
+  ok: "Jalan tanpa error",
+  compile_error: "Error kompilasi",
+  runtime_error: "Error saat jalan",
+  timeout: "Waktu jalan habis",
+  memory_limit: "Memori habis",
+  internal: "Sandbox bermasalah",
+  unknown: "Status tidak dikenal",
 }
 
-interface Props {
+export interface Props {
   problem: Problem
   solved: boolean
-  hintLevel: number
-  savedCode: string
-  onSolved: (id: string) => void
-  onHint: (id: string, level: number) => void
-  onCodeChange: (id: string, code: string) => void
+  initialCode: string
+  onCodeChange: (code: string) => void
+  onSolved: () => void
 }
 
-const STATUS_UI: Record<RunStatus, { label: string; cls: string }> = {
-  ok: { label: "Accepted", cls: "st-ok" },
-  compile_error: { label: "Compilation Error", cls: "st-err" },
-  runtime_error: { label: "Runtime Error", cls: "st-err" },
-  timeout: { label: "Time Limit Exceeded", cls: "st-err" },
-  memory_limit: { label: "Memory Limit Exceeded", cls: "st-err" },
-  internal: { label: "Runner error", cls: "st-err" },
-  unknown: { label: "Status tak dikenal", cls: "st-err" },
+interface TestOutcome {
+  idx: number
+  pass: boolean
+  got: string
+  hidden: boolean
 }
 
-async function mapLimit<T, R>(
-  items: T[],
-  limit: number,
-  fn: (item: T, index: number) => Promise<R>,
-): Promise<R[]> {
-  const out: R[] = new Array(items.length)
-  let cursor = 0
-  async function worker(): Promise<void> {
-    while (cursor < items.length) {
-      const i = cursor++
-      out[i] = await fn(items[i], i)
-    }
-  }
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker))
-  return out
-}
-
-export function ProblemCard(props: Props) {
-  const { problem } = props
-  const [code, setCode] = useState(props.savedCode || problem.starter)
-  const [input, setInput] = useState(() => firstVisibleInput(problem))
-  const [output, setOutput] = useState<RunResult | null>(null)
-  const [running, setRunning] = useState(false)
-  const [checking, setChecking] = useState(false)
-  const [results, setResults] = useState<TestOutcome[] | null>(null)
+export function ProblemCard({
+  problem,
+  solved,
+  initialCode,
+  onCodeChange,
+  onSolved,
+}: Props) {
+  const [code, setCode] = useState(initialCode)
+  const [busy, setBusy] = useState(false)
+  const [out, setOut] = useState("")
+  const [verdict, setVerdict] = useState<"ok" | "bad" | "compile" | "error" | null>(null)
+  const [detail, setDetail] = useState("")
+  const [tests, setTests] = useState<TestOutcome[] | null>(null)
+  const [revealed, setRevealed] = useState(false)
   const [showSolution, setShowSolution] = useState(false)
-  const [justSolved, setJustSolved] = useState(false)
+  const [hints, setHints] = useState(0)
+  const [shakeKey, setShakeKey] = useState(0)
+  const [burst, setBurst] = useState(0)
+  const [copied, setCopied] = useState<"starter" | "solution" | null>(null)
+  const alreadyFired = useRef(false)
 
-  function updateCode(next: string) {
-    setCode(next)
-    props.onCodeChange(problem.id, next)
+  useEffect(() => {
+    setCode(initialCode)
+    setOut("")
+    setVerdict(null)
+    setDetail("")
+    setTests(null)
+    setRevealed(false)
+    setShowSolution(false)
+    setHints(0)
+    alreadyFired.current = false
+  }, [problem.id, initialCode])
+
+  const handleCode = (value: string) => {
+    setCode(value)
+    onCodeChange(value)
   }
 
-  async function run(): Promise<void> {
-    setRunning(true)
-    setOutput(null)
-    setJustSolved(false)
-    const r = await runCode(code, input)
-    setOutput(r)
-    setRunning(false)
+  const handleRun = async () => {
+    setBusy(true)
+    setVerdict(null)
+    setTests(null)
+    const res = await runCode(code, "")
+    setOut(
+      normalizeOutput(res.stdout || filterJvmWarning(res.compileOutput)) || "(tidak ada output)",
+    )
+    if (res.status !== "ok") {
+      setVerdict(res.status === "compile_error" ? "compile" : "error")
+      setDetail(
+        filterJvmWarning(res.compileOutput || res.stderr) ||
+          STATUS_UI[res.status] ||
+          "Tanpa detail",
+      )
+      setShakeKey((k) => k + 1)
+    }
+    setBusy(false)
   }
 
-  async function check(): Promise<void> {
-    setChecking(true)
-    setResults(null)
-    setJustSolved(false)
-    const outcomes = await mapLimit(problem.tests, 3, async (t) => {
-      const r = await runCode(code, t.input)
+  const handleCheck = async () => {
+    setBusy(true)
+    setVerdict(null)
+    setTests(null)
+    // Tiap tes dijalankan sendiri-sendiri: program biasanya baca satu baris
+    // per eksekusi, jadi menggabung semua input akan menghasilkan output salah.
+    const results = await Promise.all(problem.tests.map((t) => runCode(code, t.input)))
+    const outcomes: TestOutcome[] = problem.tests.map((t, i) => {
+      const res = results[i]
       return {
-        test: t,
-        ok: r.status === "ok" && normalizeOutput(r.stdout) === normalizeOutput(t.expected),
-        actual: r.stdout,
-        status: r.status,
-        timeMs: r.timeMs,
+        idx: i,
+        pass: res.status === "ok" && normalizeOutput(res.stdout) === normalizeOutput(t.expected),
+        got: normalizeOutput(res.stdout),
+        hidden: t.hidden,
       }
     })
-    setResults(outcomes)
-    setChecking(false)
-    if (outcomes.length > 0 && outcomes.every((o) => o.ok)) {
-      props.onSolved(problem.id)
-      setJustSolved(true)
+    const allPass = outcomes.every((o) => o.pass)
+    setTests(outcomes)
+
+    if (allPass) {
+      const slowest = Math.max(...results.map((r) => r.timeMs))
+      setVerdict("ok")
+      setDetail(`${slowest} ms · ${outcomes.length}/${outcomes.length} tes lolos`)
+      if (!alreadyFired.current) {
+        alreadyFired.current = true
+        setBurst((b) => b + 1)
+        onSolved()
+      }
+    } else {
+      const bad = results.find((r) => r.status !== "ok")
+      if (bad) {
+        setVerdict(bad.status === "compile_error" ? "compile" : "error")
+        setDetail(
+          filterJvmWarning(bad.compileOutput || bad.stderr) ||
+            STATUS_UI[bad.status] ||
+            "Tanpa detail",
+        )
+      } else {
+        setVerdict("bad")
+        const failed = outcomes.filter((o) => !o.pass).length
+        setDetail(`${failed} dari ${outcomes.length} tes belum cocok`)
+      }
+      setShakeKey((k) => k + 1)
+    }
+    setBusy(false)
+  }
+
+  const copy = async (text: string, which: "starter" | "solution") => {
+    const ok = await navigator.clipboard.writeText(text).catch(() => false)
+    if (ok) {
+      setCopied(which)
+      setTimeout(() => setCopied(null), 1500)
     }
   }
 
-  const passed = results?.filter((r) => r.ok).length ?? 0
-  const solvedNow = props.solved || justSolved
+  const verdictUi = {
+    ok: { cls: "verdict-ok", icon: "circle-check" as const, label: "Lolos semua tes" },
+    bad: { cls: "verdict-bad", icon: "circle-xmark" as const, label: "Belum lolos" },
+    compile: { cls: "verdict-compile", icon: "exclamation-circle" as const, label: "Error kompilasi" },
+    error: { cls: "verdict-error", icon: "exclamation-circle" as const, label: "Error saat jalan" },
+  }
 
   return (
-    <section className="problem" id={problem.id}>
-      <header className="problem-head">
-        <h3>
-          {solvedNow ? "✅ " : ""}
-          {problem.title}
-        </h3>
-        <span className={`diff d${problem.difficulty}`}>
-          {problem.difficulty === 1 ? "mudah" : "menantang"}
-        </span>
-      </header>
-
-      <Markdown source={problem.statement} />
-
-      <label className="field-label" htmlFor={`${problem.id}-input`}>
-        Input (stdin)
-      </label>
-      <textarea
-        id={`${problem.id}-input`}
-        className="stdin"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        rows={2}
-        spellCheck={false}
-      />
-
-      <label className="field-label" htmlFor={`${problem.id}-code`}>
-        Kode
-      </label>
-      <textarea
-        id={`${problem.id}-code`}
-        className="code"
-        value={code}
-        onChange={(e) => updateCode(e.target.value)}
-        rows={Math.min(28, code.split("\n").length + 2)}
-        spellCheck={false}
-        autoCapitalize="off"
-        autoCorrect="off"
-      />
-
-      <div className="actions">
-        <button onClick={run} disabled={running || checking}>
-          {running ? "Menjalankan…" : "▶ Run"}
-        </button>
-        <button className="primary" onClick={check} disabled={running || checking}>
-          {checking ? "Memeriksa…" : "✔ Cek jawaban"}
-        </button>
-        <span className="hint-group">
-          {problem.hints.map((h, i) =>
-            props.hintLevel > i ? null : (
-              <button
-                key={i}
-                className="ghost"
-                onClick={() => props.onHint(problem.id, i + 1)}
-                title={h}
-              >
-                Petunjuk {i + 1}
-              </button>
-            ),
-          )}
+    <article className={`problem${solved ? " is-solved" : ""}`} id={problem.id}>
+      <Confetti burstKey={burst} />
+      <div className="problem-head">
+        <div className="problem-title-wrap">
+          <h3 className="problem-title">{problem.title}</h3>
+          <span className={`diff diff-${problem.difficulty}`}>
+            {problem.difficulty === 1 ? "Dasar" : "Lanjutan"}
+          </span>
+        </div>
+        <span className="problem-state">
+          {solved ? <Icon name="circle-check" size={18} /> : <Icon name="circle-blank" size={18} />}
         </span>
       </div>
 
-      {props.hintLevel > 0 && (
-        <div className="hints">
-          {problem.hints.slice(0, props.hintLevel).map((h, i) => (
-            <p key={i}>
-              <strong>Petunjuk {i + 1}.</strong> {h}
-            </p>
+      <p className="problem-statement">
+        <Markdown source={problem.statement} />
+      </p>
+
+      <textarea
+        className="editor"
+        value={code}
+        spellCheck={false}
+        onChange={(e) => handleCode(e.target.value)}
+        aria-label={`Editor kode soal ${problem.title}`}
+      />
+
+      <div className="problem-actions">
+        <button className="btn btn-ghost" onClick={handleRun} type="button" disabled={busy}>
+          <Icon name={busy ? "spinner" : "play"} size={15} className={busy ? "spin" : ""} />
+          Jalankan
+        </button>
+        <button className="btn btn-primary" onClick={handleCheck} type="button" disabled={busy}>
+          <Icon name={busy ? "spinner" : "check"} size={15} className={busy ? "spin" : ""} />
+          Cek jawaban
+        </button>
+        <button
+          className="btn btn-ghost"
+          onClick={() => copy(code, "starter")}
+          type="button"
+          disabled={busy}
+        >
+          <Icon name={copied === "starter" ? "check" : "copy"} size={15} />
+          Salin
+        </button>
+        <button
+          className="btn btn-ghost"
+          onClick={() => setRevealed((r) => !r)}
+          type="button"
+          aria-expanded={revealed}
+        >
+          <Icon name="lightbulb" size={15} />
+          {revealed ? "Tutup petunjuk" : "Petunjuk"}
+        </button>
+      </div>
+
+      {out ? (
+        <div className="output" style={{ marginTop: 14 }}>
+          <div className="code-head">
+            <span className="code-label">
+              <Icon name="terminal" size={13} />
+              Output program
+            </span>
+          </div>
+          <pre>
+            <code>{truncate(out, MAX_OUT)}</code>
+          </pre>
+        </div>
+      ) : null}
+
+      {verdict ? (
+        <div key={shakeKey} className={`verdict ${verdictUi[verdict].cls}${shakeKey ? " shake" : ""}`}>
+          <Icon name={verdictUi[verdict].icon} size={18} className={verdict === "ok" ? "pop" : ""} />
+          <div>
+            <strong>{verdictUi[verdict].label}</strong>
+            {detail ? <div className="verdict-detail">{detail}</div> : null}
+          </div>
+        </div>
+      ) : null}
+
+      {tests ? (
+        <div className="tests">
+          <div className="tests-title">Hasil tes</div>
+          {tests.map((t) => (
+            <div className={`test ${t.pass ? "test-pass" : "test-fail"}`} key={t.idx}>
+              <div className="test-row">
+                <span className="test-icon">
+                  <Icon name={t.pass ? "check" : "xmark"} size={14} />
+                </span>
+                <span className={t.hidden ? "test-hidden" : "test-head"}>
+                  Tes {t.idx + 1}
+                  {t.hidden ? " (tersembunyi)" : ""}
+                </span>
+              </div>
+              {!t.hidden ? (
+                <div className="test-io">
+                  <div className="test-io-row">
+                    <span className="test-io-label">input</span>
+                    <pre>{problem.tests[t.idx].input || "(kosong)"}</pre>
+                  </div>
+                  <div className="test-io-row">
+                    <span className="test-io-label">harus</span>
+                    <pre className="test-expected">{problem.tests[t.idx].expected}</pre>
+                  </div>
+                  <div className="test-io-row">
+                    <span className="test-io-label">jawaban</span>
+                    <pre className={`test-got ${t.pass ? "" : "bad"}`}>{t.got || "(kosong)"}</pre>
+                  </div>
+                </div>
+              ) : null}
+            </div>
           ))}
         </div>
-      )}
+      ) : null}
 
-      {output && <OutputPanel result={output} />}
-      {results && (
-        <div className="results">
-          <p className={passed === results.length ? "res-ok" : "res-bad"}>
-            {passed}/{results.length} test lulus
-          </p>
-          <ul>
-            {results.map((r, i) => (
-              <li key={i} className={r.ok ? "res-ok" : "res-bad"}>
-                <span>
-                  Test {i + 1}
-                  {r.test.hidden ? " (tersembunyi)" : ""} — {STATUS_UI[r.status].label} (
-                  {r.timeMs} ms)
-                </span>
-                {!r.ok && !r.test.hidden && (
-                  <pre>
-                    input: {JSON.stringify(r.test.input)}
-                    {"\n"}expected: {JSON.stringify(r.test.expected)}
-                    {"\n"}actual: {JSON.stringify(r.actual)}
-                  </pre>
-                )}
-              </li>
-            ))}
-          </ul>
+      {revealed ? (
+        <div className="hint">
+          <div className="hint-title">
+            <Icon name="lightbulb" size={15} />
+            Petunjuk
+          </div>
+          {problem.hints.slice(0, hints + 1).map((h, i) => (
+            <div className="hint-item" key={i}>
+              <Markdown source={h} />
+            </div>
+          ))}
+          {hints < problem.hints.length - 1 ? (
+            <button
+              className="btn btn-ghost btn-sm"
+              style={{ marginTop: 10 }}
+              onClick={() => setHints((h) => h + 1)}
+              type="button"
+            >
+              <Icon name="chevron-down" size={14} />
+              Petunjuk berikutnya
+            </button>
+          ) : null}
         </div>
-      )}
-
-      {justSolved && <p className="banner-ok">Lulus semua test! Progress tersimpan. 🎉</p>}
-      {solvedNow && !justSolved && <p className="banner-ok">Soal ini sudah lu selesaikan.</p>}
+      ) : null}
 
       <div className="solution">
-        {!showSolution ? (
-          <button className="ghost" onClick={() => setShowSolution(true)}>
-            {solvedNow ? "Lihat solusi" : "Menyerah — lihat solusi"}
+        <div className="solution-head">
+          <span className="solution-title">
+            <Icon name={showSolution ? "eye" : "lock"} size={14} />
+            {showSolution ? "Solusi dosen" : "Solusi dosen (terkunci)"}
+          </span>
+          <button
+            className="btn btn-ghost btn-sm"
+            onClick={() => setShowSolution((s) => !s)}
+            type="button"
+            aria-expanded={showSolution}
+          >
+            <Icon name={showSolution ? "xmark" : "eye"} size={14} />
+            {showSolution ? "Tutup" : "Lihat"}
           </button>
-        ) : (
+        </div>
+        {showSolution ? (
           <>
-            <div className="field-label">Solusi referensi</div>
-            <pre className="solution-code">{problem.solution}</pre>
-            <p>
-              <strong>Penjelasan.</strong> {problem.explanation}
-            </p>
+            <pre>
+              <code>{problem.solution}</code>
+            </pre>
+            <p className="expl">{problem.explanation}</p>
+            <button
+              className="btn btn-ghost btn-sm"
+              style={{ marginTop: 10 }}
+              onClick={() => copy(problem.solution, "solution")}
+              type="button"
+            >
+              <Icon name={copied === "solution" ? "check" : "copy"} size={14} />
+              Salin solusi
+            </button>
           </>
+        ) : (
+          <p className="expl" style={{ margin: 0 }}>
+            Coba dulu pakai petunjuk. Solusi dibuka kalau kamu masih mentok.
+          </p>
         )}
       </div>
-    </section>
-  )
-}
-
-function firstVisibleInput(problem: Problem): string {
-  const visible = problem.tests.find((t) => !t.hidden)
-  return visible ? visible.input : ""
-}
-
-function OutputPanel({ result }: { result: RunResult }) {
-  const ui = STATUS_UI[result.status]
-  const compileOut = filterJvmWarning(result.compileOutput)
-  const errOut = filterJvmWarning(result.stderr)
-  return (
-    <div className="output">
-      <div className="output-head">
-        <span className={`badge ${ui.cls}`}>{ui.label}</span>
-        <span className="muted">{result.timeMs} ms</span>
-      </div>
-      {compileOut && (
-        <>
-          <div className="field-label">Compile output</div>
-          <pre className="err-text">{truncate(compileOut, LIMITS.max_output_bytes)}</pre>
-        </>
-      )}
-      {result.stdout && (
-        <>
-          <div className="field-label">stdout</div>
-          <pre>{truncate(result.stdout, LIMITS.max_output_bytes)}</pre>
-        </>
-      )}
-      {errOut && (
-        <>
-          <div className="field-label">stderr</div>
-          <pre className="err-text">{truncate(errOut, LIMITS.max_output_bytes)}</pre>
-        </>
-      )}
-    </div>
+    </article>
   )
 }

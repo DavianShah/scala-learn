@@ -4,7 +4,7 @@ Web belajar pemrograman **Scala 3** untuk pemula — bahasa Indonesia, santai, d
 
 ## Stack
 
-- **Frontend:** Vite + React + TypeScript. Output statis, deploy ke Vercel.
+- **Frontend:** Vite + React + TypeScript. Output statis, deploy ke Vercel. Tema terang hangat, ikon Nerd Font (bukan emoji). Detail arah desain di `DESIGN.md`.
 - **Runner:** [Judge0 CE publik](https://ce.judge0.com) (Scala 3.4.2). Kode pelajar **hanya** jalan di sandbox Judge0.
 - **Konten:** `content/stages/<NN-slug>/stage.json`.
 

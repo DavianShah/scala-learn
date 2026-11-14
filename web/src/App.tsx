@@ -1,210 +1,203 @@
-import { useEffect, useState } from "react"
-import { getStage, nextStageId, stages } from "./lib/content"
+import { useCallback, useEffect, useState } from "react"
 import type { Stage } from "./lib/types"
-import { exportProgress, importProgress, loadProgress, resetProgress, saveProgress } from "./lib/progress"
-import type { Progress } from "./lib/progress"
+import { stages } from "./lib/content"
+import {
+  exportProgress,
+  importProgress,
+  loadProgress,
+  resetProgress,
+  saveProgress,
+  type Progress,
+} from "./lib/progress"
+import { Icon } from "./components/Icon"
 import { StageView } from "./components/StageView"
 
-function useHashRoute(): string {
-  const [hash, setHash] = useState(() => window.location.hash.replace(/^#/, "") || "/")
+function readHash(): string {
+  return window.location.hash.replace(/^#/, "")
+}
+
+async function copyText(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch {
+    return false
+  }
+}
+
+function Home({
+  progress,
+  onProgress,
+}: {
+  progress: Progress
+  onProgress: (p: Progress) => void
+}) {
+  const totalProblems = stages.reduce((n, s) => n + s.problems.length, 0)
+  const solvedProblems = Object.values(progress.solved).filter(Boolean).length
+  const pct = totalProblems ? Math.round((solvedProblems / totalProblems) * 100) : 0
+
+  const [toast, setToast] = useState<string | null>(null)
+
   useEffect(() => {
-    const on = () => setHash(window.location.hash.replace(/^#/, "") || "/")
-    window.addEventListener("hashchange", on)
-    return () => window.removeEventListener("hashchange", on)
-  }, [])
-  return hash
+    if (!toast) return
+    const t = setTimeout(() => setToast(null), 2200)
+    return () => clearTimeout(t)
+  }, [toast])
+
+  const handleExport = async () => {
+    const ok = await copyText(exportProgress(progress))
+    setToast(ok ? "Progres disalin sebagai JSON" : "Gagal menyalin")
+  }
+
+  const handleImport = async () => {
+    const text = await navigator.clipboard.readText().catch(() => null)
+    if (text === null) {
+      setToast("Clipboard tidak bisa dibaca")
+      return
+    }
+    const parsed = importProgress(text)
+    if (!parsed) {
+      setToast("JSON progres tidak valid")
+      return
+    }
+    onProgress(parsed)
+    setToast("Progres dimuat")
+  }
+
+  const handleReset = () => {
+    onProgress(resetProgress())
+    setToast("Progres direset")
+  }
+
+  return (
+    <section className="home">
+      <div className="hero">
+        <h1>Belajar Scala 3, satu langkah kecil tiap hari.</h1>
+        <p>
+          Materi pendek dari kuliah, lalu langsung jawab soal di browser. Kode
+          dijalankan di sandbox terpisah, jadi aman dan hasilnya langsung
+          dinilai.
+        </p>
+      </div>
+
+      <div className="progress">
+        <div className="progress-top">
+          <strong>
+            {solvedProblems} dari {totalProblems} soal selesai
+          </strong>
+          <span>{pct}%</span>
+        </div>
+        <div className="bar">
+          <div className="bar-fill" style={{ width: `${pct}%` }} />
+        </div>
+      </div>
+
+      <h2 className="section-label">Daftar stage</h2>
+      <div className="stage-grid">
+        {stages.map((stage) => {
+          const solved = stage.problems.filter((p) => progress.solved[p.id]).length
+          const done = solved === stage.problems.length
+          return (
+            <a
+              key={stage.id}
+              className={`stage-card${done ? " is-done" : ""}`}
+              href={`#${stage.id}`}
+            >
+              <span className="stage-num">
+                {done ? <Icon name="check" size={18} /> : stage.order}
+              </span>
+              <span>
+                <span className="stage-title">{stage.title}</span>
+                <span className="stage-meta">
+                  {solved}/{stage.problems.length} soal · minggu {stage.week}
+                </span>
+                <span className="concepts">
+                  {stage.concepts.slice(0, 3).map((c) => (
+                    <span className="concept" key={c}>
+                      {c}
+                    </span>
+                  ))}
+                </span>
+              </span>
+              <span className="stage-state">
+                <Icon name="chevron-right" size={16} />
+              </span>
+            </a>
+          )
+        })}
+      </div>
+
+      <div className="topbar-actions" style={{ marginTop: 28 }}>
+        <button className="btn btn-ghost btn-sm" onClick={handleExport} type="button">
+          <Icon name="upload" size={15} />
+          Ekspor
+        </button>
+        <button className="btn btn-ghost btn-sm" onClick={handleImport} type="button">
+          <Icon name="download" size={15} />
+          Impor
+        </button>
+        <button className="btn btn-ghost btn-sm" onClick={handleReset} type="button">
+          <Icon name="trash" size={15} />
+          Reset
+        </button>
+      </div>
+
+      {toast ? (
+        <div className="toast" role="status">
+          <Icon name="check" size={14} />
+          {toast}
+        </div>
+      ) : null}
+
+      <p className="footer-note">
+        Scala Learn · materi KOM120/KOM2205 · penilaian memakai Judge0 CE. Kode
+        pelajar tidak pernah jalan di mesin ini.
+      </p>
+    </section>
+  )
 }
 
 export default function App() {
-  const route = useHashRoute()
   const [progress, setProgress] = useState<Progress>(() => loadProgress())
-  const [message, setMessage] = useState("")
+  const [stageId, setStageId] = useState<string>(() => readHash())
+
+  useEffect(() => {
+    const onHash = () => {
+      setStageId(readHash())
+      window.scrollTo(0, 0)
+    }
+    window.addEventListener("hashchange", onHash)
+    return () => window.removeEventListener("hashchange", onHash)
+  }, [])
 
   useEffect(() => {
     saveProgress(progress)
   }, [progress])
 
-  function markSolved(id: string): void {
-    setProgress((p) => (p.solved[id] ? p : { ...p, solved: { ...p.solved, [id]: true } }))
-  }
+  const handleProgress = useCallback((p: Progress) => {
+    setProgress(p)
+  }, [])
 
-  function openHint(id: string, level: number): void {
-    setProgress((p) => ({
-      ...p,
-      openedHints: { ...p.openedHints, [id]: Math.max(p.openedHints[id] ?? 0, level) },
-    }))
-  }
-
-  function saveCode(id: string, code: string): void {
-    setProgress((p) => ({ ...p, code: { ...p.code, [id]: code } }))
-  }
-
-  const stageMatch = route.match(/^\/stage\/(.+)$/)
-  const stage = stageMatch ? getStage(stageMatch[1]) : undefined
+  const stage: Stage | undefined = stages.find((s) => s.id === stageId)
 
   return (
     <div className="app">
       <header className="topbar">
         <a className="brand" href="#/">
-          Scala <span>Learn</span>
+          <span className="brand-mark">
+            <Icon name="terminal" size={17} />
+          </span>
+          Scala Learn
         </a>
-        <nav>
-          <a href="#/">Materi</a>
-          <a href="#/settings">Pengaturan</a>
-        </nav>
       </header>
 
-      {message && <div className="banner-ok">{message}</div>}
-
-      {route === "/settings" ? (
-        <Settings
-          progress={progress}
-          onReset={() => {
-            setProgress(resetProgress())
-            setMessage("Progress dihapus.")
-          }}
-          onImport={(json) => {
-            const p = importProgress(json)
-            if (p) {
-              setProgress(p)
-              setMessage("Progress dimuat.")
-            } else {
-              setMessage("JSON tidak valid.")
-            }
-          }}
-          onExport={() => exportProgress(progress)}
-        />
-      ) : stage ? (
-        <StageView
-          stage={stage}
-          progress={progress}
-          onSolved={markSolved}
-          onHint={openHint}
-          onCodeChange={saveCode}
-        />
-      ) : (
-        <Home progress={progress} />
-      )}
-
-      {stage && (
-        <div className="next-row">
-          {nextStageId(stage.id) ? (
-            <a className="primary" href={`#/stage/${nextStageId(stage.id)}`}>
-              Stage berikutnya →
-            </a>
-          ) : (
-            <span className="muted">Semua stage selesai. 🎉</span>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function unlocked(s: Stage, p: Progress): boolean {
-  return s.prerequisites.every((id) => {
-    const pre = stages.find((x) => x.id === id)
-    return pre ? pre.problems.every((pr) => p.solved[pr.id]) : true
-  })
-}
-
-function Home({ progress }: { progress: Progress }) {
-  const total = stages.length
-  const done = stages.filter((s) => s.problems.every((p) => progress.solved[p.id])).length
-  const pct = total ? Math.round((done / total) * 100) : 0
-
-  return (
-    <div className="home">
-      <h2>Materi Pemrograman Scala</h2>
-      <p className="muted">
-        {done}/{total} stage selesai · {pct}%
-      </p>
-      <div className="progressbar">
-        <div style={{ width: `${pct}%` }} />
-      </div>
-      <ol className="stage-list">
-        {stages.map((s) => {
-          const locked = !unlocked(s, progress)
-          const solvedCount = s.problems.filter((p) => progress.solved[p.id]).length
-          const all = solvedCount === s.problems.length
-          return (
-            <li key={s.id} className={locked ? "locked" : ""}>
-              <a href={`#/stage/${s.id}`}>
-                <span className="num">{s.order}</span>
-                <span className="t">
-                  <strong>{s.title}</strong>
-                  <span className="muted">
-                    Minggu {s.week} · {solvedCount}/{s.problems.length} soal
-                  </span>
-                </span>
-                <span className="state">{locked ? "🔒" : all ? "✅" : "▶"}</span>
-              </a>
-            </li>
-          )
-        })}
-      </ol>
-    </div>
-  )
-}
-
-function Settings({
-  progress,
-  onReset,
-  onImport,
-  onExport,
-}: {
-  progress: Progress
-  onReset: () => void
-  onImport: (json: string) => void
-  onExport: () => string
-}) {
-  const [json, setJson] = useState("")
-  return (
-    <div className="settings">
-      <h2>Pengaturan</h2>
-      <p className="muted">
-        Tersimpan di browser ini ({Object.keys(progress.solved).length} soal selesai). Tidak ada
-        akun, tidak ada server.
-      </p>
-      <div className="actions">
-        <button
-          className="ghost"
-          onClick={() => {
-            const blob = new Blob([onExport()], { type: "application/json" })
-            const a = document.createElement("a")
-            a.href = URL.createObjectURL(blob)
-            a.download = "scala-learn-progress.json"
-            a.click()
-            URL.revokeObjectURL(a.href)
-          }}
-        >
-          ⬇ Ekspor progress
-        </button>
-        <button
-          className="ghost"
-          onClick={() => {
-            if (window.confirm("Hapus semua progress?")) onReset()
-          }}
-        >
-          🗑 Reset progress
-        </button>
-      </div>
-      <label className="field-label" htmlFor="import">
-        Impor progress (tempel JSON)
-      </label>
-      <textarea
-        id="import"
-        className="code"
-        rows={4}
-        value={json}
-        onChange={(e) => setJson(e.target.value)}
-        spellCheck={false}
-      />
-      <div className="actions">
-        <button className="primary" onClick={() => onImport(json)} disabled={!json.trim()}>
-          Impor
-        </button>
-      </div>
+      <main>
+        {stage ? (
+          <StageView stage={stage} progress={progress} onProgress={handleProgress} />
+        ) : (
+          <Home progress={progress} onProgress={handleProgress} />
+        )}
+      </main>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-// Client Judge0 CE pubrik (https://ce.judge0.com) — Scala 3.4.2, language_id 112.
+// Client Judge0 CE pubrik (https://ce.judge0.com), Scala 3.4.2, language_id 112.
 // Kode pelajar HANYA jalan di sandbox Judge0, tidak pernah di browser.
 
 export type RunStatus =
@@ -84,7 +84,7 @@ export function truncate(s: string, max: number): string {
 
 // JVM modern (JDK 23+) menaruh peringatan ini di stderr + compile_output saat
 // Scala 3 memakai `lazy val` (scala.runtime.LazyVals$ -> sun.misc.Unsafe).
-// Bukan error, dan TIDAK masuk stdout — perbandingan jawaban tetap akurat.
+// Bukan error, dan TIDAK masuk stdout, jadi perbandingan jawaban tetap akurat.
 // Disaring hanya supaya panel output tidak menakut-nakuti pemula.
 const JVM_UNSAFE_WARNING =
   /^WARNING: (A terminally deprecated method in sun\.misc\.Unsafe has been called|sun\.misc\.Unsafe::\w+ has been called by .+|Please consider reporting this to the maintainers of class .+|sun\.misc\.Unsafe::\w+ will be removed in a future release)\s*$/

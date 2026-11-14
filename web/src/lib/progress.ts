@@ -30,7 +30,7 @@ export function saveProgress(p: Progress): void {
   try {
     localStorage.setItem(KEY, JSON.stringify(p))
   } catch {
-    // localStorage penuh / dinonaktifkan — abaikan, progress tak tersimpan
+    // localStorage penuh / dinonaktifkan, abaikan, progress tak tersimpan
   }
 }
 

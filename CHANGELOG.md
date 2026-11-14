@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-11-14 — restyle UI warm minimalism + fix penilaian soal
+
+### Ditambahkan
+- Ikon asli dari font Nerd Font subset (`web/public/fonts/icons.woff2`, 15 KB) lewat komponen `Icon`. Tidak ada lagi emoji di UI.
+- Font kode JetBrains Mono untuk editor, output, dan blok kode.
+- Konfeti + animasi pop/shake saat lolos atau gagal.
+- Tombol salin di contoh kode materi, editor soal, dan solusi.
+- Toast untuk ekspor/impor/reset progres.
+- Progress bar total di beranda (soal selesai vs total).
+- `DESIGN.md`: arah desain dan token warna.
+
+### Diubah
+- Tema jadi terang hangat (bukan dark). Palet: dasar `#fafaf9`, aksen hijau `#15803d`, garis tipis. Bukan klon Duolingo, hanya meminjam idenya "belajar itu bisa ringan".
+- Em dash di materi diganti tanda baca natural.
+- **Fix penilaian:** tiap test case dijalankan sebagai eksekusi Scala terpisah. Sebelumnya semua input digabung satu run, sehingga program yang membaca satu baris per eksekusi selalu gagal semua tes.
+
+### Catatan
+- Judul tab dan ikon font diambil dari `index.html` + `public/fonts/`. Vercel menyajikan apa yang ada di repo.
+
 ## 2026-11-12 — v0.1 seed
 
 ### Ditambahkan

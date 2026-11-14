@@ -18,7 +18,7 @@
   "lesson": [
     {
       "type": "text",
-      "body": "**Fungsi** itu resep: dia menerima input (parameter), melakukan sesuatu, lalu mengembalikan hasil. Di Scala ditulis dengan `def`:\n\n```scala\ndef nama(parameter: Tipe): TipeHasil = isiFungsi\n```\n\nNilai kembalian itu **ekspresi terakhir** di dalam fungsi. Scala tidak butuh kata kunci `return` — menuliskannya malah dianggap tidak idiomatik."
+      "body": "**Fungsi** itu resep: dia menerima input (parameter), melakukan sesuatu, lalu mengembalikan hasil. Di Scala ditulis dengan `def`:\n\n```scala\ndef nama(parameter: Tipe): TipeHasil = isiFungsi\n```\n\nNilai kembalian itu **ekspresi terakhir** di dalam fungsi. Scala tidak butuh kata kunci `return`. Menuliskannya malah dianggap tidak idiomatik."
     },
     {
       "type": "code",
@@ -38,7 +38,7 @@
     },
     {
       "type": "text",
-      "body": "Di Scala, `if` bukan pernyataan tapi **ekspresi** — dia menghasilkan nilai. Jadi `if` bisa langsung dijalankan dan hasilnya disimpan di variabel:"
+      "body": "Di Scala, `if` bukan pernyataan tapi **ekspresi**. Dia menghasilkan nilai. Jadi `if` bisa langsung dijalankan dan hasilnya disimpan di variabel:"
     },
     {
       "type": "code",
@@ -58,12 +58,12 @@
     },
     {
       "type": "pitfall",
-      "body": "Kesalahan umum: menaruh `return` di akhir fungsi. Tidak salah, tapi membuat kode Python-like dan bukan gaya Scala — biarkan ekspresi terakhir yang jadi hasil.\n\nKesalahan kedua: menebak tipe kembalian tapi blok fungsi menghasilkan tipe lain. Misal `def f(x: Int): Int = { println(x); x }` — `println` bertipe `Unit`, jadi `f` mengembalikan `Unit` dan deklarasi `Int` gagal dikompilasi."
+      "body": "Kesalahan umum: menaruh `return` di akhir fungsi. Tidak salah, tapi membuat kode Python-like dan bukan gaya Scala. Biarkan ekspresi terakhir yang jadi hasil.\n\nKesalahan kedua: menebak tipe kembalian tapi blok fungsi menghasilkan tipe lain. Misal `def f(x: Int): Int = { println(x); x }`. `println` bertipe `Unit`, jadi `f` mengembalikan `Unit` dan deklarasi `Int` gagal dikompilasi."
     },
     {
       "type": "recap",
       "items": [
-        "`def nama(p: T): Hasil = ekspresi` — nilai kembalian adalah ekspresi terakhir.",
+        "`def nama(p: T): Hasil = ekspresi`. Nilai kembalian adalah ekspresi terakhir.",
         "`if` adalah ekspresi: hasilnya bisa langsung disimpan di variabel.",
         "`match` memilah nilai; `case _` menangkap semua sisanya."
       ]
