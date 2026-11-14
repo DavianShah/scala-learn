@@ -1,7 +1,8 @@
 // Progress pelajar di localStorage.
 // Kunci id stage/soal tidak pernah berubah setelah tayang.
 
-const KEY = "pemrok-progress-v1"
+const KEY = "pemroq-progress-v1"
+const LEGACY_KEY = "pemrok-progress-v1"
 
 export interface QuizSessionRecord {
   score: number
@@ -27,9 +28,25 @@ const EMPTY: Progress = {
   quizSessions: {},
 }
 
+function readRaw(): string | null {
+  const fresh = localStorage.getItem(KEY)
+  if (fresh !== null) return fresh
+  const legacy = localStorage.getItem(LEGACY_KEY)
+  if (legacy !== null) {
+    try {
+      localStorage.setItem(KEY, legacy)
+      localStorage.removeItem(LEGACY_KEY)
+    } catch {
+      /* localStorage penuh / dinonaktifkan */
+    }
+    return legacy
+  }
+  return null
+}
+
 export function loadProgress(): Progress {
   try {
-    const raw = localStorage.getItem(KEY)
+    const raw = readRaw()
     if (!raw) return { ...EMPTY }
     const parsed = JSON.parse(raw) as Partial<Progress>
     return {

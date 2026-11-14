@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-14 — rename Pemrok → Pemroq
+
+### Diubah
+- Nama web dijadikan **Pemroq** di mana-mana: judul halaman (title, og, twitter), brand topbar, docs, dan komentar kode.
+- Kunci `localStorage` dipindah ke `pemroq-*` (`pemroq-theme`, `pemroq-progress-v1`) dengan migrasi otomatis dari kunci lama, jadi progres & tema pengguna lama tidak hilang.
+
+### Diverifikasi
+- Build lolos, 4/4 tes `progress.test.ts` lolos (termasuk migrasi kunci lama), validasi konten lolos.
+
 ## 2026-11-14 — soal praktikum asli, coming soon, hero scramble
 
 ### Ditambahkan
@@ -51,7 +60,7 @@
 
 ### Diubah
 - Batas lebar konten 860px dihapus, halaman jadi full width dengan padding samping 24px (16px di HP) dan topbar full-bleed. Kartu stage otomatis multi-kolom mengisi layar.
-- Soal praktik coding sekarang dua kolom: panel soal plus petunjuk di kiri, editor, tombol, output, dan hasil tes di kanan. Editor punya gutter nomor baris per baris yang sejajar dengan isinya. Konsep layout mengikuti editor latihan umum, palet warna tetap warm Pemrok. Di lebar di bawah 900px otomatis jadi satu kolom.
+- Soal praktik coding sekarang dua kolom: panel soal plus petunjuk di kiri, editor, tombol, output, dan hasil tes di kanan. Editor punya gutter nomor baris per baris yang sejajar dengan isinya. Konsep layout mengikuti editor latihan umum, palet warna tetap warm Pemroq. Di lebar di bawah 900px otomatis jadi satu kolom.
 
 ### Diverifikasi
 - Build tsc + vite lolos, uji end-to-end "Cek jawaban" 4/4 tes di layout baru, cek responsif 780px dan 390px tanpa scroll horizontal.

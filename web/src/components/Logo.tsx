@@ -1,11 +1,11 @@
-// Logo Pemrok: tiga balok bertumpuk dalam kotak membulat.
+// Logo Pemroq: tiga balok bertumpuk dalam kotak membulat.
 // Sengaja simetris dan tidak miring. Lihat DESIGN.md.
 
 export function LogoMark({ size = 32 }: { size?: number }) {
   const raw = typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
     : Math.random().toString(36).slice(2)
-  const gid = `pemrok-g-${raw.replace(/[^a-zA-Z0-9]/g, "")}`
+  const gid = `pemroq-g-${raw.replace(/[^a-zA-Z0-9]/g, "")}`
   return (
     <svg
       className="logo-mark"

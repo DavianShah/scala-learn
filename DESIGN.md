@@ -1,6 +1,6 @@
 # DESIGN.md
 
-Deklarasi arah desain **Pemrok**. Aturan: tiap keputusan punya alasan tertulis.
+Deklarasi arah desain **Pemroq**. Aturan: tiap keputusan punya alasan tertulis.
 Referensi: skill `anti-slop` (R-01..R-50) dan `popular-web-designs`.
 
 ## Product truth
@@ -43,7 +43,7 @@ Bukan klon Duolingo. Kita hanya meminjam satu hal: belajar itu bisa ringan.
 - Semua animasi dimatikan saat `prefers-reduced-motion: reduce`.
 
 ## Mode gelap
-Token yang sama, nilai diganti lewat `[data-theme="dark"]`. Pilihan pengguna disimpan di `localStorage` (`pemrok-theme`); kalau belum ada, ikut `prefers-color-scheme`. Tema diterapkan di `index.html` sebelum paint supaya tak ada kedip. Alasan: membaca kode malam hari di kamar kos itu nyata.
+Token yang sama, nilai diganti lewat `[data-theme="dark"]`. Pilihan pengguna disimpan di `localStorage` (`pemroq-theme`); kalau belum ada, ikut `prefers-color-scheme`. Tema diterapkan di `index.html` sebelum paint supaya tak ada kedip. Alasan: membaca kode malam hari di kamar kos itu nyata.
 
 ## Pola interaksi
 - Tombol besar (min 44px tinggi sentuh), sudut 12px, garis bawah tebal khas tombol "3D" yang turun saat ditekan.

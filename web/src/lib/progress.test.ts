@@ -33,7 +33,7 @@ describe("progress storage", () => {
   })
 
   it("data rusak -> struktur kosong", () => {
-    stubStorage({ "pemrok-progress-v1": "{bukan json" })
+    stubStorage({ "pemroq-progress-v1": "{bukan json" })
     expect(loadProgress()).toEqual({
       solved: {},
       openedHints: {},
@@ -44,7 +44,7 @@ describe("progress storage", () => {
   })
 
   it("progress lama tanpa field quiz/quizSessions diisi default", () => {
-    stubStorage({ "pemrok-progress-v1": JSON.stringify({ solved: { b: true } }) })
+    stubStorage({ "pemroq-progress-v1": JSON.stringify({ solved: { b: true } }) })
     expect(loadProgress()).toEqual({
       solved: { b: true },
       openedHints: {},
@@ -52,5 +52,18 @@ describe("progress storage", () => {
       quiz: {},
       quizSessions: {},
     })
+  })
+
+  it("data lama pemrok-progress-v1 dimigrasi ke pemroq-progress-v1", () => {
+    const data = stubStorage({ "pemrok-progress-v1": JSON.stringify({ solved: { c: true } }) })
+    expect(loadProgress()).toEqual({
+      solved: { c: true },
+      openedHints: {},
+      code: {},
+      quiz: {},
+      quizSessions: {},
+    })
+    expect(data.has("pemroq-progress-v1")).toBe(true)
+    expect(data.has("pemrok-progress-v1")).toBe(false)
   })
 })

@@ -14,6 +14,9 @@ type Route =
   | { name: "playground" }
   | { name: "practice" }
 
+const THEME_KEY = "pemroq-theme"
+const THEME_LEGACY = "pemrok-theme"
+
 function routeFromHash(): Route {
   const h = window.location.hash.replace(/^#/, "")
   if (h === "/playground") return { name: "playground" }
@@ -50,7 +53,8 @@ export default function App() {
     setTheme(next)
     document.documentElement.dataset.theme = next === "dark" ? "dark" : ""
     try {
-      localStorage.setItem("pemrok-theme", next)
+      localStorage.setItem(THEME_KEY, next)
+      localStorage.removeItem(THEME_LEGACY)
     } catch {
       /* localStorage tak tersedia */
     }
@@ -62,9 +66,9 @@ export default function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <a className="brand" href="#/" aria-label="Pemrok - beranda">
+        <a className="brand" href="#/" aria-label="Pemroq - beranda">
           <LogoMark size={30} />
-          <span>Pemrok</span>
+          <span>Pemroq</span>
         </a>
         <nav className="nav" aria-label="Navigasi utama">
           <a className={linkClass("home")} href="#/">
