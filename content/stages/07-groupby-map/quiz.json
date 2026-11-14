@@ -1,0 +1,173 @@
+{
+  "stage": "stage-7",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Tipe hasil dari list.groupBy(f)?",
+      "options": [
+        "Seq[(K, V)]",
+        "Map[K, Seq[V]]",
+        "Set[K]",
+        "List[List[V]]"
+      ],
+      "answer": 1,
+      "explanation": "groupBy menghasilkan Map yang memetakan tiap kunci ke Seq berisi anggotanya."
+    },
+    {
+      "id": "q2",
+      "question": "games.groupBy(g => g._2) menghasilkan Map dengan berapa kunci?",
+      "options": [
+        "10",
+        "2",
+        "4",
+        "1"
+      ],
+      "answer": 2,
+      "explanation": "Kunci yang muncul dari _2 adalah 3, 50, 6, dan 1, semuanya berbeda, jadi ada 4 kunci."
+    },
+    {
+      "id": "q3",
+      "question": "Nilai untuk kunci 6 pada games.groupBy(g => g._2)?",
+      "options": [
+        "List((6, 1))",
+        "List((3, 6))",
+        "List((3,6), (6,1))",
+        "6"
+      ],
+      "answer": 1,
+      "explanation": "Hanya tuple (3, 6) yang punya _2 sama dengan 6, jadi grupnya berisi satu elemen."
+    },
+    {
+      "id": "q4",
+      "question": "games.groupBy(g => g._1) mengelompokkan berdasarkan?",
+      "options": [
+        "komponen kedua (_2)",
+        "komponen pertama (_1)",
+        "panjang tuple",
+        "seluruh tuple"
+      ],
+      "answer": 1,
+      "explanation": "Kunci pengelompokan diambil dari g._1, yaitu komponen pertama tiap tuple."
+    },
+    {
+      "id": "q5",
+      "question": "Cara membuat Map seperti di slide?",
+      "options": [
+        "Map(\"satu\" = 1, \"dua\" = 2)",
+        "new Map[String, Int]",
+        "Map { \"satu\": 1 }",
+        "Map(\"satu\" -> 1, \"dua\" -> 2)"
+      ],
+      "answer": 3,
+      "explanation": "Slide memakai notasi panah -> untuk memasangkan kunci dan nilai."
+    },
+    {
+      "id": "q6",
+      "question": "Nilai dari numbers(\"satu\")?",
+      "options": [
+        "\"satu\"",
+        "0",
+        "1",
+        "error"
+      ],
+      "answer": 2,
+      "explanation": "apply(\"satu\") mengembalikan nilai yang dipasangkan dengan kunci \"satu\", yaitu 1."
+    },
+    {
+      "id": "q7",
+      "question": "Apa yang terjadi kalau numbers(4) dijalankan pada Map[String, Int]?",
+      "options": [
+        "Mengembalikan 0",
+        "Mengembalikan 4",
+        "Mengembalikan \"empat\"",
+        "NoSuchElementException"
+      ],
+      "answer": 3,
+      "explanation": "Kunci Map ini String, dan apply melempar NoSuchElementException kalau kuncinya tidak ada."
+    },
+    {
+      "id": "q8",
+      "question": "numbers.getOrElse(\"lima\", 0) menghasilkan?",
+      "options": [
+        "None",
+        "error",
+        "5",
+        "0"
+      ],
+      "answer": 3,
+      "explanation": "Kunci \"lima\" tidak ada, jadi getOrElse mengembalikan nilai default 0."
+    },
+    {
+      "id": "q9",
+      "question": "numbers.getOrElse(\"satu\", 0) menghasilkan?",
+      "options": [
+        "1",
+        "Some(1)",
+        "error",
+        "0"
+      ],
+      "answer": 0,
+      "explanation": "Kunci \"satu\" ada, jadi nilai default tidak dipakai dan hasilnya 1."
+    },
+    {
+      "id": "q10",
+      "question": "numbers.keys menghasilkan?",
+      "options": [
+        "Set(\"satu\", \"dua\", \"tiga\", \"empat\")",
+        "Seq(1, 2, 3, 4)",
+        "List(1, 2, 3, 4)",
+        "Array(\"satu\")"
+      ],
+      "answer": 0,
+      "explanation": "keys mengembalikan kumpulan kunci, di sini Set berisi empat kunci String."
+    },
+    {
+      "id": "q11",
+      "question": "numbers.values menghasilkan?",
+      "options": [
+        "Iterable(1, 2, 3, 4)",
+        "Array(1)",
+        "Set(\"satu\", \"dua\", \"tiga\", \"empat\")",
+        "List(\"satu\", \"dua\")"
+      ],
+      "answer": 0,
+      "explanation": "values mengembalikan kumpulan nilai, yaitu 1, 2, 3, 4."
+    },
+    {
+      "id": "q12",
+      "question": "numbers.foreach { case (k, v) => println(k + \" \" + v) } mengiterasi?",
+      "options": [
+        "pasangan kunci dan nilai",
+        "hanya nilai",
+        "hanya kunci",
+        "indeks dan nilai"
+      ],
+      "answer": 0,
+      "explanation": "foreach pada Map memanggil gerbang dengan dua bagian, kunci dan nilai, yang diikat lewat pattern case (k, v)."
+    },
+    {
+      "id": "q13",
+      "question": "Apa yang dikembalikan numbers.foreach(...)?",
+      "options": [
+        "Map[String, Int]",
+        "List[String]",
+        "Unit",
+        "Int"
+      ],
+      "answer": 2,
+      "explanation": "Seperti foreach pada koleksi lain, foreach di Map mengembalikan Unit."
+    },
+    {
+      "id": "q14",
+      "question": "Kenapa urutan output HashMap bisa beda-beda?",
+      "options": [
+        "HashMap mengurutkan berdasarkan nilai",
+        "HashMap tidak menjamin urutan iterasi",
+        "HashMap selalu diurutkan berdasarkan kunci",
+        "HashMap selalu terurut menaik"
+      ],
+      "answer": 1,
+      "explanation": "Slide menampilkan urutan Map yang berbeda-beda, karena HashMap tidak menjanjikan urutan, jadi jangan bergantung pada urutannya."
+    }
+  ]
+}

@@ -91,8 +91,10 @@ for (const slug of readdirSync(stagesDir).sort()) {
     }
   }
 
-  if (stage.problems.length < 1 || stage.problems.length > 2)
-    err(label, `jumlah soal ${stage.problems.length} (maks 2)`)
+  if (stage.problems.length > 3)
+    err(label, `jumlah soal ${stage.problems.length} (maks 3)`)
+  if (stage.problems.length === 0)
+    warn_(label, "coming soon: belum ada soal praktik")
 
   for (const prob of stage.problems) {
     const plabel = `${label}/${prob.id}`

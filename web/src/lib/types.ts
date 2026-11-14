@@ -22,6 +22,14 @@ export interface Problem {
   tests: TestCase[]
 }
 
+export type QuizQuestion = {
+  id: string
+  question: string
+  options: string[]
+  answer: number
+  explanation: string
+}
+
 export interface Stage {
   id: string
   order: number
@@ -29,10 +37,13 @@ export interface Stage {
   title: string
   week: number
   course: string
+  summary: string
+  estimatedMinutes: number
   concepts: string[]
   prerequisites: string[]
   objectives: string[]
   lesson: LessonBlock[]
   problems: Problem[]
-  status: "draft" | "published"
+  quiz: QuizQuestion[]
+  status: "published" | "draft"
 }

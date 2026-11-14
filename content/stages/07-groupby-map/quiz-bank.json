@@ -1,0 +1,77 @@
+{
+  "stage": "stage-7",
+  "questions": [
+    {
+      "id": "q-b1",
+      "question": "Apa yang dihasilkan `List(\"pisang\", \"nangka\", \"jambu\", \"apel\", \"nanas\").groupBy(_.length)`?",
+      "options": [
+        "`Map(4 -> List(\"apel\"), 5 -> List(\"jambu\", \"nanas\"), 6 -> List(\"pisang\", \"nangka\"))`",
+        "`Map(\"apel\" -> 4, \"jambu\" -> 5, \"pisang\" -> 6)`",
+        "`List(4, 5, 6)`",
+        "`Map(4 -> \"apel\", 5 -> \"jambu\", 6 -> \"pisang\")`"
+      ],
+      "answer": 0,
+      "explanation": "`groupBy(_.length)` menjadikan panjang kata sebagai kunci dan mengumpulkan kata-kata dengan panjang yang sama ke dalam list nilai."
+    },
+    {
+      "id": "q-b2",
+      "question": "Untuk menghitung frekuensi tiap bilangan, pola yang dipakai setelah `groupBy` adalah?",
+      "options": [
+        "`.map { case (k, v) => k -> v.length }`",
+        "`.map { case (k, v) => k -> v.sum }`",
+        "`.filter(_.length > 1)`",
+        "`.sortBy(_._1)`"
+      ],
+      "answer": 0,
+      "explanation": "`groupBy(x => x)` menghasilkan Map bernilai list kemunculan; `.length` menghitung anggota list itu, jadi didapat frekuensi."
+    },
+    {
+      "id": "q-b3",
+      "question": "Apa yang terjadi kalau `groupBy` dipanggil pada list kosong?",
+      "options": [
+        "Melempar exception.",
+        "Mengembalikan Map kosong.",
+        "Mengembalikan `List()`.",
+        "Mengembalikan `None`."
+      ],
+      "answer": 1,
+      "explanation": "`groupBy` pada list kosong menghasilkan Map kosong, bukan error. Jadi aman, tapi kode harus tetap menangani Map kosong."
+    },
+    {
+      "id": "q-b4",
+      "question": "Apa fungsi `(List(\"Bogor\", \"Jakarta\") zip List(1, 4)).toMap`?",
+      "options": [
+        "Menggabung dua list jadi `List((\"Bogor\", 1), (\"Jakarta\", 4))` saja.",
+        "Membuat `Map(\"Bogor\" -> 1, \"Jakarta\" -> 4)`.",
+        "Mengurutkan dua list berdasarkan kunci.",
+        "Menghitung panjang kedua list."
+      ],
+      "answer": 1,
+      "explanation": "`zip` memasangkan elemen kedua list jadi tuple, lalu `toMap` mengubah tuple-tuple itu menjadi pasangan kunci-nilai Map."
+    },
+    {
+      "id": "q-b5",
+      "question": "Cara yang benar mengurutkan Map berdasarkan kunci sebelum dicetak adalah?",
+      "options": [
+        "`m.sortBy(_._1)`",
+        "`m.toSeq.sortBy(_._1)`",
+        "`m.toMap.sortBy(_._1)`",
+        "`m.keys.sortBy(_._1)`"
+      ],
+      "answer": 1,
+      "explanation": "HashMap tidak menjamin urutan, jadi ubah dulu jadi `Seq` dengan `toSeq`, lalu `sortBy(_._1)` mengurutkan berdasarkan kunci."
+    },
+    {
+      "id": "q-b6",
+      "question": "Apa hasil `Map(\"A\" -> 4, \"B\" -> 3).map { case (k, v) => k -> (v + 1) }`?",
+      "options": [
+        "`Map(\"A\" -> 4, \"B\" -> 3)`",
+        "`Map(\"A\" -> 5, \"B\" -> 4)`",
+        "`Map(\"A\" -> 3, \"B\" -> 2)`",
+        "`List(\"A\" -> 5, \"B\" -> 4)`"
+      ],
+      "answer": 1,
+      "explanation": "`map` pada Map menerapkan fungsi ke tiap pasangan kunci-nilai. Di sini nilai ditambah 1, jadi A -> 5 dan B -> 4."
+    }
+  ]
+}

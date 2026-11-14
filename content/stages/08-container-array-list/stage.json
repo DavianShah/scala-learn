@@ -1,0 +1,112 @@
+{
+  "id": "stage-8",
+  "order": 8,
+  "slug": "container-array-list",
+  "title": "Array & List: struktur dan operasi dasar",
+  "week": 12,
+  "course": "KOM2205",
+  "sources": [
+    "KOM2205 - K12 - CONTAINER - STUDENT.pdf"
+  ],
+  "estimatedMinutes": 25,
+  "summary": "Struktur data vs container, Array mutable dan indeks 0-based, serta List immutable dan operasi ++ dan :+.",
+  "concepts": [
+    "Array",
+    "List",
+    "Nil",
+    "++",
+    ":+"
+  ],
+  "prerequisites": [
+    "stage-7"
+  ],
+  "objectives": [
+    "Menjelaskan beda struktur data dan container, serta beda Array dan List.",
+    "Mengakses dan mengubah elemen Array lewat indeks 0-based.",
+    "Menggabung dan menambah List dengan ++ dan :+."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "Sebelum ngoding, bedain dulu dua kata yang sering ketuker: **struktur data** dan **container**.\n\n- **Struktur data** itu rancangannya: cara kita menyimpan dan mengatur data supaya pencarian, penambahan, dan penghapusan bisa cepat. Contohnya: Array, Linked List, Stack, Queue, Hash Table, Tree, Graph.\n- **Container** itu implementasi siap pakai yang disediakan pustaka bahasa. Di container, struktur data dasar itu dibungkus dengan fungsi tambahan supaya praktis dipakai.\n\nAnaloginya gampang: struktur data = gambar rancangannya, container = perabot yang sudah jadi dan bisa langsung dipakai."
+    },
+    {
+      "type": "text",
+      "body": "Tiap bahasa punya pustaka container masing-masing. Ini contoh yang biasa lu lihat:\n\n- **Java (JCF):** List, Set, Map\n- **C++ (STL):** Vector, Deque, Unordered Map\n- **Python:** Dictionary, Set, Tuple\n- **Scala:** List, Set, Map, Tuple\n\nKenapa harus paham? Empat manfaatnya:\n\n- **Efisiensi operasi:** pencarian dan penghapusan bisa jauh lebih cepat kalau struktur datanya tepat, misalnya lewat hash table.\n- **Pengorganisasian data:** data tersusun rapi sesuai kebutuhan, misalnya Tree dan Graph.\n- **Keterbacaan dan pemeliharaan:** kode jadi lebih bersih karena operasi dasar sudah disediakan standar.\n- **Skalabilitas:** volume data gede tetap bisa diurus tanpa kinerja ambruk."
+    },
+    {
+      "type": "text",
+      "body": "Array itu struktur data paling sederhana. Empat sifatnya wajib lu hafal:\n\n- **Berukuran tetap:** ukuran tidak bisa diubah setelah inisialisasi.\n- **Mutable:** nilai elemen di dalamnya bisa diperbarui.\n- **Setiap elemen bertipe sama:** seluruh elemen homogen, misalnya semua `Int`.\n- **Dapat diakses pakai indeks:** ambil elemen langsung lewat posisi, dan indeks dimulai dari 0."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nums = Array(1, 2, 3, 4, 5)\n    val strs = Array(\"Scala\", \"Java\")\n    val zeros = Array.fill(5)(0)\n    nums.foreach(print)\n    println()\n    println(zeros.mkString(\" \"))\n  }\n}",
+      "runnable": true,
+      "output": "12345\n0 0 0 0 0"
+    },
+    {
+      "type": "text",
+      "body": "Akses elemen Array pakai tanda kurung, bukan titik. Indeksnya **0-based**, jadi elemen pertama ada di indeks 0, bukan 1. Karena mutable, nilai elemen juga bisa diganti lewat indeks yang sama."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nums = Array(1, 2, 3, 4, 5)\n    val strs = Array(\"C\", \"Java\", \"Scala\")\n    println(nums(2))\n    println(strs(1))\n    nums(3) = 10\n    println(nums.mkString(\" \"))\n  }\n}",
+      "runnable": true,
+      "output": "3\nJava\n1 2 3 10 5"
+    },
+    {
+      "type": "text",
+      "body": "Array tetap bisa diolah pakai higher-order function, sama persis seperti List. Yang membedakan cuma dia mutable dan ukurannya kaku. `length` memberi tahu jumlah elemen, `map` mengubah tiap elemen, `filter` menyaring, `sorted` mengurutkan, dan `reduce` menggabung semua elemen jadi satu nilai."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nums = Array(1, 2, 3, 4, 5)\n    val strs = Array(\"C\", \"Java\", \"Scala\")\n    println(strs.length)\n    println(nums.map(_ * 2).mkString(\" \"))\n    println(nums.filter(_ % 2 == 0).mkString(\" \"))\n    println(strs.filter(_.length < 5).mkString(\" \"))\n    println(nums.sorted.mkString(\" \"))\n    println(nums.reduce(_ + _))\n  }\n}",
+      "runnable": true,
+      "output": "3\n2 4 6 8 10\n2 4\nC Java\n1 2 3 4 5\n15"
+    },
+    {
+      "type": "text",
+      "body": "Coba pikirin studi kasus ini: terima sebuah Array, lalu keluarkan Array baru berisi **kuadrat dari elemen ganjil**, diurutkan dari terkecil.\n\nIde solusinya tiga langkah berantai:\n\n- **Filter** elemen ganjil: `arr.filter(_ % 2 != 0)`\n- **Urutkan** dari kecil ke besar: `.sorted`\n- **Kuadratkan** tiap elemen: `.map(x => x * x)`"
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def arrKuadrat(arr: Array[Int]): Array[Int] = {\n    arr.filter(_ % 2 != 0).sorted.map(x => x * x)\n  }\n\n  def main(args: Array[String]): Unit = {\n    val nums = Array(3, 2, 5, 6, 8, 2, 1)\n    val result = arrKuadrat(nums)\n    println(result.mkString(\" \"))\n  }\n}",
+      "runnable": true,
+      "output": "1 9 25"
+    },
+    {
+      "type": "text",
+      "body": "Sekarang ke List. List punya tiga karakteristik utama:\n\n- **Linear dan immutable:** elemennya tersusun berurutan, dan setelah dibuat isinya tidak bisa diubah.\n- **Tipe data homogen:** semua elemen harus sejenis, sama seperti Array.\n- **Inisialisasi fleksibel:** bisa langsung diisi nilai, atau dibuat kosong pakai `List()` / `Nil`.\n\nList kosong secara eksplisit ditulis `Nil` atau `List()`. Keduanya sama, dan saat dicetak hasilnya `List()`."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nums = List(1, 2, 3, 4, 5)\n    val strs = List(\"Scala\", \"Java\", \"Phyton\")\n    val emptyList1 = List()\n    val emptyList2 = Nil\n    println(nums(2))\n    println(strs.mkString(\" \"))\n    println(emptyList2)\n  }\n}",
+      "runnable": true,
+      "output": "3\nScala Java Phyton\nList()"
+    },
+    {
+      "type": "pitfall",
+      "body": "Baris `nums(2) = 10` di List itu **error kompilasi**, bukan gagal diam-diam. Penyebabnya List immutable: setelah dibuat, elemennya tidak bisa dimodifikasi lewat indeks. Kalau lu butuh ubah satu elemen, pakai Array, atau bangun List baru dari isi yang lama."
+    },
+    {
+      "type": "text",
+      "body": "Walaupun isinya immutable, List tetap bisa dioperasi. Ada dua cara yang sering ketuker:\n\n- `++` atau `.concat`: **menggabung isi** dua List jadi satu.\n- `:+`: **menambah satu elemen** di belakang.\n\nPerhatikan kasus `bil1 :+ bil2`: bil2 dimasukkan sebagai **satu elemen** di belakang, bukan digabung isinya. Jadi hasilnya `List(1, 2, 3, List(4, 5))`, bukan `List(1, 2, 3, 4, 5)`. Buat nambah isi, pakai `++`."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val bil1 = List(1, 2, 3)\n    val bil2 = List(4, 5)\n    val nums1 = bil1 ++ bil2\n    val nums2 = bil1.concat(bil2)\n    val nums3 = bil1 :+ 9\n    val nums4 = bil1 :+ bil2\n    println(nums1.mkString(\" \"))\n    println(nums2.mkString(\" \"))\n    println(nums3.mkString(\" \"))\n    println(nums4)\n  }\n}",
+      "runnable": true,
+      "output": "1 2 3 4 5\n1 2 3 4 5\n1 2 3 9\nList(1, 2, 3, List(4, 5))"
+    },
+    {
+      "type": "recap",
+      "items": [
+        "Struktur data = rancangannya, container = implementasi siap pakai dari pustaka bahasa.",
+        "Array mutable, ukuran tetap, dan indeks 0-based; List immutable dan kosongnya `Nil`.",
+        "`++` menggabung isi dua List, `:+` menambah satu elemen di belakang."
+      ]
+    }
+  ],
+  "problems": [],
+  "status": "published"
+}

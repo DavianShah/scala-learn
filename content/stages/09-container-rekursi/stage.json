@@ -1,0 +1,88 @@
+{
+  "id": "stage-9",
+  "order": 9,
+  "slug": "container-rekursi",
+  "title": "List & rekursi: head, tail, pola rekursif",
+  "week": 12,
+  "course": "KOM2205",
+  "sources": [
+    "KOM2205 - K12 - CONTAINER - STUDENT.pdf"
+  ],
+  "estimatedMinutes": 20,
+  "summary": "List sebagai linked list: memecah head dan tail dengan `::`, pola rekursi, dan studi kasus count serta jumlah genap.",
+  "concepts": [
+    "head",
+    "tail",
+    "::",
+    "rekursi",
+    "count"
+  ],
+  "prerequisites": [
+    "stage-8"
+  ],
+  "objectives": [
+    "Memecah List menjadi head dan tail dengan operator `::`.",
+    "Menulis fungsi rekursif dengan base case `Nil` dan rekurens `head :: tail`.",
+    "Memilih pendekatan HOF atau rekursi untuk mengolah List."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "Secara teknis, List di Scala diimplementasikan sebagai **linked list**. Itulah kenapa operasi ambil elemen pertama dan sisanya jadi sangat murah. Scala nyediain operator `::` untuk memecah List jadi **head** (elemen pertama) dan **tail** (sisa List setelah head dilepas)."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val head :: tail = List(5, 3, 1, 4, 2)\n    println(head)\n    println(tail)\n  }\n}",
+      "runnable": true,
+      "output": "5\nList(3, 1, 4, 2)"
+    },
+    {
+      "type": "text",
+      "body": "Pemecahan head dan tail ini banyak dipakai untuk mengolah List secara **rekursif**. Polanya hampir selalu sama:\n\n- Base case: kalau List kosong (`Nil`), selesai, biasanya return 0 atau nilai netral.\n- Rekurens: kerjakan `head`, lalu panggil lagi fungsinya untuk `tail`.\n\nContoh paling klasik: jumlahkan semua elemen List."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def jumlah(L: List[Int]): Int = {\n    L match {\n      case Nil => 0\n      case head :: tail => head + jumlah(tail)\n    }\n  }\n\n  def main(args: Array[String]): Unit = {\n    val nums = List(1, 2, 3, 4, 5)\n    println(jumlah(nums))\n    println(nums.reduce(_ + _))\n  }\n}",
+      "runnable": true,
+      "output": "15\n15"
+    },
+    {
+      "type": "text",
+      "body": "Perhatikan kode di atas: baris terakhir `nums.reduce(_ + _)` menghasilkan **15 juga**. Jadi rekursi dan higher-order function itu dua jalan ke tujuan yang sama. HOF biasanya lebih ringkas, rekursi lebih eksplisit dan berguna kalau logikanya tidak bisa diringkas jadi satu panggilan."
+    },
+    {
+      "type": "text",
+      "body": "Studi kasus kedua: hitung **kemunculan sebuah nilai** di List, misalnya `List(1, 2, 3, 1, 4, 3)` dan kita cari angka `1`.\n\n- **Pendekatan HOF:** satu baris, `L.count(_ == q)`.\n- **Pendekatan rekursif:** periksa satu per satu dari head sampai habis, tambah 1 kalau head sama dengan `q`."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def search1(L: List[Int], q: Int): Int = {\n    L.count(_ == q)\n  }\n\n  def search2(L: List[Int], q: Int): Int = {\n    L match {\n      case Nil => 0\n      case head :: tail =>\n        if (head == q) 1 + search2(tail, q) else search2(tail, q)\n    }\n  }\n\n  def main(args: Array[String]): Unit = {\n    val data = List(1, 2, 3, 1, 4, 3)\n    println(search1(data, 1))\n    println(search2(data, 1))\n  }\n}",
+      "runnable": true,
+      "output": "2\n2"
+    },
+    {
+      "type": "text",
+      "body": "Studi kasus ketiga: jumlahkan **semua elemen genap** di List.\n\n- **Pendekatan HOF:** `filter` yang genap, lalu `reduce` untuk menjumlahkan.\n- **Pendekatan rekursif:** periksa head satu per satu, kalau genap tambahkan ke hasil, lalu lanjut ke tail."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def sumGenap1(L: List[Int]): Int = {\n    L.filter(_ % 2 == 0).reduce(_ + _)\n  }\n\n  def sumGenap2(L: List[Int]): Int = {\n    L match {\n      case Nil => 0\n      case head :: tail =>\n        if (head % 2 == 0) head + sumGenap2(tail)\n        else sumGenap2(tail)\n    }\n  }\n\n  def main(args: Array[String]): Unit = {\n    val nums = List(1, 2, 3, 4)\n    println(sumGenap1(nums))\n    println(sumGenap2(nums))\n  }\n}",
+      "runnable": true,
+      "output": "6\n6"
+    },
+    {
+      "type": "text",
+      "body": "Tiga soal diskusi kelas dari slide, coba dikerjain sendiri sebelum ujian:\n\n- **Diskusi 1:** merge dua List yang sudah terurut jadi satu List terurut. Input `1 4 7` dan `3 9 10 15`, output `1 3 4 7 9 10 15`.\n- **Diskusi 2:** hapus elemen yang sama dan bersebelahan. Input `1 1 1 4 4 1 1 1 1 1 7`, output `1 4 1 7`.\n- **Diskusi 3:** hapus **semua** elemen yang duplikat bersebelahan, menyisakan yang unik. Input yang sama, output `7`."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "`head :: tail` memecah List jadi elemen pertama dan sisanya; `Nil` menandai List kosong.",
+        "Pola rekursi: base case `Nil`, rekurens kerjakan `head` lalu panggil ulang untuk `tail`.",
+        "HOF dan rekursi sering menghasilkan nilai yang sama; pilih yang paling terbaca."
+      ]
+    }
+  ],
+  "problems": [],
+  "status": "published"
+}

@@ -1,0 +1,185 @@
+{
+  "stage": "stage-5",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Apa yang membuat sebuah fungsi disebut Higher Order Function (HOF)?",
+      "options": [
+        "Fungsi yang punya lebih dari dua parameter.",
+        "Fungsi yang menerima fungsi lain sebagai parameter, atau mengembalikan fungsi sebagai hasil.",
+        "Fungsi yang dipanggil berulang kali secara rekursif.",
+        "Fungsi yang selalu mengembalikan nilai Boolean."
+      ],
+      "answer": 1,
+      "explanation": "Slide mendefinisikan HOF sebagai fungsi yang menerima fungsi lain sebagai parameter input, atau mengembalikan fungsi sebagai return value. Dua-duanya membuat fungsi diperlakukan seperti first-class object."
+    },
+    {
+      "id": "q2",
+      "question": "Apa output dari `val data = Seq(2, 3, 4, 5)` lalu `data.map(_ * 2)`?",
+      "options": [
+        "List(2, 3, 4, 5)",
+        "List(4, 6, 8, 10)",
+        "List(2, 4)",
+        "14"
+      ],
+      "answer": 1,
+      "explanation": "map mengubah tiap elemen dengan fungsi yang diberikan, jadi 2, 3, 4, 5 menjadi 4, 6, 8, 10. Panjang list tetap sama."
+    },
+    {
+      "id": "q3",
+      "question": "Perbedaan `map` dan `filter` yang benar adalah?",
+      "options": [
+        "map mengubah tiap elemen, filter menyaring elemen yang memenuhi kriteria.",
+        "map menyaring elemen, filter mengubah tiap elemen.",
+        "map dan filter melakukan hal yang sama.",
+        "map menghasilkan satu nilai, filter mengubah tiap elemen."
+      ],
+      "answer": 0,
+      "explanation": "map memetakan tiap elemen ke nilai baru. filter membuang elemen yang predikatnya menghasilkan false dan mempertahankan yang true."
+    },
+    {
+      "id": "q4",
+      "question": "Fungsi yang dipakai sebagai argumen `filter` harus bertipe apa?",
+      "options": [
+        "Int",
+        "String",
+        "Boolean",
+        "Double"
+      ],
+      "answer": 2,
+      "explanation": "Argumen filter disebut predicate. Predicate menghasilkan true atau false, jadi tipe kembaliannya selalu Boolean."
+    },
+    {
+      "id": "q5",
+      "question": "Berapa hasil `Seq(2, 3, 4, 5).reduce(_ + _)`?",
+      "options": [
+        "List(2, 3, 4, 5)",
+        "14",
+        "5",
+        "List(14)"
+      ],
+      "answer": 1,
+      "explanation": "reduce merangkum semua elemen jadi satu nilai. Di sini 2 + 3 + 4 + 5 = 14, bukan list lagi."
+    },
+    {
+      "id": "q6",
+      "question": "Apa hasil `Seq(2, 3, 4, 5).reduce((x, y) => x max y)`?",
+      "options": [
+        "14",
+        "2",
+        "5",
+        "10"
+      ],
+      "answer": 2,
+      "explanation": "`x max y` membandingkan dua nilai dan mengambil yang lebih besar. Diteruskan ke semua elemen, hasilnya nilai maksimum, yaitu 5."
+    },
+    {
+      "id": "q7",
+      "question": "Pada lambda `reduce((x, y) => ...)`, apa arti kedua parameter itu?",
+      "options": [
+        "indeks dan elemen list.",
+        "akumulator dan elemen berikutnya.",
+        "elemen pertama dan elemen terakhir.",
+        "key dan value."
+      ],
+      "answer": 1,
+      "explanation": "Parameter pertama adalah akumulator, yaitu hasil sementara dari operasi sebelumnya. Parameter kedua adalah elemen list yang sedang diproses."
+    },
+    {
+      "id": "q8",
+      "question": "Apa yang dikembalikan oleh `createMultiplier(2)`?",
+      "options": [
+        "Nilai 2.",
+        "Sebuah fungsi Int => Int yang mengalikan argumennya dengan 2.",
+        "Sebuah List berisi 2.",
+        "Exception, karena parameternya kurang."
+      ],
+      "answer": 1,
+      "explanation": "createMultiplier adalah contoh HOF yang mengembalikan fungsi. Panggilan createMultiplier(2) menghasilkan fungsi (x: Int) => x * 2."
+    },
+    {
+      "id": "q9",
+      "question": "Apa tipe dari `val dobelGaji = (x: Int) => x * 2`?",
+      "options": [
+        "Int => Int",
+        "Int => Boolean",
+        "(Int, Int) => Int",
+        "Int"
+      ],
+      "answer": 0,
+      "explanation": "Fungsi itu menerima satu Int dan mengembalikan Int, jadi tipenya Int => Int. Itu juga alasan dia bisa dipakai sebagai argumen map."
+    },
+    {
+      "id": "q10",
+      "question": "Apa tipe kembalian dari `def urlBuilder(ssl: Boolean, domain: String): (String, String) => String`?",
+      "options": [
+        "Boolean",
+        "String",
+        "Sebuah fungsi dengan dua parameter String yang mengembalikan String.",
+        "List[String]"
+      ],
+      "answer": 2,
+      "explanation": "Tanda `=>` di deklarasi tipe berarti urlBuilder mengembalikan fungsi. Fungsi itu menerima dua String (end dan q) dan menghasilkan String URL."
+    },
+    {
+      "id": "q11",
+      "question": "Apa isi dari `List.range(1, 100)`?",
+      "options": [
+        "1 sampai 100, 100 elemen.",
+        "1 sampai 99, 99 elemen.",
+        "0 sampai 100.",
+        "100 sampai 1."
+      ],
+      "answer": 1,
+      "explanation": "List.range memakai batas atas yang tidak termasuk. Jadi List.range(1, 100) berisi 1 sampai 99. Kalau mau 1 sampai 100, tulis List.range(1, 101) atau 1 to 100."
+    },
+    {
+      "id": "q12",
+      "question": "Pada `data.map(_ * 2)`, apa arti dari `_`?",
+      "options": [
+        "`_` adalah positional parameter yang mewakili tiap elemen.",
+        "`_` adalah variabel yang harus dideklarasikan dulu.",
+        "`_` menandakan parameter opsional.",
+        "`_` akan diabaikan oleh kompiler."
+      ],
+      "answer": 0,
+      "explanation": "Wildcard notation memakai `_` sebagai positional parameter. `map(_ * 2)` sama artinya dengan `map(x => x * 2)`."
+    },
+    {
+      "id": "q13",
+      "question": "Berapa hasil `List(2, 3, 4, 5, 6).filter(_ % 2 == 0).map(x => x * x).reduce(_ + _)`?",
+      "options": [
+        "20",
+        "56",
+        "90",
+        "14"
+      ],
+      "answer": 1,
+      "explanation": "filter menyisakan 2, 4, 6. map menghasilkan 4, 16, 36. reduce menjumlahkan jadi 4 + 16 + 36 = 56."
+    },
+    {
+      "id": "q14",
+      "question": "Apa yang terjadi kalau `reduce` dipanggil pada list kosong?",
+      "options": [
+        "Mengembalikan 0.",
+        "Mengembalikan list kosong.",
+        "Melempar exception.",
+        "Mengembalikan null."
+      ],
+      "answer": 2,
+      "explanation": "reduce butuh minimal satu elemen sebagai nilai awal akumulator, jadi list kosong memicu exception. Kalau list bisa kosong, pakai foldLeft(0)(_ + _) atau .sum."
+    },
+    {
+      "id": "q15",
+      "question": "Bagaimana rangkaian `data.filter(...).map(...).reduce(...)` dieksekusi?",
+      "options": [
+        "Dari kanan ke kiri.",
+        "Dari kiri ke kanan, output satu fungsi menjadi input fungsi berikutnya.",
+        "reduce dulu, baru filter.",
+        "Semua fungsi dijalankan bersamaan."
+      ],
+      "answer": 1,
+      "explanation": "Rangkaian HOF dibaca dari kiri. Hasil filter masuk ke map, lalu hasil map masuk ke reduce. Itu sebabnya urutan filter, map, reduce penting."
+    }
+  ]
+}

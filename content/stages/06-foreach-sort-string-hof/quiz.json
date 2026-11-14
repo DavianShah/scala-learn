@@ -1,0 +1,173 @@
+{
+  "stage": "stage-6",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Apa yang dikembalikan oleh method foreach?",
+      "options": [
+        "List berisi hasil gerbang",
+        "Unit",
+        "Boolean",
+        "Seq dari gerbang"
+      ],
+      "answer": 1,
+      "explanation": "foreach dipakai untuk efek samping seperti println, jadi kembaliannya Unit, bukan koleksi."
+    },
+    {
+      "id": "q2",
+      "question": "Gerbang seperti apa yang diterima foreach?",
+      "options": [
+        "(A) => Int",
+        "(A, A) => Boolean",
+        "(A) => Unit",
+        "(A) => A"
+      ],
+      "answer": 2,
+      "explanation": "foreach memanggil gerbang untuk tiap elemen dan tidak memakai hasilnya, karena itu tipe gerbangnya (A) => Unit."
+    },
+    {
+      "id": "q3",
+      "question": "Apa output dari List(\"PUBG\", \"Mobile Legends\").foreach(println)?",
+      "options": [
+        "PUBG Mobile Legends dalam satu baris",
+        "PUBG dan Mobile Legends, tiap judul di baris baru",
+        "List(PUBG, Mobile Legends)",
+        "Unit saja, tidak ada output"
+      ],
+      "answer": 1,
+      "explanation": "println dipanggil sekali per elemen, jadi tiap judul tercetak di baris sendiri."
+    },
+    {
+      "id": "q4",
+      "question": "Mana yang setara dengan for (g <- games) println(g._1)?",
+      "options": [
+        "games.map(g => println(g._1))",
+        "games.foreach(g => println(g._1))",
+        "games.sortBy(g => println(g._1))",
+        "games.filter(g => println(g._1))"
+      ],
+      "answer": 1,
+      "explanation": "for dengan satu generator dan tubuh println diterjemahkan menjadi pemanggilan foreach."
+    },
+    {
+      "id": "q5",
+      "question": "Hasil dari List((10,3), (3,6), (6,1), (50,50)).sortBy(g => g._2)?",
+      "options": [
+        "List((50,50), (3,6), (10,3), (6,1))",
+        "List((6,1), (3,6), (10,3), (50,50))",
+        "List((10,3), (3,6), (6,1), (50,50))",
+        "List((6,1), (10,3), (3,6), (50,50))"
+      ],
+      "answer": 3,
+      "explanation": "sortBy mengurutkan menaik berdasarkan kunci pengurutan, di sini komponen kedua (_2): 1, 3, 6, 50."
+    },
+    {
+      "id": "q6",
+      "question": "Cara mengurutkan menurun (terbesar ke terkecil) berdasarkan _2?",
+      "options": [
+        "sortBy(g => g._2)",
+        "sortWith((a, b) => a._2 < b._2)",
+        "sortWith((a, b) => a._2 > b._2)",
+        "sortBy(g => -g._1)"
+      ],
+      "answer": 2,
+      "explanation": "sortWith membandingkan dua elemen, dan a._2 > b._2 berarti elemen dengan _2 lebih besar dianggap lebih dulu."
+    },
+    {
+      "id": "q7",
+      "question": "Apa perbedaan sortBy dan sortWith?",
+      "options": [
+        "sortBy hanya untuk String, sortWith untuk Int",
+        "sortBy butuh (A, A) => Boolean, sortWith butuh (A) => B",
+        "Keduanya sama, beda nama saja",
+        "sortBy butuh fungsi (A) => B, sortWith butuh (A, A) => Boolean"
+      ],
+      "answer": 3,
+      "explanation": "sortBy mengurutkan memakai kunci yang dihitung dari tiap elemen, sedangkan sortWith membandingkan dua elemen langsung."
+    },
+    {
+      "id": "q8",
+      "question": "Apa yang terjadi kalau \"PUBG\".foreach(println) dijalankan?",
+      "options": [
+        "Mencetak PUBG sebanyak empat kali",
+        "PUBG tercetak satu baris",
+        "Error, karena String tidak punya foreach",
+        "P, U, B, G tercetak satu karakter per baris"
+      ],
+      "answer": 3,
+      "explanation": "String adalah Seq[Char], jadi foreach mengiterasi tiap karakternya dan println mencetak satu karakter per baris."
+    },
+    {
+      "id": "q9",
+      "question": "Hasil dari \"PUBG\".split(\",\")?",
+      "options": [
+        "Array(\"PUBG\")",
+        "String \"PUBG\"",
+        "List(\"PUBG\")",
+        "Array(\"P\", \"U\", \"B\", \"G\")"
+      ],
+      "answer": 0,
+      "explanation": "Karena di dalam string tidak ada koma, split menghasilkan satu elemen, yaitu \"PUBG\"."
+    },
+    {
+      "id": "q10",
+      "question": "Nilai dari games(0)._1 kalau games = List((10,3), (50,50), (3,6), (6,1))?",
+      "options": [
+        "10",
+        "(10, 3)",
+        "3",
+        "List((10,3), (50,50), (3,6), (6,1))"
+      ],
+      "answer": 0,
+      "explanation": "games(0) adalah tuple (10, 3), dan _1 mengambil komponen pertama, yaitu 10."
+    },
+    {
+      "id": "q11",
+      "question": "Hasil dari \"PUBG\".filter(_.isUpper)?",
+      "options": [
+        "\"PUBG\"",
+        "\"P\"",
+        "\"pubg\"",
+        "\"\""
+      ],
+      "answer": 0,
+      "explanation": "Semua karakter PUBG huruf kapital, jadi filter menyisakan semua karakter."
+    },
+    {
+      "id": "q12",
+      "question": "Hasil dari \"PUBG\".map(_.toLower)?",
+      "options": [
+        "\"pubg\"",
+        "Unit",
+        "\"PUBG\"",
+        "List('p', 'u', 'b', 'g')"
+      ],
+      "answer": 0,
+      "explanation": "map menerapkan toLower ke tiap Char, menghasilkan String \"pubg\"."
+    },
+    {
+      "id": "q13",
+      "question": "String di Scala bisa diperlakukan sebagai?",
+      "options": [
+        "Array[Int]",
+        "Map[Char, Int]",
+        "Seq[Char]",
+        "Set[Char]"
+      ],
+      "answer": 2,
+      "explanation": "Slide mencontohkan \"PUBG\".foreach(println), artinya String adalah kumpulan Char yang mendukung HOF."
+    },
+    {
+      "id": "q14",
+      "question": "Apa output dari \"a,b,c\".split(\",\").foreach(println)?",
+      "options": [
+        "Unit saja, tidak ada output",
+        "a, b, c masing-masing di baris baru",
+        "a, b, c dalam satu baris",
+        "Array(a, b, c)"
+      ],
+      "answer": 1,
+      "explanation": "split menghasilkan Array(a, b, c), lalu foreach mencetak tiap elemen di baris baru."
+    }
+  ]
+}

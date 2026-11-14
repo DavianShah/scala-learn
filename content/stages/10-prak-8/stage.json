@@ -1,0 +1,109 @@
+{
+  "id": "prak-8",
+  "order": 10,
+  "slug": "prak-8",
+  "title": "Praktikum 8: bilangan, array & faktorial",
+  "week": 9,
+  "course": "KOM2205",
+  "sources": ["SOAL PRAK PEMROG UAS.pdf (Praktikum 8)"],
+  "estimatedMinutes": 30,
+  "summary": "Tiga soal asli praktikum 8: nilai ekstrem & jumlah ganjil, mutlak terbesar dua array, dan faktorial rekursif.",
+  "concepts": ["array", "loop", "rekursi"],
+  "prerequisites": ["stage-3"],
+  "objectives": [
+    "Membaca deretan bilangan dari standard input dengan rapi.",
+    "Mencari nilai ekstrem dan menjumlahkan bilangan ganjil.",
+    "Menghitung mutlak terbesar dari dua array.",
+    "Menulis fungsi faktorial rekursif."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "**Praktikum 8** isinya tiga soal asli: **Ganjil** (nilai terkecil, terbesar, dan jumlah bilangan ganjil), **Mutlak** (perkalian mutlak terbesar dua array), dan **Faktorial** (fungsi rekursif).\n\nSemua soal memberi masukan lewat *standard input* dan menilai lewat *standard output*, jadi kode kamu harus `println` persis format yang diminta."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    val angka = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    println(angka.filter(_ % 2 != 0).sum)\n  }\n}",
+      "runnable": false,
+      "output": "Input:\n5\n1 -1 -9 7 5\nOutput:\n3"
+    },
+    {
+      "type": "pitfall",
+      "body": "Soal praktikum memberi input per baris yang rapi: baris 1 berisi `N`, baris 2 berisi deretan. Baca deret dengan `readLine().trim.split(\"\\\\s+\")`, bukan `readLine` mentah. Jangan panggil `readLine` dua kali untuk baris yang sama, karena `readInt()` sudah memakan baris itu.\n\nUntuk mutlak, `map(math.abs).max` bekerja di `Array` maupun `List`. Hati-hati `n` yang dibaca tapi tidak dipakai di Scala 3 — biarkan, kompiler hanya memberi peringatan ringan."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "`filter(_ % 2 != 0).sum` untuk jumlah bilangan ganjil.",
+        "`map(math.abs).max` untuk nilai mutlak terbesar.",
+        "Rekursi faktorial: `if (n <= 1) 1 else n * faktorial(n - 1)`."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "prak-8-ganjil",
+      "title": "Ganjil",
+      "statement": "Membaca input berupa N buah bilangan bulat, lalu mencetak **nilai terkecil**, **nilai terbesar**, dan **jumlah bilangan ganjil**.\n\n**Input:** baris pertama berisi N, baris kedua berisi N bilangan bulat dipisah spasi.\n\n**Output:** satu baris berisi `nilaiTerkecil nilaiTerbesar jumlahGanjil`.\n\nContoh: `5` lalu `1 -1 -9 7 5` -> `-9 7 3`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    val angka = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    // TODO: cari nilai terkecil, terbesar, dan jumlah bilangan ganjil\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    val angka = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    val min = angka.min\n    val max = angka.max\n    val ganjil = angka.filter(_ % 2 != 0).sum\n    println(s\"$min $max $ganjil\")\n  }\n}",
+      "explanation": "`.min` dan `.max` mencari nilai ekstrem dari list. `filter(_ % 2 != 0).sum` menyaring bilangan ganjil lalu menjumlahkannya. Ketiga nilai dicetak dalam satu baris dipisah spasi.",
+      "hints": [
+        "`angka.min` dan `angka.max` untuk nilai terkecil dan terbesar.",
+        "`filter(_ % 2 != 0)` menyisakan ganjil, lalu `.sum` menjumlahkannya.",
+        "Cetak dengan `println(s\"$min $max $ganjil\")`."
+      ],
+      "tests": [
+        { "input": "5\n1 -1 -9 7 5\n", "expected": "-9 7 3", "hidden": false },
+        { "input": "1\n4\n", "expected": "4 4 0", "hidden": false },
+        { "input": "2\n-3 2\n", "expected": "-3 2 -3", "hidden": false },
+        { "input": "6\n1 2 3 4 5 6\n", "expected": "1 6 9", "hidden": true },
+        { "input": "2\n0 0\n", "expected": "0 0 0", "hidden": false }
+      ]
+    },
+    {
+      "id": "prak-8-mutlak",
+      "title": "Mutlak",
+      "statement": "Membaca dua array berukuran N, lalu mencetak perkalian **nilai mutlak terbesar** dari masing-masing array.\n\n**Input:** baris 1 berisi N, baris 2 berisi N bilangan (array A), baris 3 berisi N bilangan (array B).\n\n**Output:** `Amax * Bmax`.\n\nContoh: `5`, `1 -1 -9 7 5`, `20 7 -32 2 50` -> mutlak A = 9, mutlak B = 50 -> `450`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    val a = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    val b = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    // TODO: mutlak terbesar A dikali mutlak terbesar B\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    val a = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    val b = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    val ma = a.map(math.abs).max\n    val mb = b.map(math.abs).max\n    println(ma * mb)\n  }\n}",
+      "explanation": "`math.abs` dipakai untuk membuang tanda, lalu `.max` mencari yang terbesar di tiap array. Perkalian kedua nilai itu yang dicetak.",
+      "hints": [
+        "`a.map(math.abs).max` untuk mutlak terbesar array A.",
+        "Lakukan hal yang sama untuk array B.",
+        "Cetak `ma * mb`."
+      ],
+      "tests": [
+        { "input": "5\n1 -1 -9 7 5\n20 7 -32 2 50\n", "expected": "450", "hidden": false },
+        { "input": "1\n5\n-5\n", "expected": "25", "hidden": false },
+        { "input": "2\n-3 -7\n1 2\n", "expected": "14", "hidden": false },
+        { "input": "3\n0 0 0\n-4 5 6\n", "expected": "0", "hidden": true },
+        { "input": "4\n1 2 3 4\n-1 -2 -3 -4\n", "expected": "16", "hidden": false }
+      ]
+    },
+    {
+      "id": "prak-8-faktorial",
+      "title": "Faktorial",
+      "statement": "Membaca sebuah bilangan dan mencetak faktorialnya memakai **fungsi rekursif**.\n\n**Input:** sebuah bilangan bulat n.\n\n**Output:** n!.\n\nContoh: `5` -> `120`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def faktorial(n: Int): Int = {\n    // TODO: base case dan langkah rekursif\n    0\n  }\n\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    println(faktorial(n))\n  }\n}",
+      "solution": "object Main {\n  def faktorial(n: Int): Int = {\n    if (n <= 1) 1\n    else n * faktorial(n - 1)\n  }\n\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    println(faktorial(n))\n  }\n}",
+      "explanation": "Base case `n <= 1` mengembalikan 1, jadi rekursi berhenti. Untuk n lebih besar, `n * faktorial(n - 1)` memecah masalah jadi sub-masalah yang lebih kecil.",
+      "hints": [
+        "Base case: kalau `n <= 1`, kembalikan 1.",
+        "Langkah rekursif: `n * faktorial(n - 1)`.",
+        "Tanpa base case, rekursi akan berjalan terus dan mentok di stack overflow."
+      ],
+      "tests": [
+        { "input": "5\n", "expected": "120", "hidden": false },
+        { "input": "1\n", "expected": "1", "hidden": false },
+        { "input": "0\n", "expected": "1", "hidden": true },
+        { "input": "7\n", "expected": "5040", "hidden": false },
+        { "input": "10\n", "expected": "3628800", "hidden": false }
+      ]
+    }
+  ],
+  "status": "published"
+}

@@ -1,0 +1,77 @@
+{
+  "stage": "stage-6",
+  "questions": [
+    {
+      "id": "q-b1",
+      "question": "Apa hasil `List(5, 3, 1, 4, 2).sorted`?",
+      "options": [
+        "`List(5, 4, 3, 2, 1)`",
+        "`List(1, 2, 3, 4, 5)`",
+        "`List(1, 2, 3, 4)`",
+        "`List(2, 3, 4, 5, 1)`"
+      ],
+      "answer": 1,
+      "explanation": "`sorted` memakai urutan bawaan (menaik untuk angka), jadi hasilnya `List(1, 2, 3, 4, 5)`."
+    },
+    {
+      "id": "q-b2",
+      "question": "Apa hasil `List(\"pisang\", \"mengkudu\", \"jambu\", \"apel\").sortBy(_.length)`?",
+      "options": [
+        "`List(\"mengkudu\", \"pisang\", \"jambu\", \"apel\")`",
+        "`List(\"apel\", \"jambu\", \"pisang\", \"mengkudu\")`",
+        "`List(\"pisang\", \"mengkudu\", \"jambu\", \"apel\")`",
+        "`List(\"apel\", \"pisang\", \"jambu\", \"mengkudu\")`"
+      ],
+      "answer": 1,
+      "explanation": "`sortBy(_.length)` mengurutkan menaik berdasarkan panjang kata: apel (4), jambu (5), pisang (6), mengkudu (7)."
+    },
+    {
+      "id": "q-b3",
+      "question": "Apa output dari `List(2, 5, 3, 8, 2).foreach(x => print(s\"$x \"))`?",
+      "options": [
+        "`2 5 3 8 2` tercetak dalam satu baris",
+        "`2`, `5`, `3`, `8`, `2` masing-masing di baris baru",
+        "`List(2, 5, 3, 8, 2)`",
+        "Tidak ada output, karena `foreach` mengembalikan Unit"
+      ],
+      "answer": 0,
+      "explanation": "`print` tidak menambah baris baru, jadi semua angka tercetak dalam satu baris dengan spasi di antara. `foreach` memang mengembalikan Unit, tapi efek samping `print` tetap terjadi."
+    },
+    {
+      "id": "q-b4",
+      "question": "Apa hasil `\"Pemrograman\".reverse`?",
+      "options": [
+        "\"nemarogermeP\"",
+        "\"namargormeP\"",
+        "\"Pemrograman\"",
+        "\"n\""
+      ],
+      "answer": 1,
+      "explanation": "`reverse` membalik seluruh karakter satu per satu, bukan urutan kata. Jadi \"Pemrograman\" menjadi \"namargormeP\"."
+    },
+    {
+      "id": "q-b5",
+      "question": "Hasil `\"Pemrograman\".endsWith(\"an\")` adalah?",
+      "options": [
+        "`true`",
+        "`false`",
+        "`\"an\"`",
+        "`2`"
+      ],
+      "answer": 0,
+      "explanation": "String \"Pemrograman\" diakhiri huruf \"an\", jadi `endsWith(\"an\")` mengembalikan `true`."
+    },
+    {
+      "id": "q-b6",
+      "question": "Apa hasil `List(\"pisang\", \"nangka\", \"jambu\", \"apel\", \"nanas\").filter(!_.contains(\"an\"))`?",
+      "options": [
+        "`List(\"pisang\", \"nangka\", \"nanas\")`",
+        "`List(\"jambu\", \"apel\")`",
+        "`List(\"pisang\", \"nangka\", \"jambu\", \"apel\", \"nanas\")`",
+        "`List(\"jambu\", \"apel\", \"nanas\")`"
+      ],
+      "answer": 1,
+      "explanation": "`!_.contains(\"an\")` mempertahankan kata yang tidak mengandung \"an\", yaitu jambu dan apel. Pisang, nangka, dan nanas mengandung \"an\"."
+    }
+  ]
+}

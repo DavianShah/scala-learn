@@ -1,0 +1,161 @@
+{
+  "stage": "stage-8",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Struktur data dan container, mana yang benar?",
+      "options": [
+        "Struktur data = implementasi pustaka, container = rancangan abstrak",
+        "Struktur data = cara menyimpan dan mengatur data, container = implementasi siap pakai dari pustaka",
+        "Struktur data = kumpulan tipe data primitif, container = variabel tunggal",
+        "Struktur data = perintah console, container = fungsi"
+      ],
+      "answer": 1,
+      "explanation": "Struktur data menggambarkan cara data disimpan dan diatur, sedangkan container adalah implementasi praktis yang disediakan pustaka bahasa."
+    },
+    {
+      "id": "q2",
+      "question": "Mana yang BUKAN sifat Array di Scala?",
+      "options": [
+        "Berukuran tetap",
+        "Mutable (isinya bisa diubah)",
+        "Tipe elemen bisa campur aduk",
+        "Dapat diakses lewat indeks"
+      ],
+      "answer": 2,
+      "explanation": "Elemen Array harus sejenis (homogen). Ukuran tetap, isi bisa diganti, dan akses memakai indeks."
+    },
+    {
+      "id": "q3",
+      "question": "Indeks elemen pertama pada Array di Scala adalah...",
+      "options": [
+        "0",
+        "1",
+        "-1",
+        "tergantung deklarasi"
+      ],
+      "answer": 0,
+      "explanation": "Scala memakai indeks berbasis 0, sama seperti Java."
+    },
+    {
+      "id": "q4",
+      "question": "Untuk `val nums = Array(1,2,3,4,5)`, apa hasil `println(nums(2))`?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "error"
+      ],
+      "answer": 2,
+      "explanation": "Indeks 2 menunjuk elemen ketiga, yaitu 3."
+    },
+    {
+      "id": "q5",
+      "question": "Setelah `nums(3) = 10` pada `Array(1,2,3,4,5)`, isi array menjadi...",
+      "options": [
+        "1 2 3 10 5",
+        "1 2 3 4 5",
+        "10 2 3 4 5",
+        "error kompilasi"
+      ],
+      "answer": 0,
+      "explanation": "Array mutable, elemen indeks 3 (nilai 4) diganti menjadi 10."
+    },
+    {
+      "id": "q6",
+      "question": "`Array.fill(5)(0)` menghasilkan...",
+      "options": [
+        "Array dengan 5 elemen bernilai 0",
+        "Array dengan 5 elemen bernilai 5",
+        "List dengan 5 elemen bernilai 0",
+        "error"
+      ],
+      "answer": 0,
+      "explanation": "`fill(n)(v)` membuat Array berisi n elemen, semuanya bernilai v."
+    },
+    {
+      "id": "q7",
+      "question": "Apa yang terjadi kalau menjalankan `nums(2) = 10` pada `val nums = List(1,2,3,4,5)`?",
+      "options": [
+        "Nilai elemen ke-3 menjadi 10",
+        "Tidak terjadi apa-apa",
+        "Error kompilasi karena List immutable",
+        "Runtime error"
+      ],
+      "answer": 2,
+      "explanation": "List immutable, elemennya tidak bisa diganti lewat indeks."
+    },
+    {
+      "id": "q8",
+      "question": "Cara yang benar menulis List kosong adalah...",
+      "options": [
+        "Nil",
+        "List()",
+        "Keduanya benar (Nil dan List())",
+        "empty()"
+      ],
+      "answer": 2,
+      "explanation": "Nil dan List() sama-sama list kosong. Nil dipakai di pola head::tail."
+    },
+    {
+      "id": "q9",
+      "question": "Hasil dari `List(1,2,3) ++ List(4,5)` adalah...",
+      "options": [
+        "List(1,2,3,4,5)",
+        "List(1,2,3)List(4,5)",
+        "List(4,5,1,2,3)",
+        "List(1,2,3,List(4,5))"
+      ],
+      "answer": 0,
+      "explanation": "`++` menggabung isi dua List."
+    },
+    {
+      "id": "q10",
+      "question": "Perbedaan `++` dan `:+` yang benar adalah...",
+      "options": [
+        "`++` menambah di depan, `:+` menambah di belakang",
+        "`++` menggabung isi dua List, `:+` menambah satu elemen di belakang",
+        "`++` immutable, `:+` mutable",
+        "Tidak ada bedanya"
+      ],
+      "answer": 1,
+      "explanation": "`++` menggabung isi dua List; `:+` menambah satu nilai di belakang."
+    },
+    {
+      "id": "q11",
+      "question": "Hasil dari `List(1,2,3) :+ List(4,5)` adalah...",
+      "options": [
+        "List(1,2,3,4,5)",
+        "List(1,2,3,List(4,5))",
+        "List(4,5,1,2,3)",
+        "List(1,2,3,4)"
+      ],
+      "answer": 1,
+      "explanation": "`:+` menambah argumennya sebagai satu elemen, jadi List(4,5) menjadi elemen terakhir."
+    },
+    {
+      "id": "q13",
+      "question": "Fungsi `map` pada List dipakai untuk...",
+      "options": [
+        "menyaring elemen",
+        "mengubah tiap elemen menjadi nilai lain",
+        "menggabung semua elemen jadi satu nilai",
+        "mengurutkan elemen"
+      ],
+      "answer": 1,
+      "explanation": "`map(f)` menerapkan f ke tiap elemen dan menghasilkan List baru."
+    },
+    {
+      "id": "q14",
+      "question": "Fungsi `filter` pada List dipakai untuk...",
+      "options": [
+        "mengubah tiap elemen",
+        "menyisakan elemen yang memenuhi kondisi",
+        "menambah elemen di belakang",
+        "mengurutkan elemen"
+      ],
+      "answer": 1,
+      "explanation": "`filter(p)` menyisakan elemen yang memenuhi predikat p."
+    }
+  ]
+}

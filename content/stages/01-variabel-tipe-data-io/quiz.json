@@ -1,0 +1,185 @@
+{
+  "stage": "stage-1",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Manakah yang membuat variabel `umur` bisa diubah nilainya?",
+      "options": [
+        "val umur = 20",
+        "var umur = 20",
+        "val umur: Int = 20",
+        "def umur = 20"
+      ],
+      "answer": 1,
+      "explanation": "`var` dipakai untuk variabel mutable, jadi nilai di dalamnya bisa diganti. `val` untuk variabel immutable, nilainya terkunci setelah pertama kali diisi."
+    },
+    {
+      "id": "q2",
+      "question": "Apa yang terjadi kalau kita menjalankan kode `val nama = \"Budi\"` lalu `nama = \"Ani\"`?",
+      "options": [
+        "Nilai `nama` berubah menjadi \"Ani\".",
+        "`nama` tetap \"Budi\" dan tidak ada pesan error.",
+        "Kode gagal dikompilasi.",
+        "`nama` otomatis berubah jadi `var`."
+      ],
+      "answer": 2,
+      "explanation": "`val` membuat variabel immutable, jadi tidak boleh diisi ulang. Kompiler akan menolak `nama = \"Ani\"` dengan pesan error."
+    },
+    {
+      "id": "q3",
+      "question": "Variabel manakah yang dideklarasikan dengan tipe data eksplisit?",
+      "options": [
+        "val a = 10",
+        "var b = \"Halo\"",
+        "val c: Double = 2.5",
+        "var d = true"
+      ],
+      "answer": 2,
+      "explanation": "Tipe eksplisit ditulis setelah nama variabel, contohnya `val c: Double = 2.5`. Pilihan lain memakai inferensi, Scala yang menebak tipenya."
+    },
+    {
+      "id": "q4",
+      "question": "Setelah `val x = 10` dijalankan, tipe data `x` adalah?",
+      "options": [
+        "Double",
+        "Int",
+        "Long",
+        "String"
+      ],
+      "answer": 1,
+      "explanation": "Angka bulat seperti `10` otomatis bertipe `Int`. Kalau mau desimal, tulis `10.0` dan tipenya `Double`."
+    },
+    {
+      "id": "q5",
+      "question": "Tipe data mana yang pas untuk menyimpan satu huruf, misalnya `A`?",
+      "options": [
+        "String",
+        "Int",
+        "Char",
+        "Boolean"
+      ],
+      "answer": 2,
+      "explanation": "`Char` dipakai untuk satu karakter, ditulis dengan tanda kutip satu seperti `'A'`. `String` untuk teks, `Int` untuk angka bulat, `Boolean` untuk `true`/`false`."
+    },
+    {
+      "id": "q6",
+      "question": "Manakah deklarasi `Boolean` yang benar?",
+      "options": [
+        "val status = 1",
+        "val status = true",
+        "val status = \"true\"",
+        "val status = 'benar'"
+      ],
+      "answer": 1,
+      "explanation": "`Boolean` hanya punya dua nilai, `true` atau `false`. Tanda kutip membuatnya jadi String, bukan Boolean."
+    },
+    {
+      "id": "q7",
+      "question": "Kalau butuh menyimpan angka bulat yang sangat besar, tipe apa yang dipakai?",
+      "options": [
+        "Int",
+        "Double",
+        "Long",
+        "String"
+      ],
+      "answer": 2,
+      "explanation": "`Long` menampung bilangan bulat dengan rentang jauh lebih besar daripada `Int`. `Double` untuk desimal, `String` untuk teks."
+    },
+    {
+      "id": "q8",
+      "question": "Berapa hasil dari `7 / 2` kalau `7` dan `2` bertipe `Int`?",
+      "options": [
+        "3.5",
+        "3",
+        "4",
+        "2"
+      ],
+      "answer": 1,
+      "explanation": "Pembagian dua `Int` menghasilkan `Int` juga, jadi bagian desimal dibuang dan hasilnya `3`. Kalau mau `3.5`, salah satu bilangan harus `Double`."
+    },
+    {
+      "id": "q9",
+      "question": "Cara yang benar membaca satu bilangan bulat dari input pengguna?",
+      "options": [
+        "val n = scala.io.StdIn.readInt()",
+        "val n = scala.io.StdIn.readDouble()",
+        "val n = scala.io.StdIn.readLine()",
+        "val n = println()"
+      ],
+      "answer": 0,
+      "explanation": "`readInt()` langsung mengembalikan `Int`. `readLine()` mengembalikan String, `readDouble()` mengembalikan Double, dan `println()` hanya mencetak output."
+    },
+    {
+      "id": "q10",
+      "question": "`scala.io.StdIn.readLine()` mengembalikan nilai bertipe?",
+      "options": [
+        "Int",
+        "Double",
+        "String",
+        "Char"
+      ],
+      "answer": 2,
+      "explanation": "`readLine()` selalu menghasilkan String, apa pun yang diketik pengguna. Kalau ingin angka, ubah dulu dengan `.toInt` atau `.toDouble`."
+    },
+    {
+      "id": "q11",
+      "question": "Apa hasil dari `println(\"Hasil: \" + 5 + 3)`?",
+      "options": [
+        "Hasil: 8",
+        "Hasil: 53",
+        "Hasil: 15",
+        "8"
+      ],
+      "answer": 1,
+      "explanation": "`+` pada String berarti menggabung teks, bukan menjumlahkan angka. Jadi `\"Hasil: \" + 5` menghasilkan `Hasil: 5`, lalu digabung lagi dengan `3` menjadi `Hasil: 53`."
+    },
+    {
+      "id": "q12",
+      "question": "Apa bedanya `println` dan `print`?",
+      "options": [
+        "`print` hanya bisa untuk angka, `println` untuk teks.",
+        "`println` menambah baris baru di akhir, `print` tidak.",
+        "`print` lebih cepat dari `println`.",
+        "`println` membaca input, `print` mencetak output."
+      ],
+      "answer": 1,
+      "explanation": "`println` mencetak lalu memindahkan kursor ke baris baru, sedangkan `print` mencetak tanpa pindah baris. Keduanya sama-sama bisa dipakai untuk teks dan angka."
+    },
+    {
+      "id": "q13",
+      "question": "Manakah cara yang benar mengubah String `\"42\"` menjadi `Int`?",
+      "options": [
+        "\"42\".toInt",
+        "\"42\".readInt()",
+        "\"42\".toBoolean",
+        "\"42\".println()"
+      ],
+      "answer": 0,
+      "explanation": "Method `.toInt` mengubah String menjadi `Int`. Method `.toDouble` dipakai untuk desimal, sedangkan `readInt()` dipanggil lewat `scala.io.StdIn`, bukan lewat String."
+    },
+    {
+      "id": "q14",
+      "question": "Kalau pengguna mengetik `3.5`, input dibaca dengan `readLine()` lalu diubah ke `Int` memakai `.toInt`. Apa yang terjadi?",
+      "options": [
+        "Hasilnya `3.5`.",
+        "Nilainya otomatis dibulatkan jadi `4`.",
+        "Program berhenti dengan error.",
+        "Hasilnya `3`."
+      ],
+      "answer": 2,
+      "explanation": "`.toInt` hanya bisa mengubah String yang isinya bilangan bulat. String `\"3.5\"` tidak valid untuk `.toInt`, jadi program berhenti dengan error."
+    },
+    {
+      "id": "q15",
+      "question": "Dari tipe data di bawah, mana yang bukan tipe data dasar Scala di materi ini?",
+      "options": [
+        "Int",
+        "Double",
+        "Array",
+        "Char"
+      ],
+      "answer": 2,
+      "explanation": "Materi ini membahas `Int`, `Double`, `Boolean`, `String`, `Char`, dan `Long`. `Array` tidak termasuk tipe data dasar yang dibahas di sini."
+    }
+  ]
+}

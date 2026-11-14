@@ -1,0 +1,77 @@
+{
+  "stage": "stage-5",
+  "questions": [
+    {
+      "id": "q-b1",
+      "question": "Kalau list yang mau dirangkum bisa kosong, alternatif `reduce` yang aman dan punya nilai awal adalah?",
+      "options": [
+        "`list.foldLeft(0)(_ + _)`",
+        "`list.reduce(_ + _)`",
+        "`list.reduceLeft(_ + _)`",
+        "`list.map(_ + 0)`"
+      ],
+      "answer": 0,
+      "explanation": "`foldLeft(0)(_ + _)` menyediakan nilai awal 0, jadi list kosong tetap menghasilkan 0, bukan exception. `reduce` biasa tidak punya nilai awal."
+    },
+    {
+      "id": "q-b2",
+      "question": "Apa hasil dari `\"10 20 30\".trim.split(\"\\s+\").map(_.toInt).toList`?",
+      "options": [
+        "`List(\"10\", \"20\", \"30\")`",
+        "`List(10, 20, 30)`",
+        "`Array(10, 20, 30)`",
+        "`Seq(\"10 20 30\")`"
+      ],
+      "answer": 1,
+      "explanation": "`split` menghasilkan Array[String], `map(_.toInt)` mengubah tiap elemen jadi Int, dan `toList` mengubahnya jadi List. Jadi hasilnya `List(10, 20, 30)`."
+    },
+    {
+      "id": "q-b3",
+      "question": "Mana pemanggilan `map` yang benar untuk memakai fungsi `def kuadrat(x: Int): Int = x * x`?",
+      "options": [
+        "`list.map(kuadrat)`",
+        "`list.map(kuadrat(x))`",
+        "`list.map(def kuadrat)`",
+        "`list.map(kuadrat => kuadrat)`"
+      ],
+      "answer": 0,
+      "explanation": "Nama fungsi dipakai langsung sebagai nilai; Scala menerjemahkannya jadi fungsi yang dilewatkan ke `map`. Tanda kurung dan argumen tidak ditulis."
+    },
+    {
+      "id": "q-b4",
+      "question": "Apa hasil `List(\"John O'Shea\", \"Aiden McGeady\", \"John Hartson\").filter(_.startsWith(\"John\"))`?",
+      "options": [
+        "`List(\"John O'Shea\", \"Aiden McGeady\", \"John Hartson\")`",
+        "`List(\"John O'Shea\", \"John Hartson\")`",
+        "`List(\"Aiden McGeady\")`",
+        "`List(\"Aiden McGeady\", \"John Hartson\")`"
+      ],
+      "answer": 1,
+      "explanation": "`startsWith(\"John\")` mengembalikan true hanya untuk nama yang diawali \"John\", yaitu \"John O'Shea\" dan \"John Hartson\"."
+    },
+    {
+      "id": "q-b5",
+      "question": "Setelah `val a = List(1, 2, 3)` dan `val b = a.map(_ * 2)`, apa isi `a`?",
+      "options": [
+        "`List(2, 4, 6)`",
+        "`List(1, 2, 3)`",
+        "`List(1, 2, 3, 1, 2, 3)`",
+        "`List(1, 4, 9)`"
+      ],
+      "answer": 1,
+      "explanation": "`map` menghasilkan koleksi baru tanpa mengubah list asli. `a` tetap `List(1, 2, 3)` dan hasil transformasi ada di `b`."
+    },
+    {
+      "id": "q-b6",
+      "question": "Apa hasil `List(1, 3, 5).filter(_ % 2 == 0)`?",
+      "options": [
+        "Exception, karena tidak ada elemen genap.",
+        "`List(1, 3, 5)`",
+        "`List()`",
+        "`List(0)`"
+      ],
+      "answer": 2,
+      "explanation": "`filter` tidak melempar error kalau tidak ada yang cocok; dia mengembalikan list kosong `List()`."
+    }
+  ]
+}

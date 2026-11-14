@@ -10,6 +10,7 @@ import {
 import { Icon } from "./Icon"
 import { Confetti } from "./Confetti"
 import { Markdown } from "./Markdown"
+import { playSound } from "../lib/sound"
 
 const MAX_OUT = 4000
 
@@ -57,6 +58,7 @@ export function ProblemCard({
   const [shakeKey, setShakeKey] = useState(0)
   const [burst, setBurst] = useState(0)
   const [copied, setCopied] = useState<"starter" | "solution" | null>(null)
+  const [editorScroll, setEditorScroll] = useState(0)
   const alreadyFired = useRef(false)
 
   useEffect(() => {
@@ -139,6 +141,7 @@ export function ProblemCard({
         setDetail(`${failed} dari ${outcomes.length} tes belum cocok`)
       }
       setShakeKey((k) => k + 1)
+      playSound("wrong")
     }
     setBusy(false)
   }
@@ -173,17 +176,60 @@ export function ProblemCard({
         </span>
       </div>
 
-      <p className="problem-statement">
-        <Markdown source={problem.statement} />
-      </p>
+      <div className="problem-grid">
+        <div className="problem-left">
+          <p className="problem-statement">
+            <Markdown source={problem.statement} />
+          </p>
 
-      <textarea
-        className="editor"
-        value={code}
-        spellCheck={false}
-        onChange={(e) => handleCode(e.target.value)}
-        aria-label={`Editor kode soal ${problem.title}`}
-      />
+          {revealed ? (
+            <div className="hint">
+              <div className="hint-title">
+                <Icon name="lightbulb" size={15} />
+                Petunjuk
+              </div>
+              {problem.hints.slice(0, hints + 1).map((h, i) => (
+                <div className="hint-item" key={i}>
+                  <Markdown source={h} />
+                </div>
+              ))}
+              {hints < problem.hints.length - 1 ? (
+                <button
+                  className="btn btn-ghost btn-sm"
+                  style={{ marginTop: 10 }}
+                  onClick={() => setHints((h) => h + 1)}
+                  type="button"
+                >
+                  <Icon name="chevron-down" size={14} />
+                  Petunjuk berikutnya
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="problem-right">
+          <div className="editor-wrap">
+            <div className="editor-gutter" aria-hidden="true">
+              <div
+                className="editor-gutter-inner"
+                style={{ transform: `translateY(${-editorScroll}px)` }}
+              >
+                {Array.from({ length: code.split("\n").length }, (_, i) => (
+                  <span key={i}>{i + 1}</span>
+                ))}
+              </div>
+            </div>
+            <textarea
+              className="editor"
+              value={code}
+              spellCheck={false}
+              wrap="off"
+              onChange={(e) => handleCode(e.target.value)}
+              onScroll={(e) => setEditorScroll(e.currentTarget.scrollTop)}
+              aria-label={`Editor kode soal ${problem.title}`}
+            />
+          </div>
 
       <div className="problem-actions">
         <button className="btn btn-ghost" onClick={handleRun} type="button" disabled={busy}>
@@ -273,30 +319,8 @@ export function ProblemCard({
         </div>
       ) : null}
 
-      {revealed ? (
-        <div className="hint">
-          <div className="hint-title">
-            <Icon name="lightbulb" size={15} />
-            Petunjuk
-          </div>
-          {problem.hints.slice(0, hints + 1).map((h, i) => (
-            <div className="hint-item" key={i}>
-              <Markdown source={h} />
-            </div>
-          ))}
-          {hints < problem.hints.length - 1 ? (
-            <button
-              className="btn btn-ghost btn-sm"
-              style={{ marginTop: 10 }}
-              onClick={() => setHints((h) => h + 1)}
-              type="button"
-            >
-              <Icon name="chevron-down" size={14} />
-              Petunjuk berikutnya
-            </button>
-          ) : null}
         </div>
-      ) : null}
+      </div>
 
       <div className="solution">
         <div className="solution-head">

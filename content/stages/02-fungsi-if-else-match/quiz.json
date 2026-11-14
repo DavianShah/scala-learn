@@ -1,0 +1,185 @@
+{
+  "stage": "stage-2",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Manakah sintaks deklarasi fungsi yang benar di Scala?",
+      "options": [
+        "def kuadrat(x: Int): Int = x * x",
+        "function kuadrat(x: Int): Int = x * x",
+        "def kuadrat(x: Int) -> Int = x * x",
+        "fun kuadrat(x: Int): Int = x * x"
+      ],
+      "answer": 0,
+      "explanation": "Fungsi di Scala diawali kata kunci `def`, diikuti nama, parameter, tipe kembalian setelah tanda `:`, lalu isi fungsi setelah `=`."
+    },
+    {
+      "id": "q2",
+      "question": "Berapa nilai kembalian dari `def kuadrat(x: Int): Int = x * x` kalau dipanggil `kuadrat(4)`?",
+      "options": [
+        "4",
+        "8",
+        "16",
+        "44"
+      ],
+      "answer": 2,
+      "explanation": "Fungsi mengalikan `x` dengan dirinya sendiri. `4 * 4` menghasilkan `16`."
+    },
+    {
+      "id": "q3",
+      "question": "Apa yang jadi nilai kembalian sebuah fungsi di Scala?",
+      "options": [
+        "Nilai yang ditulis setelah kata kunci `return`.",
+        "Ekspresi terakhir di dalam fungsi.",
+        "Nilai parameter pertama.",
+        "Selalu `Unit`."
+      ],
+      "answer": 1,
+      "explanation": "Scala tidak butuh kata kunci `return`. Nilai kembalian adalah ekspresi terakhir yang ada di dalam fungsi, jadi tulis hasil akhir di baris terakhir."
+    },
+    {
+      "id": "q4",
+      "question": "Fungsi `def greet(): Unit = println(\"Halo\")` bertipe kembalian `Unit`. Artinya?",
+      "options": [
+        "Fungsi itu mengembalikan angka nol.",
+        "Fungsi itu tidak mengembalikan nilai yang dipakai.",
+        "Fungsi itu tidak bisa dipanggil.",
+        "Fungsi itu mengembalikan String."
+      ],
+      "answer": 1,
+      "explanation": "`Unit` dipakai untuk fungsi yang cuma melakukan aksi, misalnya mencetak, dan tidak menghasilkan nilai yang bisa disimpan. Fungsinya tetap bisa dipanggil."
+    },
+    {
+      "id": "q5",
+      "question": "Diberikan `def f(x: Int): Int = { println(x); x }`. Apa yang terjadi?",
+      "options": [
+        "Fungsi mengembalikan `x` dan tercetak normal.",
+        "Kode gagal dikompilasi.",
+        "Fungsi mengembalikan String.",
+        "Fungsi berhenti di baris pertama."
+      ],
+      "answer": 1,
+      "explanation": "`println(x)` bertipe `Unit`, bukan `Int`. Karena ekspresi terakhir di blok itu `Unit`, deklarasi tipe kembalian `Int` tidak cocok dan kompilasi gagal."
+    },
+    {
+      "id": "q6",
+      "question": "Di Scala, `if` itu ekspresi. Artinya?",
+      "options": [
+        "`if` hanya boleh dipakai di dalam fungsi.",
+        "`if` menghasilkan nilai yang bisa disimpan di variabel.",
+        "`if` harus selalu diakhiri `else`.",
+        "`if` tidak bisa dipakai untuk angka."
+      ],
+      "answer": 1,
+      "explanation": "Karena `if` adalah ekspresi, hasilnya bisa langsung disimpan, contohnya `val label = if (x > 5) \"besar\" else \"kecil\"`."
+    },
+    {
+      "id": "q7",
+      "question": "Berapa nilai `label` setelah `val x = 7` lalu `val label = if (x > 5) \"besar\" else \"kecil\"`?",
+      "options": [
+        "kecil",
+        "besar",
+        "7",
+        "true"
+      ],
+      "answer": 1,
+      "explanation": "`x` bernilai `7` dan `7 > 5` benar, jadi cabang `if` yang dipilih dan `label` berisi `\"besar\"`."
+    },
+    {
+      "id": "q8",
+      "question": "Untuk apa `case _` dipakai di dalam `match`?",
+      "options": [
+        "Menghentikan program.",
+        "Menangkap semua nilai yang tidak cocok dengan `case` lain.",
+        "Membuang nilai yang diperiksa.",
+        "Menandai awal `match`."
+      ],
+      "answer": 1,
+      "explanation": "`case _` adalah jaring pengaman atau default. Kalau tidak ada `case` lain yang cocok, cabang inilah yang dijalankan."
+    },
+    {
+      "id": "q9",
+      "question": "Berapa nilai `nama` setelah `val kode = 2` lalu `val nama = kode match { case 1 => \"Satu\"; case 2 => \"Dua\"; case 3 => \"Tiga\"; case _ => \"Lainnya\" }`?",
+      "options": [
+        "Satu",
+        "Dua",
+        "Tiga",
+        "Lainnya"
+      ],
+      "answer": 1,
+      "explanation": "`kode` bernilai `2`, jadi `case 2` yang cocok dan `nama` berisi `\"Dua\"`."
+    },
+    {
+      "id": "q10",
+      "question": "`match` di Scala paling mirip dengan struktur di bahasa lain yang mana?",
+      "options": [
+        "switch case",
+        "while",
+        "for",
+        "do while"
+      ],
+      "answer": 0,
+      "explanation": "Slide menyebut `match` mirip `switch case` di C/C++. Bedanya, `match` di Scala adalah ekspresi yang bisa menghasilkan nilai."
+    },
+    {
+      "id": "q11",
+      "question": "Fungsi manakah yang menjumlahkan nilai mutlak dua bilangan dengan benar?",
+      "options": [
+        "def sumAbs(a: Int, b: Int): Int = { val absA = if (a > 0) a else -a; val absB = if (b > 0) b else -b; absA + absB }",
+        "def sumAbs(a: Int, b: Int): Int = { a + b }",
+        "def sumAbs(a: Int, b: Int): Unit = { val absA = if (a > 0) a else -a; absA + b }",
+        "def sumAbs(a: Int, b: Int): Int = if (a > 0) a else -a"
+      ],
+      "answer": 0,
+      "explanation": "Fungsi itu menjadikan tiap bilangan positif dengan `if`, lalu menjumlahkan keduanya. Ekspresi terakhir `absA + absB` menjadi nilai kembalian."
+    },
+    {
+      "id": "q12",
+      "question": "Bagaimana cara menulis `match` untuk nilai `x` dengan `case x if x >= 80 => \"A\"`?",
+      "options": [
+        "Semua `x` di atas 80 jadi \"A\", sisanya lanjut ke case berikutnya.",
+        "Hanya `x` tepat 80 yang jadi \"A\".",
+        "Semua `x` di bawah 80 yang jadi \"A\".",
+        "`match` gagal karena `if` tidak boleh dipakai."
+      ],
+      "answer": 0,
+      "explanation": "`case x if x >= 80` memakai guard, jadi semua nilai 80 ke atas masuk cabang ini. Kalau tidak cocok, `match` lanjut memeriksa `case` berikutnya."
+    },
+    {
+      "id": "q13",
+      "question": "Mengapa menaruh `return` di akhir fungsi di Scala dianggap kurang idiomatik?",
+      "options": [
+        "`return` membuat program berhenti total.",
+        "Nilai kembalian sudah otomatis diambil dari ekspresi terakhir.",
+        "`return` tidak bisa dipakai untuk tipe `Int`.",
+        "`return` hanya boleh di dalam `object`."
+      ],
+      "answer": 1,
+      "explanation": "Di Scala hasil fungsi sudah otomatis diambil dari ekspresi terakhir. Menulis `return` tidak salah, tapi membuat kode terasa seperti gaya Python, bukan Scala."
+    },
+    {
+      "id": "q14",
+      "question": "Apa keuntungan `match` dibanding rangkaian `if-else` untuk banyak cabang?",
+      "options": [
+        "`match` lebih cepat dieksekusi mesin.",
+        "`match` lebih rapi dan tiap kemungkinan ditulis sebagai `case`.",
+        "`match` bisa membaca input langsung.",
+        "`match` tidak butuh tipe data."
+      ],
+      "answer": 1,
+      "explanation": "`match` memilah nilai lewat daftar `case`, jadi kode lebih rapi dan gampang dibaca. Untuk banyak cabang, ini lebih enak daripada menumpuk `if-else`."
+    },
+    {
+      "id": "q15",
+      "question": "Diberikan `def diskon(harga: Double): Double = { val potong = harga * 0.1; harga - potong }`. Berapa hasil `diskon(100.0)`?",
+      "options": [
+        "10.0",
+        "90.0",
+        "110.0",
+        "100.0"
+      ],
+      "answer": 1,
+      "explanation": "`potong` dihitung `100.0 * 0.1 = 10.0`, lalu `harga - potong` menghasilkan `100.0 - 10.0 = 90.0`. Ekspresi terakhir itulah yang jadi nilai kembalian."
+    }
+  ]
+}

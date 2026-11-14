@@ -1,0 +1,77 @@
+{
+  "stage": "stage-3",
+  "questions": [
+    {
+      "id": "q-b1",
+      "question": "Kenapa di dalam `for` kita tidak perlu menulis `i += 1`?",
+      "options": [
+        "Karena `i` otomatis jadi `val`",
+        "Karena `for` tidak butuh variabel",
+        "Karena `for` otomatis menelusuri tiap nilai di rentang",
+        "Karena `i += 1` tidak bisa dipakai di Scala"
+      ],
+      "answer": 2,
+      "explanation": "`for (i <- rentang)` sudah menaungi `i` dari awal sampai akhir rentang, jadi `i` berubah sendiri tiap putaran."
+    },
+    {
+      "id": "q-b2",
+      "question": "Apa yang terjadi kalau kondisi `while` sudah `false` sejak awal?",
+      "options": [
+        "Blok dijalankan satu kali lalu berhenti",
+        "Program error saat kompilasi",
+        "Blok dijalankan selamanya",
+        "Blok tidak pernah dijalankan"
+      ],
+      "answer": 3,
+      "explanation": "`while` mengecek kondisi sebelum tiap putaran. Kalau kondisinya `false` dari awal, blok sama sekali tidak dijalankan."
+    },
+    {
+      "id": "q-b3",
+      "question": "Range `5 to 5` berisi berapa nilai?",
+      "options": [
+        "1",
+        "0",
+        "2",
+        "5"
+      ],
+      "answer": 0,
+      "explanation": "`to` inklusif, jadi `5 to 5` berisi tepat satu nilai, yaitu `5`."
+    },
+    {
+      "id": "q-b4",
+      "question": "Kenapa variabel penampung total biasanya dibuat dengan `var`, bukan `val`?",
+      "options": [
+        "Karena `val` lebih lambat",
+        "Karena `var` hanya bisa untuk angka",
+        "Karena nilainya diubah tiap putaran, dan `val` tidak boleh diisi ulang",
+        "Karena `val` tidak bisa dicetak"
+      ],
+      "answer": 2,
+      "explanation": "Total diakumulasi dengan `total += i` di setiap putaran, jadi nilainya harus bisa berubah. `val` akan ditolak kompiler."
+    },
+    {
+      "id": "q-b5",
+      "question": "Di soal FizzBuzz, kenapa kelipatan 15 harus diperiksa lebih dulu?",
+      "options": [
+        "Karena 15 lebih besar dari 3 dan 5",
+        "Karena `%` tidak bisa dipakai untuk 15",
+        "Karena 15 harus dicetak paling akhir",
+        "Karena 15 juga kelipatan 3 dan 5, jadi kalau tidak duluan bisa salah tercetak Fizz atau Buzz"
+      ],
+      "answer": 3,
+      "explanation": "15 memenuhi `i % 3 == 0` dan `i % 5 == 0` sekaligus. Kalau pengecekan 3 atau 5 lebih dulu, 15 tertangkap di sana dan tidak jadi `FizzBuzz`."
+    },
+    {
+      "id": "q-b6",
+      "question": "Apa kegunaan operator `%` (modulo) di stage ini?",
+      "options": [
+        "Mencari sisa pembagian, misal untuk mengecek kelipatan",
+        "Membagi dua bilangan",
+        "Mengalikan dua bilangan",
+        "Mengubah tipe data"
+      ],
+      "answer": 0,
+      "explanation": "`%` mengembalikan sisa pembagian. Kalau `i % 3 == 0`, artinya `i` kelipatan 3."
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "id": "prak-10",
+  "order": 12,
+  "slug": "prak-10",
+  "title": "Praktikum 10: koleksi lanjutan — kuadrat, mutu, palindrome",
+  "week": 11,
+  "course": "KOM2205",
+  "sources": ["SOAL PRAK PEMROG UAS.pdf (Praktikum 10)"],
+  "estimatedMinutes": 35,
+  "summary": "Tiga soal asli praktikum 10: K kuadrat teratas bilangan genap positif, pengelompokan huruf mutu, dan palindrom unik terurut.",
+  "concepts": ["koleksi", "sort", "groupBy", "string"],
+  "prerequisites": ["stage-6"],
+  "objectives": [
+    "Mengurutkan dan mengambil K elemen teratas dari koleksi.",
+    "Mengelompokkan nilai ke kategori dan mengurutkan hasilnya.",
+    "Merapikan string dan mencari palindrom unik."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "**Praktikum 10** isinya tiga soal asli: **Jumlah Kuadrat Terbesar** (urutkan kuadrat, ambil K teratas), **Huruf Mutu Mahasiswa** (kelompokkan A/B/C lalu urutkan frekuensinya), dan **Palindrome Terurut** (rapikan string, buang duplikat, urutkan panjang lalu alfabetis).\n\nSemuanya memakai operasi koleksi: `filter`, `map`, `sorted`, `groupBy`, dan `distinct`."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val data = List(3, 1, 4, 1, 5)\n    println(data.sortBy(-_))\n    println(data.groupBy(x => x % 2).view.mapValues(_.size).toMap)\n  }\n}",
+      "runnable": true,
+      "output": "List(5, 4, 3, 1, 1)\nMap(1 -> 3, 0 -> 2)"
+    },
+    {
+      "type": "pitfall",
+      "body": "Urut menurun dengan `sortBy(-_)`; untuk urutan ganda, pakai tuple: `sortBy(r => (-r._2, r._1))` berarti frekuensi menurun lalu nama alfabetis. `distinct` menghapus duplikat sebelum memilih K, bukan sesudah.\n\nUntuk merapikan string, `toLowerCase.filter(c => c >= 'a' && c <= 'z')` membuang angka dan tanda baca, jadi `a1na` menjadi `ana`."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "`sortBy(-_)` mengurutkan menurun; `sortBy(r => (-r._2, r._1))` untuk urutan ganda.",
+        "`groupBy(k).view.mapValues(_.size)` menghitung frekuensi per kelompok.",
+        "`filter(s => s.length >= 3 && s == s.reverse)` menemukan palindrom."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "prak-10-kuadrat-terbesar",
+      "title": "Jumlah Kuadrat Terbesar",
+      "statement": "Membaca N, K, dan N bilangan bulat. Ambil **K kuadrat teratas dari bilangan genap positif** (urutkan menurun), lalu cetak jumlahnya. Kalau tidak ada bilangan yang memenuhi, cetak `0`.\n\n**Input:** baris 1 berisi N dan K, baris 2 berisi N bilangan bulat dipisah spasi.\n\n**Output:** satu angka.\n\nContoh: `8 3` lalu `5 2 8 -4 7 12 6 1` -> kuadrat genap positif 4, 64, 144, 36; tiga terbesar 144, 64, 36 -> `244`.",
+      "difficulty": 2,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nk = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt)\n    val n = nk(0)\n    val k = nk(1)\n    val angka = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    // TODO: genap positif, kuadrat, urut menurun, ambil k, jumlahkan\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nk = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt)\n    val n = nk(0)\n    val k = nk(1)\n    val angka = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    val kuadrat = angka.filter(x => x > 0 && x % 2 == 0).map(x => x * x).sortBy(-_)\n    println(kuadrat.take(k).sum)\n  }\n}",
+      "explanation": "`filter(x => x > 0 && x % 2 == 0)` menyisakan genap positif. `map(x => x * x)` mengkuadratkan, `sortBy(-_)` mengurutkan menurun, `take(k)` mengambil K teratas, dan `sum` menjumlahkan. Kalau hasilnya kosong, `sum` menghasilkan 0.",
+      "hints": [
+        "Genap positif: `x > 0 && x % 2 == 0`.",
+        "`sortBy(-_)` untuk urut menurun, `take(k)` untuk K teratas.",
+        "`.sum` pada list kosong menghasilkan 0."
+      ],
+      "tests": [
+        { "input": "8 3\n5 2 8 -4 7 12 6 1\n", "expected": "244", "hidden": false },
+        { "input": "3 1\n1 2 3\n", "expected": "4", "hidden": false },
+        { "input": "2 5\n2 4\n", "expected": "20", "hidden": false },
+        { "input": "4 2\n-2 0 2 6\n", "expected": "40", "hidden": true },
+        { "input": "1 1\n7\n", "expected": "0", "hidden": false }
+      ]
+    },
+    {
+      "id": "prak-10-huruf-mutu",
+      "title": "Huruf Mutu Mahasiswa",
+      "statement": "Membaca N dan N nilai, lalu mengelompokkan: **A** (85-100), **B** (70-84), **C** (60-69). Cetak kelompok dengan **jumlah siswa terbanyak**, diurutkan menurun; bila jumlah sama, urut alfabetis. Kelompok dengan jumlah 0 dilewati. Kalau tidak ada nilai yang memenuhi, cetak `TIDAK ADA`.\n\n**Input:** baris 1 berisi N, baris 2 berisi N nilai dipisah spasi.\n\n**Output:** satu baris, mis. `A 3 B 3 C 2`.\n\nContoh: `10` lalu `90 84 60 75 59 91 85 70 40 60` -> `A 3 B 3 C 2`.",
+      "difficulty": 2,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    val nilai = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    // TODO: kelompokkan A/B/C, hitung, urutkan menurun (tie alfabetis)\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    val nilai = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    def rentang(x: Int): String = if (x >= 85) \"A\" else if (x >= 70) \"B\" else if (x >= 60) \"C\" else \"\"\n    val hitung = nilai.groupBy(rentang).view.mapValues(_.size).toMap\n    val baris = Seq(\"A\", \"B\", \"C\").flatMap(k => hitung.get(k).map(c => (k, c)))\n    val urut = baris.sortBy(r => (-r._2, r._1))\n    if (urut.isEmpty) println(\"TIDAK ADA\")\n    else println(urut.map(r => s\"${r._1} ${r._2}\").mkString(\" \"))\n  }\n}",
+      "explanation": "`groupBy(rentang)` memetakan tiap nilai ke A/B/C, `mapValues(_.size)` menghitung frekuensinya. `flatMap` dengan `Seq` A/B/C membuang kelompok kosong, `sortBy(r => (-r._2, r._1))` mengurutkan menurun dengan tie alfabetis.",
+      "hints": [
+        "`def rentang(x: Int)` dengan ambang 85/70/60.",
+        "`groupBy(rentang).view.mapValues(_.size)` untuk frekuensi.",
+        "`sortBy(r => (-r._2, r._1))` untuk menurun + tie alfabetis."
+      ],
+      "tests": [
+        { "input": "10\n90 84 60 75 59 91 85 70 40 60\n", "expected": "A 3 B 3 C 2", "hidden": false },
+        { "input": "3\n85 70 60\n", "expected": "A 1 B 1 C 1", "hidden": false },
+        { "input": "3\n50 40 30\n", "expected": "TIDAK ADA", "hidden": false },
+        { "input": "5\n90 90 80 80 60\n", "expected": "A 2 B 2 C 1", "hidden": true },
+        { "input": "4\n85 85 70 70\n", "expected": "A 2 B 2", "hidden": false }
+      ]
+    },
+    {
+      "id": "prak-10-palindrome",
+      "title": "Palindrome Terurut",
+      "statement": "Membaca N, K, dan N string. Rapikan tiap string: huruf kecil dan buang karakter selain a-z. Ambil string yang **palindrom** dengan panjang minimal 3, **buang duplikat**, urutkan panjang menurun lalu alfabetis, lalu cetak K string teratas. Kalau tidak ada, cetak `TIDAK ADA`.\n\n**Input:** baris 1 berisi N dan K, lalu N baris string.\n\n**Output:** satu baris, mis. `katak level radar`.\n\nContoh: `8 3` lalu `Level`, `a1na`, `KATAK`, `baca`, `Noon`, `Ana`, `radar`, `level` -> `katak level radar`.",
+      "difficulty": 2,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nk = scala.io.StdIn.readLine().trim.split(\"\\\\s+\")\n    val n = nk(0).toInt\n    val k = nk(1).toInt\n    // TODO: rapikan, palindrom min 3, unik, urut panjang desc + alfabetis, ambil k\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nk = scala.io.StdIn.readLine().trim.split(\"\\\\s+\")\n    val n = nk(0).toInt\n    val k = nk(1).toInt\n    val strings = (1 to n).map(_ => scala.io.StdIn.readLine())\n    val bersih = strings.map(s => s.toLowerCase.filter(c => c >= 'a' && c <= 'z'))\n    val pal = bersih.filter(s => s.length >= 3 && s == s.reverse).distinct\n    val urut = pal.sortBy(s => (-s.length, s)).take(k)\n    if (urut.isEmpty) println(\"TIDAK ADA\") else println(urut.mkString(\" \"))\n  }\n}",
+      "explanation": "`filter(c => c >= 'a' && c <= 'z')` membuang karakter non-huruf. `s == s.reverse` memeriksa palindrom. `distinct` menghapus duplikat, `sortBy(s => (-s.length, s))` mengurutkan panjang menurun lalu alfabetis, dan `take(k)` memilih K teratas.",
+      "hints": [
+        "Rapikan: `toLowerCase.filter(c => c >= 'a' && c <= 'z')`.",
+        "Palindrom: `s == s.reverse`, dengan `s.length >= 3`.",
+        "`distinct` lalu `sortBy(s => (-s.length, s))` dan `take(k)`."
+      ],
+      "tests": [
+        { "input": "8 3\nLevel\na1na\nKATAK\nbaca\nNoon\nAna\nradar\nlevel\n", "expected": "katak level radar", "hidden": false },
+        { "input": "3 2\nkatak\nlevel\nbudi\n", "expected": "katak level", "hidden": false },
+        { "input": "2 5\nabc\ncba\n", "expected": "TIDAK ADA", "hidden": false },
+        { "input": "4 3\nLevel\nleveL\nnoon\nxyz\n", "expected": "level noon", "hidden": true },
+        { "input": "1 1\nkatak\n", "expected": "katak", "hidden": false }
+      ]
+    }
+  ],
+  "status": "published"
+}

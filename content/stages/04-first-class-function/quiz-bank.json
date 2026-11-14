@@ -1,0 +1,77 @@
+{
+  "stage": "stage-4",
+  "questions": [
+    {
+      "id": "q-b1",
+      "question": "Apa arti tipe `Int => Int`?",
+      "options": [
+        "Fungsi yang menerima satu `Int` dan mengembalikan `Int`",
+        "Fungsi yang menerima dua `Int`",
+        "Tuple yang berisi dua `Int`",
+        "Range dari `Int` ke `Int`"
+      ],
+      "answer": 0,
+      "explanation": "Di tipe fungsi, sebelah kiri panah adalah parameter dan sebelah kanan adalah hasil. `Int => Int` berarti satu `Int` masuk, satu `Int` keluar."
+    },
+    {
+      "id": "q-b2",
+      "question": "Di `def applyTwice(f: Int => Int, x: Int): Int = f(f(x))`, mana yang dijalankan lebih dulu?",
+      "options": [
+        "`f` yang di luar, lalu `f(x)`",
+        "Keduanya dijalankan bersamaan",
+        "`f(x)` yang di dalam, lalu hasilnya dipakai lagi",
+        "Tergantung tipe `x`"
+      ],
+      "answer": 2,
+      "explanation": "Ekspresi di dalam harus selesai dulu. `f(x)` dihitung, lalu hasilnya jadi argumen untuk `f` yang luar."
+    },
+    {
+      "id": "q-b3",
+      "question": "`val f = (x: Int) => x * 3`. Berapa hasil `f(5)`?",
+      "options": [
+        "8",
+        "35",
+        "53",
+        "15"
+      ],
+      "answer": 3,
+      "explanation": "Lambda itu mengalikan argumennya dengan 3, jadi `f(5)` sama dengan `5 * 3 = 15`."
+    },
+    {
+      "id": "q-b4",
+      "question": "Apa beda `applyTwice` dan `createMultiplier`?",
+      "options": [
+        "`applyTwice` menerima fungsi sebagai argumen, `createMultiplier` mengembalikan fungsi",
+        "Keduanya sama-sama mengembalikan fungsi",
+        "`applyTwice` mengembalikan fungsi, `createMultiplier` menerima fungsi",
+        "Keduanya tidak berhubungan dengan fungsi"
+      ],
+      "answer": 0,
+      "explanation": "`applyTwice(f, x)` memakai `f` sebagai parameter, sedangkan `createMultiplier(factor)` menghasilkan sebuah fungsi sebagai nilai kembalian."
+    },
+    {
+      "id": "q-b5",
+      "question": "Kenapa `val kaliDua = createMultiplier(2)` masih \"ingat\" faktor 2 padahal `createMultiplier` sudah selesai dijalankan?",
+      "options": [
+        "Karena `factor` disimpan sebagai variabel global",
+        "Karena `kaliDua` otomatis jadi `var`",
+        "Karena fungsi yang dikembalikan membawa nilai `factor` saat dibuat",
+        "Karena Scala selalu mengingat semua fungsi"
+      ],
+      "answer": 2,
+      "explanation": "Lambda yang dikembalikan menangkap `factor` dari lingkungan saat ia dibuat, jadi nilai 2 tetap melekat pada `kaliDua`."
+    },
+    {
+      "id": "q-b6",
+      "question": "Apa keuntungan menggabung-gabung fungsi seperti `applyTwice`?",
+      "options": [
+        "Program jadi lebih cepat dieksekusi",
+        "Fungsi jadi tidak perlu parameter",
+        "Tidak perlu lagi `val`",
+        "Perilaku kompleks bisa dibentuk dari fungsi-fungsi kecil yang murni"
+      ],
+      "answer": 3,
+      "explanation": "Ini inti gaya fungsional: fungsi kecil yang murni digabung untuk membentuk perilaku baru, jadi kode tetap mudah diprediksi."
+    }
+  ]
+}

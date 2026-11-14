@@ -1,0 +1,77 @@
+{
+  "stage": "stage-2",
+  "questions": [
+    {
+      "id": "q-b1",
+      "question": "Kalau tipe kembalian sebuah fungsi tidak ditulis eksplisit, siapa yang menebak?",
+      "options": [
+        "Kita harus menebak sendiri, kalau tidak kompilasi gagal",
+        "Scala, lewat type inference dari ekspresi terakhir",
+        "JVM saat program dijalankan",
+        "Tidak ada; tipe kembalian wajib selalu ditulis"
+      ],
+      "answer": 1,
+      "explanation": "Scala bisa menyimpulkan tipe kembalian dari ekspresi terakhir di body fungsi, jadi penulisan eksplisit sering tidak wajib."
+    },
+    {
+      "id": "q-b2",
+      "question": "Mana penulisan fungsi dengan dua parameter yang benar?",
+      "options": [
+        "def jumlah(a: Int, b: Int): Int = a + b",
+        "def jumlah(a: Int; b: Int): Int = a + b",
+        "def jumlah(a, b: Int): Int = a + b",
+        "def jumlah(a: Int, b: Int) -> Int = a + b"
+      ],
+      "answer": 0,
+      "explanation": "Parameter dipisah dengan koma, dan setiap parameter menyebut tipenya sendiri. Tipe kembalian ditulis setelah `)`, sebelum `=`."
+    },
+    {
+      "id": "q-b3",
+      "question": "`val n = 75` lalu `val kategori = n match { case x if x >= 80 => \"A\"; case x if x >= 70 => \"B\"; case x if x >= 60 => \"C\"; case _ => \"E\" }`. Berapa nilai `kategori`?",
+      "options": [
+        "A",
+        "C",
+        "E",
+        "B"
+      ],
+      "answer": 3,
+      "explanation": "`match` memeriksa dari atas ke bawah. `75 >= 80` salah, lalu `75 >= 70` benar, jadi `case` itu yang dipilih dan `kategori` berisi `\"B\"`."
+    },
+    {
+      "id": "q-b4",
+      "question": "Apa yang terjadi kalau `case _` ditaruh paling awal di sebuah `match`?",
+      "options": [
+        "Semua nilai langsung masuk ke `case _`, jadi `case` lain tidak pernah dipakai",
+        "`match` jadi error saat kompilasi",
+        "`case _` otomatis dipindah ke akhir",
+        "Hanya nilai yang cocok dengan `case` lain yang diproses"
+      ],
+      "answer": 0,
+      "explanation": "`match` berhenti di `case` pertama yang cocok. `case _` cocok dengan segala nilai, jadi kalau dia di depan, `case` setelahnya tidak pernah tercapai."
+    },
+    {
+      "id": "q-b5",
+      "question": "Kondisi di dalam `if (...)` harus bertipe?",
+      "options": [
+        "Int",
+        "String",
+        "Boolean",
+        "Char"
+      ],
+      "answer": 2,
+      "explanation": "`if` butuh kondisi yang hasilnya `true` atau `false`, jadi tipenya `Boolean`."
+    },
+    {
+      "id": "q-b6",
+      "question": "`def max(a: Int, b: Int): Int = if (a > b) a else b`. Berapa hasil `max(3, 9)`?",
+      "options": [
+        "3",
+        "9",
+        "12",
+        "6"
+      ],
+      "answer": 1,
+      "explanation": "`3 > 9` salah, jadi cabang `else` dipilih dan fungsi mengembalikan `b`, yaitu `9`."
+    }
+  ]
+}

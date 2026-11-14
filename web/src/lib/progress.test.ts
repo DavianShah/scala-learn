@@ -1,23 +1,56 @@
-import { describe, expect, it } from "vitest"
-import { exportProgress, importProgress } from "./progress"
+import { beforeEach, describe, expect, it } from "vitest"
+import { loadProgress, saveProgress } from "./progress"
 
-describe("progress import/export", () => {
-  it("round-trip JSON", () => {
-    const p = { solved: { a: true }, openedHints: { a: 2 }, code: { a: "x" } }
-    expect(importProgress(exportProgress(p))).toEqual(p)
+function stubStorage(initial: Record<string, string> = {}) {
+  const data = new Map(Object.entries(initial))
+  const store = {
+    getItem: (k: string) => (data.has(k) ? (data.get(k) as string) : null),
+    setItem: (k: string, v: string) => void data.set(k, String(v)),
+    removeItem: (k: string) => void data.delete(k),
+  } as unknown as Storage
+  ;(globalThis as unknown as { localStorage: Storage }).localStorage = store
+  return data
+}
+
+describe("progress storage", () => {
+  beforeEach(() => stubStorage())
+
+  it("simpan lalu baca kembali, termasuk jawaban kuis dan riwayat sesi", () => {
+    saveProgress({
+      solved: { a: true },
+      openedHints: { a: 1 },
+      code: { a: "x" },
+      quiz: { "stage-1": { q1: 2 } },
+      quizSessions: { "stage-1": [{ score: 80, correct: 8, total: 10, seconds: 95, at: 1 }] },
+    })
+    expect(loadProgress()).toEqual({
+      solved: { a: true },
+      openedHints: { a: 1 },
+      code: { a: "x" },
+      quiz: { "stage-1": { q1: 2 } },
+      quizSessions: { "stage-1": [{ score: 80, correct: 8, total: 10, seconds: 95, at: 1 }] },
+    })
   })
 
-  it("JSON tidak valid -> null", () => {
-    expect(importProgress("bukan json")).toBeNull()
-    expect(importProgress("[1,2,3]")).toBeNull()
+  it("data rusak -> struktur kosong", () => {
+    stubStorage({ "pemrok-progress-v1": "{bukan json" })
+    expect(loadProgress()).toEqual({
+      solved: {},
+      openedHints: {},
+      code: {},
+      quiz: {},
+      quizSessions: {},
+    })
   })
 
-  it("objek kosong -> struktur default", () => {
-    expect(importProgress("{}")).toEqual({ solved: {}, openedHints: {}, code: {} })
-  })
-
-  it("field hilang diisi default", () => {
-    const p = importProgress('{"solved":{"b":true}}')
-    expect(p).toEqual({ solved: { b: true }, openedHints: {}, code: {} })
+  it("progress lama tanpa field quiz/quizSessions diisi default", () => {
+    stubStorage({ "pemrok-progress-v1": JSON.stringify({ solved: { b: true } }) })
+    expect(loadProgress()).toEqual({
+      solved: { b: true },
+      openedHints: {},
+      code: {},
+      quiz: {},
+      quizSessions: {},
+    })
   })
 })

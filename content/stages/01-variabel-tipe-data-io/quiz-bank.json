@@ -1,0 +1,77 @@
+{
+  "stage": "stage-1",
+  "questions": [
+    {
+      "id": "q-b1",
+      "question": "Kalau kita cuma menulis `val sapaan = \"Halo\"`, siapa yang menebak tipe `sapaan`?",
+      "options": [
+        "Kompiler Scala, lewat type inference",
+        "Kita sendiri, lewat kata kunci `val`",
+        "JVM saat program dijalankan",
+        "Tidak ada; tipe harus selalu ditulis eksplisit"
+      ],
+      "answer": 0,
+      "explanation": "Scala punya *type inference*: kompiler menebak tipe dari nilai di kanan. `\"Halo\"` otomatis bertipe `String` walau kita tidak menuliskannya."
+    },
+    {
+      "id": "q-b2",
+      "question": "Kenapa materi ini menyarankan pakai `val` dulu, baru `var` kalau memang perlu?",
+      "options": [
+        "Karena `val` lebih cepat dieksekusi",
+        "Karena `var` tidak bisa dipakai untuk angka",
+        "Karena `val` mengunci nilai, jadi program lebih aman dan mudah ditebak",
+        "Karena `val` hanya bisa dipakai untuk teks"
+      ],
+      "answer": 2,
+      "explanation": "`val` mengunci nilai, jadi kode lain tidak bisa mengubahnya di kemudian hari. Alur data jadi lebih jelas dan bug lebih gampang dilacak."
+    },
+    {
+      "id": "q-b3",
+      "question": "Tipe data dasar yang dipakai untuk angka desimal, misalnya `2.5`, adalah?",
+      "options": [
+        "Int",
+        "Char",
+        "Boolean",
+        "Double"
+      ],
+      "answer": 3,
+      "explanation": "`Double` menampung angka desimal. Angka bulat seperti `10` baru otomatis `Int`."
+    },
+    {
+      "id": "q-b4",
+      "question": "Apa tipe kembalian dari `scala.io.StdIn.readDouble()`?",
+      "options": [
+        "String",
+        "Int",
+        "Double",
+        "Unit"
+      ],
+      "answer": 2,
+      "explanation": "`readDouble()` membaca satu bilangan desimal dan mengembalikannya sebagai `Double`. `readInt()` untuk `Int`, `readLine()` untuk `String`."
+    },
+    {
+      "id": "q-b5",
+      "question": "Tipe data dari nilai `\"Halo\"` adalah?",
+      "options": [
+        "Char",
+        "Boolean",
+        "String",
+        "Int"
+      ],
+      "answer": 2,
+      "explanation": "Teks yang ditulis dengan kutip dua bertipe `String`. `Char` hanya untuk satu huruf dan pakai kutip satu."
+    },
+    {
+      "id": "q-b6",
+      "question": "Tipe data hasil dari `val ok = 5 > 3` adalah?",
+      "options": [
+        "Boolean",
+        "Int",
+        "String",
+        "Char"
+      ],
+      "answer": 0,
+      "explanation": "Hasil perbandingan seperti `5 > 3` selalu `true` atau `false`, jadi tipenya `Boolean`."
+    }
+  ]
+}

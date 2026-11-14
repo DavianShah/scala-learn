@@ -1,0 +1,108 @@
+{
+  "id": "prak-9",
+  "order": 11,
+  "slug": "prak-9",
+  "title": "Praktikum 9: HOF — kuadrat, pencarian, huruf",
+  "week": 10,
+  "course": "KOM2205",
+  "sources": ["SOAL PRAK PEMROG UAS.pdf (Praktikum 9)"],
+  "estimatedMinutes": 30,
+  "summary": "Tiga soal asli praktikum 9 memakai higher order function: jumlah kuadrat genap, pencarian bilangan, dan menghitung huruf di nama.",
+  "concepts": ["HOF", "map", "filter", "contains"],
+  "prerequisites": ["stage-5"],
+  "objectives": [
+    "Memakai `filter`, `map`, dan `sum` untuk mengolah deretan bilangan.",
+    "Memakai `contains` untuk memeriksa keanggotaan nilai.",
+    "Membandingkan teks tanpa mempedulikan huruf besar/kecil."
+  ],
+  "lesson": [
+    {
+      "type": "text",
+      "body": "**Praktikum 9** isinya tiga soal asli yang semuanya bisa dikerjakan dengan **higher order function**: **Jumlah Kuadrat** (filter genap, map kuadrat, jumlahkan), **Pencarian Bilangan** (`contains`), dan **Mencari Huruf Nama** (bandingkan huruf tanpa mempedulikan kapital).\n\nHOF bekerja di list/string dan menghindari loop manual, jadi kodenya pendek dan mudah dibaca."
+    },
+    {
+      "type": "code",
+      "code": "object Main {\n  def main(args: Array[String]): Unit = {\n    val data = List(2, 3, 4, 5)\n    println(data.filter(_ % 2 == 0).map(x => x * x))\n    println(data.contains(3))\n  }\n}",
+      "runnable": true,
+      "output": "List(4, 16)\ntrue"
+    },
+    {
+      "type": "pitfall",
+      "body": "Untuk pencarian, `list.contains(k)` sudah mengembalikan `Boolean`, lebih sederhana daripada `indexOf(k) >= 0`. Kalau soal meminta output `1`/`0`, bungkus dengan `if ... else`.\n\nUntuk soal huruf, `toLowerCase` dulu sebelum `contains`, karena `Andi` dan `andi` dianggap sama. Gunakan `readLine()` per baris, bukan `split` sekaligus, karena nama bisa mengandung spasi."
+    },
+    {
+      "type": "recap",
+      "items": [
+        "`filter(_ % 2 == 0).map(x => x * x).sum` untuk jumlah kuadrat genap.",
+        "`list.contains(k)` lalu `if` untuk mencetak 1/0.",
+        "`toLowerCase` sebelum membandingkan huruf."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "prak-9-jumlah-kuadrat",
+      "title": "Jumlah Kuadrat Bilangan Genap",
+      "statement": "Membaca N buah bilangan bulat dan mencetak **jumlah kuadrat bilangan genap**.\n\n**Input:** baris 1 berisi N, baris 2 berisi N bilangan bulat dipisah spasi.\n\n**Output:** satu baris berisi jumlah kuadrat bilangan genap.\n\nContoh: `7` lalu `-4 -3 0 2 5 6 7` -> `56`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    val angka = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    // TODO: saring genap, kuadratkan, jumlahkan\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val n = scala.io.StdIn.readInt()\n    val angka = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    val hasil = angka.filter(_ % 2 == 0).map(x => x * x).sum\n    println(hasil)\n  }\n}",
+      "explanation": "`filter(_ % 2 == 0)` menyisakan bilangan genap. `map(x => x * x)` mengkuadratkan tiap elemen. `sum` menjumlahkan semuanya. Rangkaian HOF ini setara dengan loop, tapi lebih ringkas.",
+      "hints": [
+        "Saring dulu: `filter(_ % 2 == 0)`.",
+        "Kuadratkan: `map(x => x * x)`.",
+        "Jumlahkan dengan `.sum`."
+      ],
+      "tests": [
+        { "input": "7\n-4 -3 0 2 5 6 7\n", "expected": "56", "hidden": false },
+        { "input": "3\n1 3 5\n", "expected": "0", "hidden": false },
+        { "input": "4\n2 2 2 2\n", "expected": "16", "hidden": false },
+        { "input": "5\n-4 0 2 5 6\n", "expected": "56", "hidden": true },
+        { "input": "1\n7\n", "expected": "0", "hidden": false }
+      ]
+    },
+    {
+      "id": "prak-9-cari-bilangan",
+      "title": "Pencarian Bilangan",
+      "statement": "Membaca N, sebuah bilangan K, dan N bilangan bulat, lalu mencetak `1` kalau K ada di deretan dan `0` kalau tidak.\n\n**Input:** baris 1 berisi N dan K dipisah spasi, baris 2 berisi N bilangan bulat dipisah spasi.\n\n**Output:** `1` atau `0`.\n\nContoh: `7 10` lalu `3 5 10 2 10 -1 0` -> `1`; `5 8` lalu `1 3 5 7 9` -> `0`.",
+      "difficulty": 1,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nk = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt)\n    val n = nk(0)\n    val k = nk(1)\n    val angka = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    // TODO: cetak 1 kalau k ada, 0 kalau tidak\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nk = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt)\n    val n = nk(0)\n    val k = nk(1)\n    val angka = scala.io.StdIn.readLine().trim.split(\"\\\\s+\").map(_.toInt).toList\n    if (angka.contains(k)) println(1) else println(0)\n  }\n}",
+      "explanation": "`contains` memeriksa apakah K ada di list dan mengembalikan `Boolean`. `if/else` kemudian mencetak 1 untuk `true` dan 0 untuk `false`.",
+      "hints": [
+        "Baca N dan K dari baris pertama.",
+        "`angka.contains(k)` menghasilkan Boolean.",
+        "`if (angka.contains(k)) println(1) else println(0)`."
+      ],
+      "tests": [
+        { "input": "7 10\n3 5 10 2 10 -1 0\n", "expected": "1", "hidden": false },
+        { "input": "5 8\n1 3 5 7 9\n", "expected": "0", "hidden": false },
+        { "input": "1 5\n5\n", "expected": "1", "hidden": true },
+        { "input": "4 9\n9 1 2 3\n", "expected": "1", "hidden": false },
+        { "input": "2 -1\n1 2\n", "expected": "0", "hidden": false }
+      ]
+    },
+    {
+      "id": "prak-9-huruf-nama",
+      "title": "Mencari Huruf Nama",
+      "statement": "Membaca N, sebuah huruf C, dan N baris nama, lalu menghitung **berapa nama yang memuat huruf C**. Pencocokan tidak peka huruf besar/kecil dan tiap nama dihitung paling banyak satu kali.\n\n**Input:** baris 1 berisi N dan C, lalu N baris nama.\n\n**Output:** satu angka.\n\nContoh: `7 a` lalu `Andi`, `Budi`, `Sari`, `Rina`, `Eka`, `Lulu`, `Hana` -> `5`.",
+      "difficulty": 2,
+      "starter": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nk = scala.io.StdIn.readLine().trim.split(\"\\\\s+\")\n    val n = nk(0).toInt\n    val c = nk(1).toLowerCase\n    // TODO: baca n nama, hitung yang memuat c\n  }\n}",
+      "solution": "object Main {\n  def main(args: Array[String]): Unit = {\n    val nk = scala.io.StdIn.readLine().trim.split(\"\\\\s+\")\n    val n = nk(0).toInt\n    val c = nk(1).toLowerCase\n    val nama = (1 to n).map(_ => scala.io.StdIn.readLine().toLowerCase)\n    println(nama.count(_.contains(c)))\n  }\n}",
+      "explanation": "`toLowerCase` dipakai pada huruf target dan semua nama supaya perbandingan tidak peka kapital. `count(_.contains(c))` menghitung berapa nama yang memuat huruf itu.",
+      "hints": [
+        "`toLowerCase` pada C dan tiap nama.",
+        "`count(_.contains(c))` menghitung kecocokan.",
+        "Baca nama per baris dengan `(1 to n).map(_ => readLine())`."
+      ],
+      "tests": [
+        { "input": "7 a\nAndi\nBudi\nSari\nRina\nEka\nLulu\nHana\n", "expected": "5", "hidden": false },
+        { "input": "3 a\nAlice\nBob\nanna\n", "expected": "2", "hidden": false },
+        { "input": "2 z\nZoe\nzain\n", "expected": "2", "hidden": true },
+        { "input": "1 b\nBudi\n", "expected": "1", "hidden": false },
+        { "input": "4 e\nAndi\nBudi\nSari\nRina\n", "expected": "0", "hidden": false }
+      ]
+    }
+  ],
+  "status": "published"
+}

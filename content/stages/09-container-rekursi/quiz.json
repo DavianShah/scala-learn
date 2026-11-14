@@ -1,0 +1,173 @@
+{
+  "stage": "stage-9",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Untuk `val head :: tail = List(5,3,1,4,2)`, nilai head dan tail adalah...",
+      "options": [
+        "head = 5, tail = List(3,1,4,2)",
+        "head = List(5), tail = List(3,1,4,2)",
+        "head = 5, tail = 3",
+        "head = List(5,3,1,4,2), tail = Nil"
+      ],
+      "answer": 0,
+      "explanation": "`::` memecah elemen pertama (head) dan sisanya (tail)."
+    },
+    {
+      "id": "q2",
+      "question": "Base case yang tepat untuk fungsi rekursif `jumlah(L: List[Int])` adalah...",
+      "options": [
+        "case Nil => 0",
+        "case head :: tail => 0",
+        "case Nil => 1",
+        "case head :: tail => head"
+      ],
+      "answer": 0,
+      "explanation": "List kosong dijumlahkan jadi 0, jadi case Nil mengembalikan 0."
+    },
+    {
+      "id": "q3",
+      "question": "Apa hasil dari `List(1, 2, 3).head`?",
+      "options": [
+        "1",
+        "List(1)",
+        "3",
+        "error"
+      ],
+      "answer": 0,
+      "explanation": "`head` mengembalikan elemen pertama List, yaitu 1."
+    },
+    {
+      "id": "q4",
+      "question": "Apa hasil dari `List(1, 2, 3).tail`?",
+      "options": [
+        "List(1, 2)",
+        "List(2, 3)",
+        "3",
+        "List(1)"
+      ],
+      "answer": 1,
+      "explanation": "`tail` mengembalikan List tanpa elemen pertama, yaitu List(2, 3)."
+    },
+    {
+      "id": "q5",
+      "question": "Untuk `val head :: tail = List(10, 20, 30)`, apa isi `tail`?",
+      "options": [
+        "List(10, 20)",
+        "List(20, 30)",
+        "20",
+        "List(30)"
+      ],
+      "answer": 1,
+      "explanation": "`::` melepas elemen pertama (10), sisanya List(20, 30) menjadi tail."
+    },
+    {
+      "id": "q6",
+      "question": "Operator untuk menambah elemen di depan List adalah...",
+      "options": [
+        "++",
+        ":+",
+        "::",
+        "+:"
+      ],
+      "answer": 2,
+      "explanation": "`::` (cons) menempelkan elemen di depan List, misalnya 0 :: List(1, 2) menghasilkan List(0, 1, 2)."
+    },
+    {
+      "id": "q7",
+      "question": "Hasil dari `0 :: List(1, 2)` adalah...",
+      "options": [
+        "List(0, 1, 2)",
+        "List(1, 2, 0)",
+        "List(1, 2)",
+        "List(0)"
+      ],
+      "answer": 0,
+      "explanation": "`::` menaruh 0 di depan, jadi hasilnya List(0, 1, 2)."
+    },
+    {
+      "id": "q8",
+      "question": "Pola rekursi yang benar untuk mengolah List adalah...",
+      "options": [
+        "Base case `Nil`, rekurens kerjakan `head` lalu panggil ulang untuk `tail`",
+        "Base case `head`, rekurens untuk `Nil`",
+        "Selalu panggil `tail` sampai List penuh",
+        "Rekursi hanya bisa dipakai pada Array"
+      ],
+      "answer": 0,
+      "explanation": "Base case biasanya Nil; rekurens memproses head lalu melanjutkan ke tail."
+    },
+    {
+      "id": "q9",
+      "question": "Apa yang dikembalikan `List(1, 2, 3) match { case Nil => 0; case head :: tail => head }`?",
+      "options": [
+        "0",
+        "1",
+        "List(1)",
+        "3"
+      ],
+      "answer": 1,
+      "explanation": "List tidak kosong, jadi cocok dengan `head :: tail` dan mengembalikan head, yaitu 1."
+    },
+    {
+      "id": "q10",
+      "question": "Apa yang dikembalikan `List(1, 2, 3).count(_ == 2)`?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "0"
+      ],
+      "answer": 0,
+      "explanation": "`count(p)` menghitung elemen yang memenuhi predikat; hanya satu elemen bernilai 2."
+    },
+    {
+      "id": "q11",
+      "question": "Hasil dari `List(1, 2, 3, 4).filter(_ % 2 == 0).reduce(_ + _)` adalah...",
+      "options": [
+        "10",
+        "6",
+        "4",
+        "error"
+      ],
+      "answer": 1,
+      "explanation": "`filter` menyisakan 2 dan 4, lalu `reduce` menjumlahkan jadi 6."
+    },
+    {
+      "id": "q12",
+      "question": "Fungsi `reduce(_ + _)` pada `List(1, 2, 3, 4, 5)` menghasilkan...",
+      "options": [
+        "5",
+        "10",
+        "15",
+        "120"
+      ],
+      "answer": 2,
+      "explanation": "`reduce(_ + _)` menjumlahkan semua elemen: 1+2+3+4+5 = 15."
+    },
+    {
+      "id": "q13",
+      "question": "Rekursi dan higher-order function, mana yang benar?",
+      "options": [
+        "HOF selalu lebih lambat dari rekursi",
+        "HOF lebih ringkas, rekursi lebih eksplisit",
+        "Rekursi tidak bisa dipakai pada List",
+        "Keduanya tidak pernah menghasilkan nilai yang sama"
+      ],
+      "answer": 1,
+      "explanation": "Keduanya bisa menghasilkan hasil yang sama; HOF ringkas, rekursi eksplisit."
+    },
+    {
+      "id": "q14",
+      "question": "Apa yang terjadi kalau fungsi rekursif pada List tidak punya `case Nil`?",
+      "options": [
+        "Tetap jalan untuk List kosong",
+        "MatchError saat List kosong",
+        "Selalu mengembalikan 0",
+        "Error kompilasi"
+      ],
+      "answer": 1,
+      "explanation": "Tanpa `case Nil`, List kosong tidak cocok dengan pola `head :: tail` dan melempar MatchError."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "stage": "stage-9",
+  "questions": [
+    {
+      "id": "q-b1",
+      "question": "Secara teknis, List di Scala diimplementasikan sebagai...",
+      "options": [
+        "Array",
+        "Linked List",
+        "Hash Table",
+        "Tree"
+      ],
+      "answer": 1,
+      "explanation": "List di Scala berdasar linked list, itu sebabnya ambil `head` dan `tail` bisa sangat murah."
+    },
+    {
+      "id": "q-b2",
+      "question": "Apa hasil dari `List(1, 2, 3).tail.head`?",
+      "options": [
+        "1",
+        "3",
+        "2",
+        "List(2)"
+      ],
+      "answer": 2,
+      "explanation": "`tail` dari `List(1, 2, 3)` adalah `List(2, 3)`, lalu `.head` mengambil elemen pertamanya, yaitu 2."
+    },
+    {
+      "id": "q-b3",
+      "question": "Apa hasil dari `List(1, 2, 3, 4).count(_ % 2 == 0)`?",
+      "options": [
+        "2",
+        "1",
+        "3",
+        "4"
+      ],
+      "answer": 0,
+      "explanation": "`count` menghitung elemen yang memenuhi predikat. Hanya 2 dan 4 yang genap, jadi hasilnya 2."
+    },
+    {
+      "id": "q-b4",
+      "question": "Untuk fungsi rekursif `jumlah(L: List[Int])` seperti di materi, apa hasil `jumlah(List(2, 4, 6))`?",
+      "options": [
+        "6",
+        "10",
+        "9",
+        "12"
+      ],
+      "answer": 3,
+      "explanation": "Rekurens menjumlahkan head dengan hasil penjumlahan tail: 2 + 4 + 6 = 12."
+    },
+    {
+      "id": "q-b5",
+      "question": "Untuk fungsi rekursif `sumGenap2(L: List[Int])` seperti di materi, apa hasil `sumGenap2(List(1, 2, 3, 4))`?",
+      "options": [
+        "4",
+        "6",
+        "10",
+        "12"
+      ],
+      "answer": 1,
+      "explanation": "Fungsi itu hanya menjumlahkan elemen genap, yaitu 2 dan 4, jadi hasilnya 6."
+    },
+    {
+      "id": "q-b6",
+      "question": "Untuk fungsi rekursif `search2(L: List[Int], q: Int)` seperti di materi, apa hasil `search2(List(1, 2, 3, 1, 4, 3), 1)`?",
+      "options": [
+        "1",
+        "3",
+        "2",
+        "4"
+      ],
+      "answer": 2,
+      "explanation": "Angka 1 muncul dua kali di List itu, dan `search2` menghitung tiap kemunculan head yang sama dengan `q`."
+    }
+  ]
+}
