@@ -1513,7 +1513,7 @@ pre,
 .nav-link {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 12px;
   padding: 8px 14px;
   border-radius: 999px;
   border: 1px solid transparent;
