@@ -47,14 +47,6 @@ export function Home({ progress }: { progress: Progress }) {
             <Icon name="play" size={15} />
             Mulai belajar
           </a>
-          <a className="btn" href="#/latihan">
-            <Icon name="code" size={15} />
-            Latihan soal
-          </a>
-          <a className="btn btn-ghost" href="#/playground">
-            <Icon name="terminal" size={15} />
-            Playground
-          </a>
         </div>
       </section>
 
@@ -102,6 +94,9 @@ export function Home({ progress }: { progress: Progress }) {
                   const partially = s.problems.length > 0 && s.problems.some((p) => progress.solved[p.id])
                   return (
                     <a className={`stage-card${done ? " is-done" : ""}`} href={`#${s.id}`} key={s.id}>
+                      <span className={`stage-notch ${s.id.startsWith("prak-") ? "prak" : "materi"}`}>
+                        {s.id.startsWith("prak-") ? "Praktikum" : "Materi"}
+                      </span>
                       <span className="stage-topline">
                         {done ? (
                           <span className="stage-badge done">

@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-15 — revisi UI lanjutan
+
+### Diubah
+- Hero: tombol "Latihan soal" & "Playground" dihapus — tinggal "Mulai belajar" (dua tautan itu sudah ada di navbar).
+- Tiap kartu stage dapat notch di pojok kanan atas: **Praktikum** (hijau) atau **Materi** (kuning).
+- Tombol teks "Tema Terang/Gelang" diganti switcher kapsul berisi ikon matahari & bulan; thumb ke bulan saat dark mode.
+- Navbar: jarak ikon-teks dilegakan (9px) — `>_ Playground` dan `></ Latihan Praktikum` tidak lagi rapet.
+- Halaman Latihan Praktikum: tambah group **Minggu 12** berisi kotak "Coming Soon".
+
+### Diverifikasi
+- Build lolos, 4/4 tes lolos, validasi konten lolos, screenshot ditinjau ulang.
+
 ## 2026-11-14 — rename Pemrok → Pemroq
 
 ### Diubah

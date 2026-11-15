@@ -157,22 +157,52 @@ pre,
 .theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 14px;
+  padding: 2px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: var(--surface);
-  color: var(--muted);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 13px;
-  font-weight: 600;
   cursor: pointer;
-  transition: color 120ms ease-out, border-color 120ms ease-out;
+  transition: border-color 120ms ease-out;
 }
 
 .theme-toggle:hover {
-  color: var(--ink);
   border-color: var(--muted);
+}
+
+.tt-track {
+  position: relative;
+  display: flex;
+  width: 52px;
+  height: 26px;
+}
+
+.tt-opt {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  transition: color 180ms ease;
+}
+
+.theme-toggle:not(.dark) .tt-opt-sun,
+.theme-toggle.dark .tt-opt-moon {
+  color: var(--ink);
+}
+
+.tt-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #0d9488);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+  transition: transform 200ms ease;
+}
+
+.theme-toggle.dark .tt-thumb {
+  transform: translateX(26px);
 }
 
 .brand {
@@ -365,6 +395,7 @@ pre,
 }
 
 .stage-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -387,6 +418,32 @@ pre,
 
 .stage-card:active {
   transform: translateY(-1px);
+}
+
+.stage-notch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px 12px;
+  border: 1px solid transparent;
+  border-radius: 0 var(--radius) 0 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stage-notch.prak {
+  background: var(--ok-soft);
+  border-color: var(--ok-border);
+  color: var(--primary);
+}
+
+.stage-notch.materi {
+  background: var(--warn-soft);
+  border-color: var(--warn-border);
+  color: var(--accent-ink);
 }
 
 .stage-topline {
@@ -1458,7 +1515,7 @@ pre,
 .nav-link {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 9px;
   padding: 8px 14px;
   border-radius: 999px;
   border: 1px solid transparent;

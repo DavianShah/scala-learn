@@ -54,6 +54,20 @@ export function Practice({ progress }: { progress: Progress }) {
             </div>
           </div>
         ))}
+
+        <div className="practice-stage">
+          <header className="practice-stage-head">
+            <span className="week-badge">Minggu 12</span>
+            <span className="practice-stage-link">Coming Soon</span>
+            <span className="practice-count">coming soon</span>
+          </header>
+          <div className="soon-box">
+            <span className="soon-bars" aria-hidden="true">
+              <i /><i /><i /><i />
+            </span>
+            <span>Coming Soon</span>
+          </div>
+        </div>
       </div>
     </section>
   )

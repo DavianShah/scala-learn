@@ -7,6 +7,7 @@ import { Home } from "./components/Home"
 import { StageView } from "./components/StageView"
 import { Playground } from "./components/Playground"
 import { Practice } from "./components/Practice"
+import { ThemeSwitch } from "./components/ThemeSwitch"
 
 type Route =
   | { name: "home" }
@@ -84,14 +85,7 @@ export default function App() {
             Latihan Praktikum
           </a>
         </nav>
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label={theme === "dark" ? "Ubah ke tema terang" : "Ubah ke tema gelap"}
-        >
-          {theme === "dark" ? "Tema terang" : "Tema gelap"}
-        </button>
+        <ThemeSwitch theme={theme} onToggle={toggleTheme} />
       </header>
 
       <main className="content">
