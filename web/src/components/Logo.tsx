@@ -17,8 +17,8 @@ export function LogoMark({ size = 32 }: { size?: number }) {
     >
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#22c55e" />
-          <stop offset="1" stopColor="#0d9488" />
+          <stop offset="0" stopColor="#0284c7" />
+          <stop offset="1" stopColor="#38bdf8" />
         </linearGradient>
       </defs>
       <rect width="64" height="64" rx="16" fill={`url(#${gid})`} />

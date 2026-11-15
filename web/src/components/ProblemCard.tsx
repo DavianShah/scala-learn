@@ -161,10 +161,12 @@ export function ProblemCard({
     error: { cls: "verdict-error", icon: "exclamation-circle" as const, label: "Error saat jalan" },
   }
 
+  const visibleTests = problem.tests.filter((t) => !t.hidden)
+
   return (
     <article className={`problem${solved ? " is-solved" : ""}`} id={problem.id}>
       <Confetti burstKey={burst} />
-      <div className="problem-head">
+      <header className="problem-topbar">
         <div className="problem-title-wrap">
           <h3 className="problem-title">{problem.title}</h3>
           <span className={`diff diff-${problem.difficulty}`}>
@@ -174,13 +176,29 @@ export function ProblemCard({
         <span className="problem-state">
           {solved ? <Icon name="circle-check" size={18} /> : <Icon name="circle-blank" size={18} />}
         </span>
-      </div>
+      </header>
 
-      <div className="problem-grid">
-        <div className="problem-left">
-          <p className="problem-statement">
+      <div className="problem-body">
+        <div className="problem-brief">
+          <div className="problem-statement">
             <Markdown source={problem.statement} />
-          </p>
+          </div>
+
+          {visibleTests.length > 0 ? (
+            <div className="brief-tests">
+              <div className="brief-tests-title">Contoh tes</div>
+              {visibleTests.slice(0, 2).map((t, i) => (
+                <div className="brief-test" key={i}>
+                  <span>
+                    input <code>{t.input || "(kosong)"}</code>
+                  </span>
+                  <span>
+                    harus <code>{t.expected}</code>
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : null}
 
           {revealed ? (
             <div className="hint">
@@ -208,7 +226,42 @@ export function ProblemCard({
           ) : null}
         </div>
 
-        <div className="problem-right">
+        <div className="problem-work">
+          <div className="problem-toolbar">
+            <span className="code-label">
+              <Icon name="code" size={13} />
+              Scala 3
+            </span>
+            <span className="toolbar-actions">
+              <button className="btn btn-ghost btn-sm" onClick={handleRun} type="button" disabled={busy}>
+                <Icon name={busy ? "spinner" : "play"} size={14} className={busy ? "spin" : ""} />
+                Jalankan
+              </button>
+              <button className="btn btn-primary btn-sm" onClick={handleCheck} type="button" disabled={busy}>
+                <Icon name={busy ? "spinner" : "check"} size={14} className={busy ? "spin" : ""} />
+                Cek jawaban
+              </button>
+              <button
+                className="btn btn-ghost btn-sm"
+                onClick={() => copy(code, "starter")}
+                type="button"
+                disabled={busy}
+              >
+                <Icon name={copied === "starter" ? "check" : "copy"} size={14} />
+                Salin
+              </button>
+              <button
+                className="btn btn-ghost btn-sm"
+                onClick={() => setRevealed((r) => !r)}
+                type="button"
+                aria-expanded={revealed}
+              >
+                <Icon name="lightbulb" size={14} />
+                {revealed ? "Tutup petunjuk" : "Petunjuk"}
+              </button>
+            </span>
+          </div>
+
           <div className="editor-wrap">
             <div className="editor-gutter" aria-hidden="true">
               <div
@@ -231,94 +284,73 @@ export function ProblemCard({
             />
           </div>
 
-      <div className="problem-actions">
-        <button className="btn btn-ghost" onClick={handleRun} type="button" disabled={busy}>
-          <Icon name={busy ? "spinner" : "play"} size={15} className={busy ? "spin" : ""} />
-          Jalankan
-        </button>
-        <button className="btn btn-primary" onClick={handleCheck} type="button" disabled={busy}>
-          <Icon name={busy ? "spinner" : "check"} size={15} className={busy ? "spin" : ""} />
-          Cek jawaban
-        </button>
-        <button
-          className="btn btn-ghost"
-          onClick={() => copy(code, "starter")}
-          type="button"
-          disabled={busy}
-        >
-          <Icon name={copied === "starter" ? "check" : "copy"} size={15} />
-          Salin
-        </button>
-        <button
-          className="btn btn-ghost"
-          onClick={() => setRevealed((r) => !r)}
-          type="button"
-          aria-expanded={revealed}
-        >
-          <Icon name="lightbulb" size={15} />
-          {revealed ? "Tutup petunjuk" : "Petunjuk"}
-        </button>
-      </div>
-
-      {out ? (
-        <div className="output" style={{ marginTop: 14 }}>
-          <div className="code-head">
-            <span className="code-label">
-              <Icon name="terminal" size={13} />
-              Output program
-            </span>
-          </div>
-          <pre>
-            <code>{truncate(out, MAX_OUT)}</code>
-          </pre>
-        </div>
-      ) : null}
-
-      {verdict ? (
-        <div key={shakeKey} className={`verdict ${verdictUi[verdict].cls}${shakeKey ? " shake" : ""}`}>
-          <Icon name={verdictUi[verdict].icon} size={18} className={verdict === "ok" ? "pop" : ""} />
-          <div>
-            <strong>{verdictUi[verdict].label}</strong>
-            {detail ? <div className="verdict-detail">{detail}</div> : null}
-          </div>
-        </div>
-      ) : null}
-
-      {tests ? (
-        <div className="tests">
-          <div className="tests-title">Hasil tes</div>
-          {tests.map((t) => (
-            <div className={`test ${t.pass ? "test-pass" : "test-fail"}`} key={t.idx}>
-              <div className="test-row">
-                <span className="test-icon">
-                  <Icon name={t.pass ? "check" : "xmark"} size={14} />
-                </span>
-                <span className={t.hidden ? "test-hidden" : "test-head"}>
-                  Tes {t.idx + 1}
-                  {t.hidden ? " (tersembunyi)" : ""}
-                </span>
+          <div className="problem-console">
+            {!out && !verdict && !tests ? (
+              <div className="console-empty">
+                Tekan <strong>Jalankan</strong> untuk melihat output, atau{" "}
+                <strong>Cek jawaban</strong> untuk menilai kodemu.
               </div>
-              {!t.hidden ? (
-                <div className="test-io">
-                  <div className="test-io-row">
-                    <span className="test-io-label">input</span>
-                    <pre>{problem.tests[t.idx].input || "(kosong)"}</pre>
-                  </div>
-                  <div className="test-io-row">
-                    <span className="test-io-label">harus</span>
-                    <pre className="test-expected">{problem.tests[t.idx].expected}</pre>
-                  </div>
-                  <div className="test-io-row">
-                    <span className="test-io-label">jawaban</span>
-                    <pre className={`test-got ${t.pass ? "" : "bad"}`}>{t.got || "(kosong)"}</pre>
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          ))}
-        </div>
-      ) : null}
+            ) : null}
 
+            {out ? (
+              <div className="output">
+                <div className="code-head">
+                  <span className="code-label">
+                    <Icon name="terminal" size={13} />
+                    Output program
+                  </span>
+                </div>
+                <pre>
+                  <code>{truncate(out, MAX_OUT)}</code>
+                </pre>
+              </div>
+            ) : null}
+
+            {verdict ? (
+              <div key={shakeKey} className={`verdict ${verdictUi[verdict].cls}${shakeKey ? " shake" : ""}`}>
+                <Icon name={verdictUi[verdict].icon} size={18} className={verdict === "ok" ? "pop" : ""} />
+                <div>
+                  <strong>{verdictUi[verdict].label}</strong>
+                  {detail ? <div className="verdict-detail">{detail}</div> : null}
+                </div>
+              </div>
+            ) : null}
+
+            {tests ? (
+              <div className="tests">
+                <div className="tests-title">Hasil tes</div>
+                {tests.map((t) => (
+                  <div className={`test ${t.pass ? "test-pass" : "test-fail"}`} key={t.idx}>
+                    <div className="test-row">
+                      <span className="test-icon">
+                        <Icon name={t.pass ? "check" : "xmark"} size={14} />
+                      </span>
+                      <span className={t.hidden ? "test-hidden" : "test-head"}>
+                        Tes {t.idx + 1}
+                        {t.hidden ? " (tersembunyi)" : ""}
+                      </span>
+                    </div>
+                    {!t.hidden ? (
+                      <div className="test-io">
+                        <div className="test-io-row">
+                          <span className="test-io-label">input</span>
+                          <pre>{problem.tests[t.idx].input || "(kosong)"}</pre>
+                        </div>
+                        <div className="test-io-row">
+                          <span className="test-io-label">harus</span>
+                          <pre className="test-expected">{problem.tests[t.idx].expected}</pre>
+                        </div>
+                        <div className="test-io-row">
+                          <span className="test-io-label">jawaban</span>
+                          <pre className={`test-got ${t.pass ? "" : "bad"}`}>{t.got || "(kosong)"}</pre>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 
-const COLORS = ["#15803d", "#f59e0b", "#1d4ed8", "#db2777", "#0891b2"]
+const COLORS = ["#0ea5e9", "#38bdf8", "#f59e0b", "#818cf8", "#22d3ee"]
 
 interface Piece {
   id: number

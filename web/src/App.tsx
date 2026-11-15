@@ -8,6 +8,7 @@ import { StageView } from "./components/StageView"
 import { Playground } from "./components/Playground"
 import { Practice } from "./components/Practice"
 import { ThemeSwitch } from "./components/ThemeSwitch"
+import { ProgressRing } from "./components/ProgressRing"
 
 type Route =
   | { name: "home" }
@@ -61,48 +62,97 @@ export default function App() {
     }
   }
 
-  const linkClass = (name: Route["name"]) =>
-    `nav-link${route.name === name ? " active" : ""}`
+  const totalProblems = stages.reduce((n, s) => n + s.problems.length, 0)
+  const solved = Object.values(progress.solved).filter(Boolean).length
+  const doneStages = stages.filter(
+    (s) => s.problems.length > 0 && s.problems.every((p) => progress.solved[p.id]),
+  ).length
+  const pct = totalProblems ? Math.round((solved / totalProblems) * 100) : 0
+
+  const navItems = [
+    { name: "home" as const, href: "#/", icon: "book" as const, label: "Home" },
+    { name: "playground" as const, href: "#/playground", icon: "terminal" as const, label: "Playground" },
+    { name: "practice" as const, href: "#/latihan", icon: "code" as const, label: "Latihan Praktikum" },
+  ]
 
   return (
     <div className="app">
-      <header className="topbar">
+      <aside className="sidebar">
         <a className="brand" href="#/" aria-label="Pemroq - beranda">
-          <LogoMark size={30} />
+          <LogoMark size={32} />
           <span>Pemroq</span>
         </a>
-        <nav className="nav" aria-label="Navigasi utama">
-          <a className={linkClass("home")} href="#/">
-            <Icon name="book" size={14} />
-            Home
-          </a>
-          <a className={linkClass("playground")} href="#/playground">
-            <Icon name="terminal" size={14} />
-            Playground
-          </a>
-          <a className={linkClass("practice")} href="#/latihan">
-            <Icon name="code" size={14} />
-            Latihan Praktikum
-          </a>
+        <nav className="sidenav" aria-label="Navigasi utama">
+          {navItems.map((item) => (
+            <a
+              key={item.name}
+              className={`sidenav-link${route.name === item.name ? " active" : ""}`}
+              href={item.href}
+              aria-current={route.name === item.name ? "page" : undefined}
+            >
+              <Icon name={item.icon} size={16} />
+              {item.label}
+            </a>
+          ))}
         </nav>
-        <ThemeSwitch theme={theme} onToggle={toggleTheme} />
-      </header>
+        <div className="side-progress">
+          <ProgressRing value={solved} total={totalProblems} size={64}>
+            {pct}%
+          </ProgressRing>
+          <div className="side-progress-text">
+            <strong>
+              {solved} / {totalProblems} soal
+            </strong>
+            <span>
+              {doneStages} dari {stages.length} materi selesai
+            </span>
+          </div>
+        </div>
+        <div className="side-foot">
+          <ThemeSwitch theme={theme} onToggle={toggleTheme} />
+          <span className="side-foot-label">{theme === "dark" ? "Gelap" : "Terang"}</span>
+        </div>
+      </aside>
 
-      <main className="content">
-        {route.name === "home" && <Home progress={progress} />}
-        {route.name === "stage" && stage && (
-          <StageView stage={stage} progress={progress} onProgress={updateProgress} />
-        )}
-        {route.name === "playground" && <Playground />}
-        {route.name === "practice" && <Practice progress={progress} />}
-      </main>
+      <div className="main-col">
+        <header className="topbar">
+          <a className="brand" href="#/" aria-label="Pemroq - beranda">
+            <LogoMark size={30} />
+            <span>Pemroq</span>
+          </a>
+          <ThemeSwitch theme={theme} onToggle={toggleTheme} />
+        </header>
 
-      <footer className="footer-note">
-        <span>made by Dav with pecut</span>
-        <span className="footer-update">
-          Materi bakal di update per Minggu nya sesuai ppt dosen.
-        </span>
-      </footer>
+        <main className="content">
+          {route.name === "home" && <Home progress={progress} />}
+          {route.name === "stage" && stage && (
+            <StageView stage={stage} progress={progress} onProgress={updateProgress} />
+          )}
+          {route.name === "playground" && <Playground />}
+          {route.name === "practice" && <Practice progress={progress} />}
+        </main>
+
+        <footer className="footer-note">
+          <span>made by Dav with pecut</span>
+          <span className="footer-update">
+            Materi bakal di update per Minggu nya sesuai ppt dosen.
+          </span>
+        </footer>
+      </div>
+
+      <nav className="bottombar" aria-label="Navigasi utama">
+        {navItems.map((item) => (
+          <a
+            key={item.name}
+            className={`bottom-link${route.name === item.name ? " active" : ""}`}
+            href={item.href}
+            aria-current={route.name === item.name ? "page" : undefined}
+          >
+            <Icon name={item.icon} size={18} />
+            <span>{item.label}</span>
+          </a>
+        ))}
+      </nav>
     </div>
   )
 }

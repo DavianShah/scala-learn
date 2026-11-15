@@ -1,17 +1,9 @@
 import { useMemo } from "react"
-import { stages } from "../lib/content"
+import { stages, WEEK_COLORS } from "../lib/content"
 import type { Progress } from "../lib/progress"
 import { Icon } from "./Icon"
 import { ScrambleText } from "./ScrambleText"
-import { LogoMark } from "./Logo"
-
-const WEEK_ACCENTS = ["week-accent-0", "week-accent-1", "week-accent-2", "week-accent-3"]
-
-function fmtDuration(minutes: number): string {
-  if (minutes < 60) return `${minutes} menit`
-  const h = Math.floor(minutes / 60)
-  return `${h} jam ${minutes % 60} mnt`
-}
+import { ProgressRing } from "./ProgressRing"
 
 export function Home({ progress }: { progress: Progress }) {
   const weeks = useMemo(() => {
@@ -27,98 +19,236 @@ export function Home({ progress }: { progress: Progress }) {
   const totalStages = stages.length
   const solved = Object.values(progress.solved).filter(Boolean).length
   const totalProblems = stages.reduce((n, s) => n + s.problems.length, 0)
-  const first = stages[0]
+  const doneStages = stages.filter(
+    (s) => s.problems.length > 0 && s.problems.every((p) => progress.solved[p.id]),
+  ).length
+  const pct = totalProblems ? Math.round((solved / totalProblems) * 100) : 0
+
+  const quizRecords = Object.values(progress.quizSessions).flat()
+  const quizPoints = quizRecords.reduce((n, r) => n + r.score, 0)
+  const quizBest = quizRecords.length > 0 ? Math.max(...quizRecords.map((r) => r.score)) : 0
+
+  const next =
+    stages.find((s) => s.problems.some((p) => !progress.solved[p.id])) ?? stages[0]
 
   return (
     <>
-      <section className="hero">
-        <div className="hero-logo">
-          <LogoMark size={64} />
-        </div>
-        <h1>
-          Belajar Matkul Pemrog <ScrambleText text="Scala" className="grad scramble" />
-        </h1>
-        <p>
-          Semua materi Kuliah & Praktikum diambil langsung dari Materi & Soal asli
-          mata kuliah Pemrograman.
-        </p>
-        <div className="hero-cta">
-          <a className="btn btn-primary" href={first ? `#${first.id}` : "#/"}>
-            <Icon name="play" size={15} />
-            Mulai belajar
-          </a>
-        </div>
-      </section>
-
-      <section className="progress" aria-label="Progres belajarmu">
-        <div className="progress-top">
-          <div>
-            Progres keseluruhan: <strong>{solved} / {totalProblems}</strong> soal praktik
+      <section className="hero-band">
+        <div className="dot-matrix" aria-hidden="true" />
+        <div className="hero-copy">
+          <span className="eyebrow">Pemrograman · Scala 3 · UAS</span>
+          <h1>
+            Belajar <ScrambleText text="Scala" className="grad scramble" />
+            <br />
+            selangkah demi selangkah.
+          </h1>
+          <p>
+            Semua materi Kuliah &amp; Praktikum diambil langsung dari Materi &amp; Soal asli
+            mata kuliah Pemrograman. Baca, tulis kode, jalankan, lolos.
+          </p>
+          <div className="hero-cta">
+            <a className="btn btn-primary btn-shine" href={next ? `#${next.id}` : "#/"}>
+              <Icon name="play" size={15} />
+              {solved > 0 ? "Lanjutkan belajar" : "Mulai belajar"}
+            </a>
+            <a className="btn btn-ghost" href="#/playground">
+              <Icon name="terminal" size={15} />
+              Coba Playground
+            </a>
           </div>
-          <span>{totalStages} materi</span>
+          <div className="hero-stats">
+            <span>
+              <strong>{totalStages}</strong> materi
+            </span>
+            <span>
+              <strong>{totalProblems}</strong> soal praktik
+            </span>
+            <span>
+              <strong>{quizPoints}</strong> poin kuis
+            </span>
+          </div>
         </div>
-        <div
-          className="bar"
-          role="progressbar"
-          aria-valuemin={0}
-          aria-valuemax={totalProblems}
-          aria-valuenow={solved}
-          aria-label="Soal praktik terselesaikan"
-        >
-          <div
-            className="bar-fill"
-            style={{ width: totalProblems ? `${(solved / totalProblems) * 100}%` : "0%" }}
-          />
+        <div className="hero-art" aria-hidden="true">
+          <div className="code-window">
+            <div className="code-window-bar">
+              <i />
+              <i />
+              <i />
+              <span>Main.scala</span>
+            </div>
+            <pre>
+              <code>{`val skor = List(70, 85, 60, 90)
+val lolos = skor.filter(_ >= 75)
+println(lolos.mkString(", "))`}</code>
+            </pre>
+            <div className="code-window-out">70, 85, 90</div>
+          </div>
+          <span className="float-chip chip-a">
+            <Icon name="check" size={12} />
+            Soal lolos
+          </span>
+          <span className="float-chip chip-b">
+            <Icon name="trophy" size={12} />
+            +10 poin
+          </span>
         </div>
       </section>
 
-      {weeks.map(([week, list], idx) => {
-        const problems = list.reduce((n, s) => n + s.problems.length, 0)
-        const minutes = list.reduce((n, s) => n + (s.estimatedMinutes ?? 0), 0)
-        return (
-          <section className={`week-group ${WEEK_ACCENTS[idx % WEEK_ACCENTS.length]}`} key={week}>
-            <details className="week" open={idx === 0}>
-              <summary>
-                <span className="week-badge">Minggu {week}</span>
-                <span className="week-title">
-                  {list.length} materi · {problems} soal
-                </span>
-                <span className="week-meta">
-                  <span>± {fmtDuration(minutes)}</span>
-                  <Icon name="chevron-down" size={14} className="week-caret" />
-                </span>
-              </summary>
-              <div className="stage-grid">
-                {list.map((s) => {
-                  const done = s.problems.length > 0 && s.problems.every((p) => progress.solved[p.id])
-                  const partially = s.problems.length > 0 && s.problems.some((p) => progress.solved[p.id])
-                  return (
-                    <a className={`stage-card${done ? " is-done" : ""}`} href={`#${s.id}`} key={s.id}>
-                      <span className={`stage-notch ${s.id.startsWith("prak-") ? "prak" : "materi"}`}>
-                        {s.id.startsWith("prak-") ? "Praktikum" : "Materi"}
-                      </span>
-                      <span className="stage-topline">
-                        {done ? (
-                          <span className="stage-badge done">
-                            <Icon name="check" size={12} />
-                            Selesai
+      <div className="home-layout">
+        <div className="path-wrap">
+          <div className="path-head">
+            <h2>Jalur belajar</h2>
+            <span>
+              {solved} / {totalProblems} soal selesai
+            </span>
+          </div>
+
+          {weeks.map(([week, list], wi) => {
+            const color = WEEK_COLORS[wi % WEEK_COLORS.length]
+            const wProblems = list.reduce((n, s) => n + s.problems.length, 0)
+            const wSolved = list.reduce(
+              (n, s) => n + s.problems.filter((p) => progress.solved[p.id]).length,
+              0,
+            )
+            const wPct = wProblems ? Math.round((wSolved / wProblems) * 100) : 0
+            return (
+              <section className={`chapter week-color-${color}`} key={week}>
+                <header className="chapter-head">
+                  <span className="chapter-pill">Minggu {week}</span>
+                  <span className="chapter-meta">
+                    {list.length} materi · {wProblems} soal
+                  </span>
+                  <span
+                    className="chapter-bar"
+                    role="progressbar"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={wPct}
+                    aria-label={`Progres minggu ${week}`}
+                  >
+                    <span style={{ width: `${wPct}%` }} />
+                  </span>
+                </header>
+                <ol className="path">
+                  {list.map((s) => {
+                    const done =
+                      s.problems.length > 0 &&
+                      s.problems.every((p) => progress.solved[p.id])
+                    const partial =
+                      s.problems.length > 0 &&
+                      s.problems.some((p) => progress.solved[p.id])
+                    const isNext = next !== undefined && s.id === next.id
+                    const state = done
+                      ? "done"
+                      : s.problems.length === 0
+                        ? "soon"
+                        : isNext
+                          ? "current"
+                          : partial
+                            ? "partial"
+                            : "todo"
+                    return (
+                      <li className={`path-node ${state}`} key={s.id}>
+                        <a className="node-link" href={`#${s.id}`}>
+                          <span className="node-dot" aria-hidden="true">
+                            {done ? (
+                              <Icon name="check" size={18} />
+                            ) : (
+                              <span className="node-num">{s.order}</span>
+                            )}
                           </span>
-                        ) : partially ? (
-                          <span className="stage-badge partial">Berjalan</span>
-                        ) : s.problems.length === 0 ? (
-                          <span className="stage-badge soon">Coming soon</span>
-                        ) : null}
-                      </span>
-                      <h3>{s.title}</h3>
-                      <p>{s.summary}</p>
-                    </a>
-                  )
-                })}
-              </div>
-            </details>
-          </section>
-        )
-      })}
+                          <span className="node-card">
+                            <span className="node-top">
+                              <span
+                                className={`stage-notch ${s.id.startsWith("prak-") ? "prak" : "materi"}`}
+                              >
+                                {s.id.startsWith("prak-") ? "Praktikum" : "Materi"}
+                              </span>
+                              <span className="node-count">
+                                {s.problems.length === 0
+                                  ? "Belum ada soal"
+                                  : `${s.problems.length} soal`}
+                              </span>
+                              {state === "current" ? (
+                                <span className="node-tag">Lanjutkan</span>
+                              ) : null}
+                              {state === "soon" ? (
+                                <span className="node-tag soon">Segera</span>
+                              ) : null}
+                              {done ? (
+                                <span className="node-tag done">
+                                  <Icon name="check" size={11} />
+                                  Selesai
+                                </span>
+                              ) : null}
+                            </span>
+                            <span className="node-title">{s.title}</span>
+                            <span className="node-desc">{s.summary}</span>
+                          </span>
+                        </a>
+                      </li>
+                    )
+                  })}
+                </ol>
+              </section>
+            )
+          })}
+        </div>
+
+        <aside className="rail" aria-label="Ringkasan progres">
+          <div className="rail-card">
+            <h3>Progresmu</h3>
+            <div className="rail-ring">
+              <ProgressRing value={solved} total={totalProblems} size={88}>
+                {pct}%
+              </ProgressRing>
+              <p>
+                <strong>{solved}</strong> dari {totalProblems} soal praktik selesai
+              </p>
+            </div>
+            <div className="rail-rows">
+              <span>
+                Materi tuntas <strong>{doneStages} / {totalStages}</strong>
+              </span>
+              <span>
+                Soal tersisa <strong>{totalProblems - solved}</strong>
+              </span>
+            </div>
+          </div>
+          <div className="rail-card">
+            <h3>Kuis teori</h3>
+            <div className="rail-rows">
+              <span>
+                Poin terkumpul <strong>{quizPoints}</strong>
+              </span>
+              <span>
+                Skor terbaik <strong>{quizBest}</strong>
+              </span>
+              <span>
+                Sesi dimainkan <strong>{quizRecords.length}</strong>
+              </span>
+            </div>
+          </div>
+          <div className="rail-card rail-links">
+            <a href="#/playground">
+              <Icon name="terminal" size={15} />
+              <span>
+                <strong>Playground</strong>
+                <small>Coba kode Scala bebas</small>
+              </span>
+              <Icon name="arrow-right" size={14} />
+            </a>
+            <a href="#/latihan">
+              <Icon name="code" size={15} />
+              <span>
+                <strong>Latihan Praktikum</strong>
+                <small>Semua soal praktikum asli</small>
+              </span>
+              <Icon name="arrow-right" size={14} />
+            </a>
+          </div>
+        </aside>
+      </div>
     </>
   )
 }

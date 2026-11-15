@@ -3,6 +3,7 @@ import type { QuizQuestion } from "../lib/types"
 import type { Progress, QuizSessionRecord } from "../lib/progress"
 import { playSound } from "../lib/sound"
 import { Icon } from "./Icon"
+import { ProgressRing } from "./ProgressRing"
 
 const PER_SESSION = 10
 const POINTS = 10
@@ -50,6 +51,7 @@ export function QuizCard({
   const running = session !== null && session.finishedAt === null
   const history = progress.quizSessions[stageId] ?? []
   const perSession = Math.min(PER_SESSION, questions.length)
+  const best = history.length > 0 ? Math.max(...history.map((r) => r.score)) : 0
 
   useEffect(() => {
     if (!running) return
@@ -108,23 +110,35 @@ export function QuizCard({
   if (!session) {
     return (
       <div className="quiz-idle">
-        <span className="quiz-idle-icon">
-          <Icon name="question-circle" size={36} />
-        </span>
-        <h2>Kuis Teori</h2>
-        <p className="quiz-lead">
-          Bank soal berisi {questions.length} soal. Tiap sesi mengambil {perSession} soal
-          acak, jadi kombinasi bisa beda tiap kali kamu jalankan.
-        </p>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={start}
-          disabled={questions.length === 0}
-        >
-          <Icon name="play" size={15} />
-          Mulai kuis
-        </button>
+        <div className="quiz-idle-main">
+          <span className="quiz-idle-icon">
+            <Icon name="question-circle" size={36} />
+          </span>
+          <div>
+            <h2>Kuis Teori</h2>
+            <p className="quiz-lead">
+              Bank soal berisi {questions.length} soal. Tiap sesi mengambil {perSession} soal
+              acak, jadi kombinasi bisa beda tiap kali kamu jalankan.
+            </p>
+          </div>
+        </div>
+        <div className="quiz-idle-side">
+          {best > 0 ? (
+            <div className="quiz-best">
+              <span>Skor terbaik</span>
+              <strong>{best}</strong>
+            </div>
+          ) : null}
+          <button
+            type="button"
+            className="btn btn-primary btn-shine"
+            onClick={start}
+            disabled={questions.length === 0}
+          >
+            <Icon name="play" size={15} />
+            Mulai kuis
+          </button>
+        </div>
 
         {history.length > 0 ? (
           <div className="quiz-history">
@@ -155,22 +169,21 @@ export function QuizCard({
 
     return (
       <div className="quiz-done">
-        <div className="quiz-done-head">
-          <span className="quiz-done-icon">
-            <Icon name="trophy" size={28} />
-          </span>
-          <div>
+        <div className="quiz-scoreband">
+          <ProgressRing value={correct} total={session.order.length} size={96}>
+            {accuracy}%
+          </ProgressRing>
+          <div className="quiz-scoreband-text">
             <h2>Kuis selesai</h2>
             <p>{correct} dari {session.order.length} jawaban benar.</p>
+          </div>
+          <div className="quiz-score-points">
+            <span>Poin</span>
+            <strong>{score}</strong>
           </div>
         </div>
 
         <div className="quiz-stats">
-          <div className="stat">
-            <span className="stat-icon accent"><Icon name="trophy" size={16} /></span>
-            <span className="stat-value">{score}</span>
-            <span className="stat-label">Poin</span>
-          </div>
           <div className="stat">
             <span className="stat-icon ok"><Icon name="circle-check" size={16} /></span>
             <span className="stat-value">{correct}/{session.order.length}</span>
@@ -231,34 +244,42 @@ export function QuizCard({
   return (
     <div className="quiz-run">
       <div className="quiz-top">
-        <span className="quiz-count">
-          Soal {session.index + 1} / {session.order.length}
-        </span>
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm"
+          onClick={() => setSession(null)}
+        >
+          <Icon name="xmark" size={14} />
+          Keluar
+        </button>
+        <div
+          className="quiz-dots"
+          role="progressbar"
+          aria-label="Kemajuan kuis"
+          aria-valuemin={0}
+          aria-valuemax={session.order.length}
+          aria-valuenow={session.index + 1}
+        >
+          {session.order.map((item, i) => {
+            const cls =
+              i < session.index
+                ? session.answers[item.id] === item.answer
+                  ? "done-ok"
+                  : "done-bad"
+                : i === session.index
+                  ? "current"
+                  : "todo"
+            return (
+              <span className={`quiz-dot ${cls}`} key={item.id}>
+                {i + 1}
+              </span>
+            )
+          })}
+        </div>
         <span className="quiz-timer">
           <Icon name="keyboard" size={14} />
           {fmtTime(elapsed)}
         </span>
-      </div>
-
-      <div
-        className="quiz-progress"
-        role="progressbar"
-        aria-label="Kemajuan kuis"
-        aria-valuemin={0}
-        aria-valuemax={session.order.length}
-        aria-valuenow={session.index + 1}
-      >
-        {session.order.map((item, i) => {
-          const cls =
-            i < session.index
-              ? session.answers[item.id] === item.answer
-                ? "done-ok"
-                : "done-bad"
-              : i === session.index
-                ? "current"
-                : "todo"
-          return <span className={`quiz-seg ${cls}`} key={item.id} />
-        })}
       </div>
 
       <div className="quiz-slide" key={session.index}>
@@ -294,12 +315,12 @@ export function QuizCard({
         ) : null}
       </div>
 
-      <div className="quiz-foot">
+      <div className="quiz-actionbar">
         <span className="quiz-poin">
           <Icon name="trophy" size={13} />
           Poin sementara: <strong>{correctSoFar * POINTS}</strong>
         </span>
-        <button type="button" className="btn btn-primary" onClick={next} disabled={!answered}>
+        <button type="button" className="btn btn-primary btn-lg" onClick={next} disabled={!answered}>
           {session.index + 1 === session.order.length ? "Selesaikan kuis" : "Soal berikutnya"}
           <Icon name="arrow-right" size={15} />
         </button>

@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-11-15 — redesign struktural v2 (FULL redesign, bukan recolor)
+
+### Diubah
+- **Struktur dari awal, semua layar.** Redesign "Langit" sebelumnya (hanya ganti warna) ditolak pemilik ("cuma ganti warna doang"); kali ini layout-nya yang dirombak, fitur tetap semua.
+- **Warna direkonsiliasi:** basis kembali NETRAL (`base #fafafa`, `ink #0f172a`, `line #e2e8f0`; gelap: `base #0f172a`, `surface #1e293b`) — biru langit hanya aksen utama (CTA, state aktif, progres, link). Colorful: kuning, hijau, coral, ungu, teal sebagai variasi per minggu (siklus `WEEK_COLORS`: sky, amber, green, coral, violet, teal), kategori, dan dekorasi.
+- **Kerangka:** sidebar kiri 248px di desktop (brand, nav, kartu cincin progres, tema di bawah); <1024px jadi topbar + bottom tab bar 3 item. Konten max-width 1120px. Komponen baru `ProgressRing.tsx` (cincin SVG gradient).
+- **Beranda:** hero band dua kolom (copy + CTA "Lanjutkan belajar"/"Mulai belajar" & "Coba Playground" + stat; jendela kode dekoratif + chip melayang + dot-matrix) lalu **jalur belajar vertikal** (chapter per minggu dengan pill + bar progres warna minggu; node lingkaran di trek: selesai/hijau, saat ini/biru denyut, segera/dashed) + rail kanan sticky (progres, poin kuis, tautan cepat). Accordion minggu & grid kartu stage lama dihapus.
+- **Stage:** bar nav prev/next stage, hero band stage (kicker, judul, meta, cincin progres soal), pill mode switcher Materi/Latihan di tengah, materi dua kolom (baca + rail tujuan/fakta sticky), kartu "Lanjut ke latihan" + "Stage berikutnya".
+- **Soal:** workbench — header bar penuh, brief kiri (pernyataan + contoh tes + petunjuk), area kerja kanan (toolbar di ATAS editor, editor gutter, konsol di bawah editor). Chip kesulitan: Dasar = hijau, Lanjutan = coral.
+- **Kuis:** deck baru — kartu idle horizontal (skor terbaik + tombol mulai), titik bernomor saat jalan, opsi grid 2×2, bar aksi bawah dengan tombol besar, hasil = band skor (cincin akurasi + poin) + 4 stat (poin sudah di band).
+- **Latihan Praktikum:** strip ringkasan + grid 2 kolom kartu minggu (header band warna minggu); Minggu 12 Coming Soon tetap ada.
+- **Playground:** workbench dua kolom (editor kiri + konsol kanan dengan chip status).
+- **21st.dev (adaptasi CSS murni, tanpa dependency baru):** Shiny Button → `.btn-shine` (kilau menyapu saat hover); Dot Matrix → `.dot-matrix` (grid titik + fade mask di hero).
+- `lib/content.ts`: tambah `prevStageId()` + `WEEK_COLORS`. Tidak ada data pelajaran, Scastie ID, atau logika fitur yang diubah.
+
+### Diverifikasi
+- Build lolos (`tsc` + vite); 14/14 tes lolos; preview HTTP 200; screenshot beranda + stage (terang & gelap) ditinjau ulang (lihat `preview-shots/`).
+
+## 2026-11-15 — redesign "Langit" (biru langit, gerak ala Duolingo)
+
+### Diubah
+- Palet merek hijau hangat → sistem biru langit: primary `#0ea5e9`, latar `#f0f9ff`, tinta `#082f49`; mode gelap jadi malam biru laut (`#082f49` / `#0d3b5d`, primary `#38bdf8`). Hijau tinggal dipakai untuk makna sukses/benar saja.
+- Logo (SVG + komponen) gradient hijau → biru langit (`#0284c7` → `#38bdf8`); konfeti ikut palet langit + kuning.
+- Tombol utama chunky ala Duolingo: tekan ke bawah 2px + garis bawah menipis; kartu hover naik 4px; masuk halaman fade-up bertahap; progres berisi gradient + garis diagonal bergerak; segmen kuis aktif berdenyut.
+- Navbar solid → frosted tembus pandang + blur; judul hero "Scala" kembali gradient (biru langit) dengan ambient blob melayang halus.
+- Aksen minggu jadi empat biru sekeluarga (langit, cyan, biru, teal); notch Praktikum hijau → biru langit.
+- Perbaikan yang ikut kebawa: variabel CSS yang sebelumnya tak terdefinisi (`--surface-soft`, `--bg-soft`, `--accent-border`) kini terisi; class yang dipakai komponen tapi belum punya gaya (`.stage-kicker`, `.lead`, `.field-label`, `.form-error`, `.verdict-title`, `.verdict-status`, `.verdict.ok/.wrong`) kini diberi gaya.
+- Tidak ada fitur, rute, konten, atau Scastie ID yang diubah.
+
+### Diverifikasi
+- Build lolos; preview HTTP 200; screenshot beranda + halaman stage ditinjau (lihat `preview-shots/`).
+
 ## 2026-11-15 — anti-slop pass
 
 ### Diubah

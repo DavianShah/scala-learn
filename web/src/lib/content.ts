@@ -59,3 +59,12 @@ export function nextStageId(id: string): string | null {
   const i = stages.findIndex((s) => s.id === id)
   return i >= 0 && i < stages.length - 1 ? stages[i + 1].id : null
 }
+
+export function prevStageId(id: string): string | null {
+  const i = stages.findIndex((s) => s.id === id)
+  return i > 0 ? stages[i - 1].id : null
+}
+
+// Warna aksen per minggu (dipakai Home + Practice). Siklus 6 warna:
+// biru langit = warna utama, sisanya variasi colorful ala Duolingo.
+export const WEEK_COLORS = ["sky", "amber", "green", "coral", "violet", "teal"] as const
