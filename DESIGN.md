@@ -59,7 +59,8 @@ Token yang sama, nilai diganti lewat `[data-theme="dark"]`. Pilihan pengguna dis
 - Halaman Latihan Praktikum menampilkan soal asli praktikum per minggu, lengkap dengan penanda Coming Soon untuk minggu yang belum keluar (Minggu 12).
 - Font antarmuka Inter Variable (self-host lewat `@fontsource-variable/inter`), mirip font sistem modern; kode tetap JetBrains Mono.
 - Logo tiga balok simetris (SVG `public/logo.svg`, komponen `Logo.tsx`) — sengaja tidak memakai glyph prompt miring.
-- Judul hero: kata **Scala** dianimasikan per huruf (komponen `ScrambleText`): acak saat halaman dibuka, diam, lalu diacak ulang tiap 5 detik; hover juga memicu animasi baru. Memakai gradient brand + glow halus. `prefers-reduced-motion` mematikan animasi, dan `aria-label` menyimpan teks asli.
+- Judul hero: kata **Scala** dianimasikan per huruf (komponen `ScrambleText`): acak saat halaman dibuka, diam, lalu diacak ulang tiap 5 detik; hover juga memicu animasi baru. Teks solid (`--primary`, tanpa gradient/glow); ambient hero sangat halus. `prefers-reduced-motion` mematikan animasi, dan `aria-label` menyimpan teks asli.
+- Navbar solid (tanpa blur/glass). Kartu stage flat dengan border; bayangan hanya muncul saat hover/interaksi.
 - Halaman **Latihan Praktikum** hanya menampilkan soal asli praktikum (`prak-*`); soal tahap lain tetap hidup di dalam stage masing-masing.
 - Kalau praktikum belum keluar, stage menampilkan kotak blur **Praktikum Coming Soon**: baris samar yang diblur sebagai latar, satu teks tegas di tengah. Beranda tetap memakai badge Coming soon. Validator mengizinkan stage dengan 0 soal (maks 3).
 - Kartu stage di beranda berisi judul + deskripsi singkat saja (tanpa nomor, jumlah soal, atau estimasi menit). Dropdown minggu terbuka default di minggu pertama.

@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-11-15 — anti-slop pass
+
+### Diubah
+- Judul **Scala** di hero: gradient teks + glow dihapus, jadi solid `--primary` (animasi scramble tetap).
+- Navbar: blur/glass dihapus, background solid (`#fafaf9` / `#101010`).
+- Kartu stage flat (border saja); bayangan hanya saat hover.
+- Ambient hero dikurangi jauh lebih halus.
+- Em dash di teks UI dihapus (lead Latihan Praktikum, judul Praktikum 9/10, catatan Praktikum 8).
+- Ejaan hero "di ambil" → "diambil".
+- Playground: kicker "Area bebas" → "Playground"; lead dibuat konkret (output di bawah editor); contoh kode diganti (daftar skor, bukan angka π).
+
+### Diverifikasi
+- Build lolos, validasi konten lolos, kontras teks ≥ 4.5 (hitung WCAG), mobile 390px tanpa overflow (scrollWidth = clientWidth), computed style dikonfirmasi (grad solid, navbar tanpa backdrop-filter, kartu tanpa shadow).
+
 ## 2026-11-15 — revisi UI lanjutan
 
 ### Diubah

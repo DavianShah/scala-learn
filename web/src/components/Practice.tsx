@@ -18,8 +18,8 @@ export function Practice({ progress }: { progress: Progress }) {
         </div>
         <h1>Semua Soal Praktikum</h1>
         <p className="lead">
-          Kumpulan soal asli praktikum. Pilih satu, kerjakan, lalu jalankan —
-          semua tes dinilai otomatis.
+          Kumpulan soal asli praktikum. Pilih satu, kerjakan, lalu jalankan.
+          Semua tes dinilai otomatis.
         </p>
       </div>
 

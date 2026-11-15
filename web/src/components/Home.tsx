@@ -39,8 +39,8 @@ export function Home({ progress }: { progress: Progress }) {
           Belajar Matkul Pemrog <ScrambleText text="Scala" className="grad scramble" />
         </h1>
         <p>
-          Semua materi Kuliah &amp; Praktikum di ambil langsung dari Materi &amp;
-          Soal asli mata kuliah Pemrograman.
+          Semua materi Kuliah & Praktikum diambil langsung dari Materi & Soal asli
+          mata kuliah Pemrograman.
         </p>
         <div className="hero-cta">
           <a className="btn btn-primary" href={first ? `#${first.id}` : "#/"}>

@@ -29,7 +29,7 @@
     },
     {
       "type": "pitfall",
-      "body": "Soal praktikum memberi input per baris yang rapi: baris 1 berisi `N`, baris 2 berisi deretan. Baca deret dengan `readLine().trim.split(\"\\\\s+\")`, bukan `readLine` mentah. Jangan panggil `readLine` dua kali untuk baris yang sama, karena `readInt()` sudah memakan baris itu.\n\nUntuk mutlak, `map(math.abs).max` bekerja di `Array` maupun `List`. Hati-hati `n` yang dibaca tapi tidak dipakai di Scala 3 — biarkan, kompiler hanya memberi peringatan ringan."
+      "body": "Soal praktikum memberi input per baris yang rapi: baris 1 berisi `N`, baris 2 berisi deretan. Baca deret dengan `readLine().trim.split(\"\\\\s+\")`, bukan `readLine` mentah. Jangan panggil `readLine` dua kali untuk baris yang sama, karena `readInt()` sudah memakan baris itu.\n\nUntuk mutlak, `map(math.abs).max` bekerja di `Array` maupun `List`. Hati-hati `n` yang dibaca tapi tidak dipakai di Scala 3. Biarkan, kompiler hanya memberi peringatan ringan."
     },
     {
       "type": "recap",

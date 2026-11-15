@@ -4,8 +4,8 @@ import { Icon } from "./Icon"
 
 const STARTER = `object Main {
   def main(args: Array[String]): Unit = {
-    val angka = List(3, 1, 4, 1, 5)
-    println(angka.map(x => x * x).mkString(" "))
+    val skor = List(70, 85, 60, 90)
+    println(skor.filter(_ >= 75).mkString(", "))
   }
 }
 `
@@ -39,12 +39,12 @@ export function Playground() {
       <div className="stage-head">
         <div className="stage-kicker">
           <Icon name="terminal" size={12} />
-          <span>Area bebas</span>
+          <span>Playground</span>
         </div>
         <h1>Playground Scala</h1>
         <p className="lead">
-          Tulis dan jalankan kode Scala 3 tanpa penilaian tes. Cocok buat mencoba sintaks
-          yang baru kamu baca.
+          Tulis dan jalankan kode Scala 3 tanpa tes. Hasilnya langsung muncul di
+          bawah editor.
         </p>
       </div>
 
