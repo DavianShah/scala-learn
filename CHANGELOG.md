@@ -5,7 +5,7 @@
 ### Diubah
 - Hero: tombol "Latihan soal" & "Playground" dihapus — tinggal "Mulai belajar" (dua tautan itu sudah ada di navbar).
 - Tiap kartu stage dapat notch di pojok kanan atas: **Praktikum** (hijau) atau **Materi** (kuning).
-- Tombol teks "Tema Terang/Gelang" diganti switcher kapsul berisi ikon matahari & bulan; thumb ke bulan saat dark mode.
+- Tombol teks "Tema Terang/Gelap" diganti switcher kapsul berisi ikon matahari & bulan; thumb ke bulan saat dark mode.
 - Navbar: jarak ikon-teks dilegakan (9px) — `>_ Playground` dan `></ Latihan Praktikum` tidak lagi rapet.
 - Halaman Latihan Praktikum: tambah group **Minggu 12** berisi kotak "Coming Soon".
 
